@@ -1,0 +1,106 @@
+{
+  "" : {
+    "const-values" : "/Users/gazishahi/Library/Developer/Xcode/DerivedData/apta-cseocgkpfaiivaacghdmmxefkvez/SourcePackages/checkouts/adhan-swift/build/Adhan.build/Release-iphoneos/Adhan.build/Objects-normal/arm64/Adhan-primary.swiftconstvalues",
+    "dependencies" : "/Users/gazishahi/Library/Developer/Xcode/DerivedData/apta-cseocgkpfaiivaacghdmmxefkvez/SourcePackages/checkouts/adhan-swift/build/Adhan.build/Release-iphoneos/Adhan.build/Objects-normal/arm64/Adhan-primary.d",
+    "diagnostics" : "/Users/gazishahi/Library/Developer/Xcode/DerivedData/apta-cseocgkpfaiivaacghdmmxefkvez/SourcePackages/checkouts/adhan-swift/build/Adhan.build/Release-iphoneos/Adhan.build/Objects-normal/arm64/Adhan-primary.dia",
+    "emit-module-dependencies" : "/Users/gazishahi/Library/Developer/Xcode/DerivedData/apta-cseocgkpfaiivaacghdmmxefkvez/SourcePackages/checkouts/adhan-swift/build/Adhan.build/Release-iphoneos/Adhan.build/Objects-normal/arm64/Adhan-primary-emit-module.d",
+    "emit-module-diagnostics" : "/Users/gazishahi/Library/Developer/Xcode/DerivedData/apta-cseocgkpfaiivaacghdmmxefkvez/SourcePackages/checkouts/adhan-swift/build/Adhan.build/Release-iphoneos/Adhan.build/Objects-normal/arm64/Adhan-primary-emit-module.dia",
+    "pch" : "/Users/gazishahi/Library/Developer/Xcode/DerivedData/apta-cseocgkpfaiivaacghdmmxefkvez/SourcePackages/checkouts/adhan-swift/build/Adhan.build/Release-iphoneos/Adhan.build/Objects-normal/arm64/Adhan-primary-Bridging-header.pch",
+    "swift-dependencies" : "/Users/gazishahi/Library/Developer/Xcode/DerivedData/apta-cseocgkpfaiivaacghdmmxefkvez/SourcePackages/checkouts/adhan-swift/build/Adhan.build/Release-iphoneos/Adhan.build/Objects-normal/arm64/Adhan-primary.swiftdeps"
+  },
+  "/Users/gazishahi/Library/Developer/Xcode/DerivedData/apta-cseocgkpfaiivaacghdmmxefkvez/SourcePackages/checkouts/adhan-swift/Sources/Astronomy/Astronomical.swift" : {
+    "index-unit-output-path" : "/Adhan.build/Release-iphoneos/Adhan.build/Objects-normal/arm64/Astronomical.o",
+    "llvm-bc" : "/Users/gazishahi/Library/Developer/Xcode/DerivedData/apta-cseocgkpfaiivaacghdmmxefkvez/SourcePackages/checkouts/adhan-swift/build/Adhan.build/Release-iphoneos/Adhan.build/Objects-normal/arm64/Astronomical.bc",
+    "object" : "/Users/gazishahi/Library/Developer/Xcode/DerivedData/apta-cseocgkpfaiivaacghdmmxefkvez/SourcePackages/checkouts/adhan-swift/build/Adhan.build/Release-iphoneos/Adhan.build/Objects-normal/arm64/Astronomical.o"
+  },
+  "/Users/gazishahi/Library/Developer/Xcode/DerivedData/apta-cseocgkpfaiivaacghdmmxefkvez/SourcePackages/checkouts/adhan-swift/Sources/Astronomy/SolarCoordinates.swift" : {
+    "index-unit-output-path" : "/Adhan.build/Release-iphoneos/Adhan.build/Objects-normal/arm64/SolarCoordinates.o",
+    "llvm-bc" : "/Users/gazishahi/Library/Developer/Xcode/DerivedData/apta-cseocgkpfaiivaacghdmmxefkvez/SourcePackages/checkouts/adhan-swift/build/Adhan.build/Release-iphoneos/Adhan.build/Objects-normal/arm64/SolarCoordinates.bc",
+    "object" : "/Users/gazishahi/Library/Developer/Xcode/DerivedData/apta-cseocgkpfaiivaacghdmmxefkvez/SourcePackages/checkouts/adhan-swift/build/Adhan.build/Release-iphoneos/Adhan.build/Objects-normal/arm64/SolarCoordinates.o"
+  },
+  "/Users/gazishahi/Library/Developer/Xcode/DerivedData/apta-cseocgkpfaiivaacghdmmxefkvez/SourcePackages/checkouts/adhan-swift/Sources/Astronomy/SolarTime.swift" : {
+    "index-unit-output-path" : "/Adhan.build/Release-iphoneos/Adhan.build/Objects-normal/arm64/SolarTime.o",
+    "llvm-bc" : "/Users/gazishahi/Library/Developer/Xcode/DerivedData/apta-cseocgkpfaiivaacghdmmxefkvez/SourcePackages/checkouts/adhan-swift/build/Adhan.build/Release-iphoneos/Adhan.build/Objects-normal/arm64/SolarTime.bc",
+    "object" : "/Users/gazishahi/Library/Developer/Xcode/DerivedData/apta-cseocgkpfaiivaacghdmmxefkvez/SourcePackages/checkouts/adhan-swift/build/Adhan.build/Release-iphoneos/Adhan.build/Objects-normal/arm64/SolarTime.o"
+  },
+  "/Users/gazishahi/Library/Developer/Xcode/DerivedData/apta-cseocgkpfaiivaacghdmmxefkvez/SourcePackages/checkouts/adhan-swift/Sources/Extensions/DateUtilities.swift" : {
+    "index-unit-output-path" : "/Adhan.build/Release-iphoneos/Adhan.build/Objects-normal/arm64/DateUtilities.o",
+    "llvm-bc" : "/Users/gazishahi/Library/Developer/Xcode/DerivedData/apta-cseocgkpfaiivaacghdmmxefkvez/SourcePackages/checkouts/adhan-swift/build/Adhan.build/Release-iphoneos/Adhan.build/Objects-normal/arm64/DateUtilities.bc",
+    "object" : "/Users/gazishahi/Library/Developer/Xcode/DerivedData/apta-cseocgkpfaiivaacghdmmxefkvez/SourcePackages/checkouts/adhan-swift/build/Adhan.build/Release-iphoneos/Adhan.build/Objects-normal/arm64/DateUtilities.o"
+  },
+  "/Users/gazishahi/Library/Developer/Xcode/DerivedData/apta-cseocgkpfaiivaacghdmmxefkvez/SourcePackages/checkouts/adhan-swift/Sources/Extensions/MathUtilities.swift" : {
+    "index-unit-output-path" : "/Adhan.build/Release-iphoneos/Adhan.build/Objects-normal/arm64/MathUtilities.o",
+    "llvm-bc" : "/Users/gazishahi/Library/Developer/Xcode/DerivedData/apta-cseocgkpfaiivaacghdmmxefkvez/SourcePackages/checkouts/adhan-swift/build/Adhan.build/Release-iphoneos/Adhan.build/Objects-normal/arm64/MathUtilities.bc",
+    "object" : "/Users/gazishahi/Library/Developer/Xcode/DerivedData/apta-cseocgkpfaiivaacghdmmxefkvez/SourcePackages/checkouts/adhan-swift/build/Adhan.build/Release-iphoneos/Adhan.build/Objects-normal/arm64/MathUtilities.o"
+  },
+  "/Users/gazishahi/Library/Developer/Xcode/DerivedData/apta-cseocgkpfaiivaacghdmmxefkvez/SourcePackages/checkouts/adhan-swift/Sources/Models/CalculationMethod.swift" : {
+    "index-unit-output-path" : "/Adhan.build/Release-iphoneos/Adhan.build/Objects-normal/arm64/CalculationMethod.o",
+    "llvm-bc" : "/Users/gazishahi/Library/Developer/Xcode/DerivedData/apta-cseocgkpfaiivaacghdmmxefkvez/SourcePackages/checkouts/adhan-swift/build/Adhan.build/Release-iphoneos/Adhan.build/Objects-normal/arm64/CalculationMethod.bc",
+    "object" : "/Users/gazishahi/Library/Developer/Xcode/DerivedData/apta-cseocgkpfaiivaacghdmmxefkvez/SourcePackages/checkouts/adhan-swift/build/Adhan.build/Release-iphoneos/Adhan.build/Objects-normal/arm64/CalculationMethod.o"
+  },
+  "/Users/gazishahi/Library/Developer/Xcode/DerivedData/apta-cseocgkpfaiivaacghdmmxefkvez/SourcePackages/checkouts/adhan-swift/Sources/Models/CalculationParameters.swift" : {
+    "index-unit-output-path" : "/Adhan.build/Release-iphoneos/Adhan.build/Objects-normal/arm64/CalculationParameters.o",
+    "llvm-bc" : "/Users/gazishahi/Library/Developer/Xcode/DerivedData/apta-cseocgkpfaiivaacghdmmxefkvez/SourcePackages/checkouts/adhan-swift/build/Adhan.build/Release-iphoneos/Adhan.build/Objects-normal/arm64/CalculationParameters.bc",
+    "object" : "/Users/gazishahi/Library/Developer/Xcode/DerivedData/apta-cseocgkpfaiivaacghdmmxefkvez/SourcePackages/checkouts/adhan-swift/build/Adhan.build/Release-iphoneos/Adhan.build/Objects-normal/arm64/CalculationParameters.o"
+  },
+  "/Users/gazishahi/Library/Developer/Xcode/DerivedData/apta-cseocgkpfaiivaacghdmmxefkvez/SourcePackages/checkouts/adhan-swift/Sources/Models/Coordinates.swift" : {
+    "index-unit-output-path" : "/Adhan.build/Release-iphoneos/Adhan.build/Objects-normal/arm64/Coordinates.o",
+    "llvm-bc" : "/Users/gazishahi/Library/Developer/Xcode/DerivedData/apta-cseocgkpfaiivaacghdmmxefkvez/SourcePackages/checkouts/adhan-swift/build/Adhan.build/Release-iphoneos/Adhan.build/Objects-normal/arm64/Coordinates.bc",
+    "object" : "/Users/gazishahi/Library/Developer/Xcode/DerivedData/apta-cseocgkpfaiivaacghdmmxefkvez/SourcePackages/checkouts/adhan-swift/build/Adhan.build/Release-iphoneos/Adhan.build/Objects-normal/arm64/Coordinates.o"
+  },
+  "/Users/gazishahi/Library/Developer/Xcode/DerivedData/apta-cseocgkpfaiivaacghdmmxefkvez/SourcePackages/checkouts/adhan-swift/Sources/Models/HighLatitudeRule.swift" : {
+    "index-unit-output-path" : "/Adhan.build/Release-iphoneos/Adhan.build/Objects-normal/arm64/HighLatitudeRule.o",
+    "llvm-bc" : "/Users/gazishahi/Library/Developer/Xcode/DerivedData/apta-cseocgkpfaiivaacghdmmxefkvez/SourcePackages/checkouts/adhan-swift/build/Adhan.build/Release-iphoneos/Adhan.build/Objects-normal/arm64/HighLatitudeRule.bc",
+    "object" : "/Users/gazishahi/Library/Developer/Xcode/DerivedData/apta-cseocgkpfaiivaacghdmmxefkvez/SourcePackages/checkouts/adhan-swift/build/Adhan.build/Release-iphoneos/Adhan.build/Objects-normal/arm64/HighLatitudeRule.o"
+  },
+  "/Users/gazishahi/Library/Developer/Xcode/DerivedData/apta-cseocgkpfaiivaacghdmmxefkvez/SourcePackages/checkouts/adhan-swift/Sources/Models/Madhab.swift" : {
+    "index-unit-output-path" : "/Adhan.build/Release-iphoneos/Adhan.build/Objects-normal/arm64/Madhab.o",
+    "llvm-bc" : "/Users/gazishahi/Library/Developer/Xcode/DerivedData/apta-cseocgkpfaiivaacghdmmxefkvez/SourcePackages/checkouts/adhan-swift/build/Adhan.build/Release-iphoneos/Adhan.build/Objects-normal/arm64/Madhab.bc",
+    "object" : "/Users/gazishahi/Library/Developer/Xcode/DerivedData/apta-cseocgkpfaiivaacghdmmxefkvez/SourcePackages/checkouts/adhan-swift/build/Adhan.build/Release-iphoneos/Adhan.build/Objects-normal/arm64/Madhab.o"
+  },
+  "/Users/gazishahi/Library/Developer/Xcode/DerivedData/apta-cseocgkpfaiivaacghdmmxefkvez/SourcePackages/checkouts/adhan-swift/Sources/Models/Prayer.swift" : {
+    "index-unit-output-path" : "/Adhan.build/Release-iphoneos/Adhan.build/Objects-normal/arm64/Prayer.o",
+    "llvm-bc" : "/Users/gazishahi/Library/Developer/Xcode/DerivedData/apta-cseocgkpfaiivaacghdmmxefkvez/SourcePackages/checkouts/adhan-swift/build/Adhan.build/Release-iphoneos/Adhan.build/Objects-normal/arm64/Prayer.bc",
+    "object" : "/Users/gazishahi/Library/Developer/Xcode/DerivedData/apta-cseocgkpfaiivaacghdmmxefkvez/SourcePackages/checkouts/adhan-swift/build/Adhan.build/Release-iphoneos/Adhan.build/Objects-normal/arm64/Prayer.o"
+  },
+  "/Users/gazishahi/Library/Developer/Xcode/DerivedData/apta-cseocgkpfaiivaacghdmmxefkvez/SourcePackages/checkouts/adhan-swift/Sources/Models/PrayerAdjustment.swift" : {
+    "index-unit-output-path" : "/Adhan.build/Release-iphoneos/Adhan.build/Objects-normal/arm64/PrayerAdjustment.o",
+    "llvm-bc" : "/Users/gazishahi/Library/Developer/Xcode/DerivedData/apta-cseocgkpfaiivaacghdmmxefkvez/SourcePackages/checkouts/adhan-swift/build/Adhan.build/Release-iphoneos/Adhan.build/Objects-normal/arm64/PrayerAdjustment.bc",
+    "object" : "/Users/gazishahi/Library/Developer/Xcode/DerivedData/apta-cseocgkpfaiivaacghdmmxefkvez/SourcePackages/checkouts/adhan-swift/build/Adhan.build/Release-iphoneos/Adhan.build/Objects-normal/arm64/PrayerAdjustment.o"
+  },
+  "/Users/gazishahi/Library/Developer/Xcode/DerivedData/apta-cseocgkpfaiivaacghdmmxefkvez/SourcePackages/checkouts/adhan-swift/Sources/Models/Rouding.swift" : {
+    "index-unit-output-path" : "/Adhan.build/Release-iphoneos/Adhan.build/Objects-normal/arm64/Rouding.o",
+    "llvm-bc" : "/Users/gazishahi/Library/Developer/Xcode/DerivedData/apta-cseocgkpfaiivaacghdmmxefkvez/SourcePackages/checkouts/adhan-swift/build/Adhan.build/Release-iphoneos/Adhan.build/Objects-normal/arm64/Rouding.bc",
+    "object" : "/Users/gazishahi/Library/Developer/Xcode/DerivedData/apta-cseocgkpfaiivaacghdmmxefkvez/SourcePackages/checkouts/adhan-swift/build/Adhan.build/Release-iphoneos/Adhan.build/Objects-normal/arm64/Rouding.o"
+  },
+  "/Users/gazishahi/Library/Developer/Xcode/DerivedData/apta-cseocgkpfaiivaacghdmmxefkvez/SourcePackages/checkouts/adhan-swift/Sources/Models/Shafaq.swift" : {
+    "index-unit-output-path" : "/Adhan.build/Release-iphoneos/Adhan.build/Objects-normal/arm64/Shafaq.o",
+    "llvm-bc" : "/Users/gazishahi/Library/Developer/Xcode/DerivedData/apta-cseocgkpfaiivaacghdmmxefkvez/SourcePackages/checkouts/adhan-swift/build/Adhan.build/Release-iphoneos/Adhan.build/Objects-normal/arm64/Shafaq.bc",
+    "object" : "/Users/gazishahi/Library/Developer/Xcode/DerivedData/apta-cseocgkpfaiivaacghdmmxefkvez/SourcePackages/checkouts/adhan-swift/build/Adhan.build/Release-iphoneos/Adhan.build/Objects-normal/arm64/Shafaq.o"
+  },
+  "/Users/gazishahi/Library/Developer/Xcode/DerivedData/apta-cseocgkpfaiivaacghdmmxefkvez/SourcePackages/checkouts/adhan-swift/Sources/PrayerTimes.swift" : {
+    "index-unit-output-path" : "/Adhan.build/Release-iphoneos/Adhan.build/Objects-normal/arm64/PrayerTimes.o",
+    "llvm-bc" : "/Users/gazishahi/Library/Developer/Xcode/DerivedData/apta-cseocgkpfaiivaacghdmmxefkvez/SourcePackages/checkouts/adhan-swift/build/Adhan.build/Release-iphoneos/Adhan.build/Objects-normal/arm64/PrayerTimes.bc",
+    "object" : "/Users/gazishahi/Library/Developer/Xcode/DerivedData/apta-cseocgkpfaiivaacghdmmxefkvez/SourcePackages/checkouts/adhan-swift/build/Adhan.build/Release-iphoneos/Adhan.build/Objects-normal/arm64/PrayerTimes.o"
+  },
+  "/Users/gazishahi/Library/Developer/Xcode/DerivedData/apta-cseocgkpfaiivaacghdmmxefkvez/SourcePackages/checkouts/adhan-swift/Sources/Qibla.swift" : {
+    "index-unit-output-path" : "/Adhan.build/Release-iphoneos/Adhan.build/Objects-normal/arm64/Qibla.o",
+    "llvm-bc" : "/Users/gazishahi/Library/Developer/Xcode/DerivedData/apta-cseocgkpfaiivaacghdmmxefkvez/SourcePackages/checkouts/adhan-swift/build/Adhan.build/Release-iphoneos/Adhan.build/Objects-normal/arm64/Qibla.bc",
+    "object" : "/Users/gazishahi/Library/Developer/Xcode/DerivedData/apta-cseocgkpfaiivaacghdmmxefkvez/SourcePackages/checkouts/adhan-swift/build/Adhan.build/Release-iphoneos/Adhan.build/Objects-normal/arm64/Qibla.o"
+  },
+  "/Users/gazishahi/Library/Developer/Xcode/DerivedData/apta-cseocgkpfaiivaacghdmmxefkvez/SourcePackages/checkouts/adhan-swift/Sources/SunnahTimes.swift" : {
+    "index-unit-output-path" : "/Adhan.build/Release-iphoneos/Adhan.build/Objects-normal/arm64/SunnahTimes.o",
+    "llvm-bc" : "/Users/gazishahi/Library/Developer/Xcode/DerivedData/apta-cseocgkpfaiivaacghdmmxefkvez/SourcePackages/checkouts/adhan-swift/build/Adhan.build/Release-iphoneos/Adhan.build/Objects-normal/arm64/SunnahTimes.bc",
+    "object" : "/Users/gazishahi/Library/Developer/Xcode/DerivedData/apta-cseocgkpfaiivaacghdmmxefkvez/SourcePackages/checkouts/adhan-swift/build/Adhan.build/Release-iphoneos/Adhan.build/Objects-normal/arm64/SunnahTimes.o"
+  },
+  "/Users/gazishahi/Library/Developer/Xcode/DerivedData/apta-cseocgkpfaiivaacghdmmxefkvez/SourcePackages/checkouts/adhan-swift/Sources/Units/Angle.swift" : {
+    "index-unit-output-path" : "/Adhan.build/Release-iphoneos/Adhan.build/Objects-normal/arm64/Angle.o",
+    "llvm-bc" : "/Users/gazishahi/Library/Developer/Xcode/DerivedData/apta-cseocgkpfaiivaacghdmmxefkvez/SourcePackages/checkouts/adhan-swift/build/Adhan.build/Release-iphoneos/Adhan.build/Objects-normal/arm64/Angle.bc",
+    "object" : "/Users/gazishahi/Library/Developer/Xcode/DerivedData/apta-cseocgkpfaiivaacghdmmxefkvez/SourcePackages/checkouts/adhan-swift/build/Adhan.build/Release-iphoneos/Adhan.build/Objects-normal/arm64/Angle.o"
+  },
+  "/Users/gazishahi/Library/Developer/Xcode/DerivedData/apta-cseocgkpfaiivaacghdmmxefkvez/SourcePackages/checkouts/adhan-swift/Sources/Units/Minute.swift" : {
+    "index-unit-output-path" : "/Adhan.build/Release-iphoneos/Adhan.build/Objects-normal/arm64/Minute.o",
+    "llvm-bc" : "/Users/gazishahi/Library/Developer/Xcode/DerivedData/apta-cseocgkpfaiivaacghdmmxefkvez/SourcePackages/checkouts/adhan-swift/build/Adhan.build/Release-iphoneos/Adhan.build/Objects-normal/arm64/Minute.bc",
+    "object" : "/Users/gazishahi/Library/Developer/Xcode/DerivedData/apta-cseocgkpfaiivaacghdmmxefkvez/SourcePackages/checkouts/adhan-swift/build/Adhan.build/Release-iphoneos/Adhan.build/Objects-normal/arm64/Minute.o"
+  }
+}

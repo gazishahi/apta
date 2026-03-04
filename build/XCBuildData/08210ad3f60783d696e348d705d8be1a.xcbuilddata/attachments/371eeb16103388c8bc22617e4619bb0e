@@ -1,0 +1,4 @@
+module Adhan {
+header "Adhan-Swift.h"
+export *
+}

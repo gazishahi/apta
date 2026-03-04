@@ -1,0 +1,793 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		79BBC3322F57F1620040921E /* Adhan in Frameworks */ = {isa = PBXBuildFile; productRef = 79FC59012F57EA0000A20B7F /* Adhan */; };
+		AABB00012F580000000AABB1 /* Adhan in Frameworks */ = {isa = PBXBuildFile; productRef = AABB000D2F580000000AABB1 /* Adhan */; };
+		AABB00102F580000000AABB1 /* AptaWidgetsExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = AABB00032F580000000AABB1 /* AptaWidgetsExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		79FC58D32F57E97F00A20B7F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 79FC58BB2F57E97E00A20B7F /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 79FC58C22F57E97E00A20B7F;
+			remoteInfo = apta;
+		};
+		79FC58DD2F57E97F00A20B7F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 79FC58BB2F57E97E00A20B7F /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 79FC58C22F57E97E00A20B7F;
+			remoteInfo = apta;
+		};
+		AABB00022F580000000AABB1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 79FC58BB2F57E97E00A20B7F /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = AABB00062F580000000AABB1;
+			remoteInfo = AptaWidgetsExtension;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		AABB000E2F580000000AABB1 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				AABB00102F580000000AABB1 /* AptaWidgetsExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		79FC58C32F57E97E00A20B7F /* apta.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = apta.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		79FC58D22F57E97F00A20B7F /* aptaTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = aptaTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		79FC58DC2F57E97F00A20B7F /* aptaUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = aptaUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		AABB00032F580000000AABB1 /* AptaWidgetsExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = AptaWidgetsExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		AABB000F2F580000000AABB1 /* Exceptions for "apta" folder in "AptaWidgetsExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				DesignSystem/AptaColors.swift,
+				DesignSystem/Typography.swift,
+				Models/CalculationMethod.swift,
+				Models/PrayerName.swift,
+				Models/PrayerSettings.swift,
+				Models/SharedDefaults.swift,
+				Services/PrayerCalculationService.swift,
+			);
+			target = AABB00062F580000000AABB1 /* AptaWidgetsExtension */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		79FC58C52F57E97E00A20B7F /* apta */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				AABB000F2F580000000AABB1 /* Exceptions for "apta" folder in "AptaWidgetsExtension" target */,
+			);
+			path = apta;
+			sourceTree = "<group>";
+		};
+		79FC58D52F57E97F00A20B7F /* aptaTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = aptaTests;
+			sourceTree = "<group>";
+		};
+		79FC58DF2F57E97F00A20B7F /* aptaUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = aptaUITests;
+			sourceTree = "<group>";
+		};
+		AABB00042F580000000AABB1 /* AptaWidgets */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = AptaWidgets;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		79FC58C02F57E97E00A20B7F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				79BBC3322F57F1620040921E /* Adhan in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		79FC58CF2F57E97F00A20B7F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		79FC58D92F57E97F00A20B7F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AABB00052F580000000AABB1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AABB00012F580000000AABB1 /* Adhan in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		79FC58BA2F57E97E00A20B7F = {
+			isa = PBXGroup;
+			children = (
+				79FC58C52F57E97E00A20B7F /* apta */,
+				AABB00042F580000000AABB1 /* AptaWidgets */,
+				79FC58D52F57E97F00A20B7F /* aptaTests */,
+				79FC58DF2F57E97F00A20B7F /* aptaUITests */,
+				79FC58C42F57E97E00A20B7F /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		79FC58C42F57E97E00A20B7F /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				79FC58C32F57E97E00A20B7F /* apta.app */,
+				79FC58D22F57E97F00A20B7F /* aptaTests.xctest */,
+				79FC58DC2F57E97F00A20B7F /* aptaUITests.xctest */,
+				AABB00032F580000000AABB1 /* AptaWidgetsExtension.appex */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		79FC58C22F57E97E00A20B7F /* apta */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 79FC58E62F57E97F00A20B7F /* Build configuration list for PBXNativeTarget "apta" */;
+			buildPhases = (
+				79FC58BF2F57E97E00A20B7F /* Sources */,
+				79FC58C02F57E97E00A20B7F /* Frameworks */,
+				79FC58C12F57E97E00A20B7F /* Resources */,
+				AABB000E2F580000000AABB1 /* Embed Foundation Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				AABB00092F580000000AABB1 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				79FC58C52F57E97E00A20B7F /* apta */,
+			);
+			name = apta;
+			packageProductDependencies = (
+				79FC59012F57EA0000A20B7F /* Adhan */,
+			);
+			productName = apta;
+			productReference = 79FC58C32F57E97E00A20B7F /* apta.app */;
+			productType = "com.apple.product-type.application";
+		};
+		79FC58D12F57E97F00A20B7F /* aptaTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 79FC58E92F57E97F00A20B7F /* Build configuration list for PBXNativeTarget "aptaTests" */;
+			buildPhases = (
+				79FC58CE2F57E97F00A20B7F /* Sources */,
+				79FC58CF2F57E97F00A20B7F /* Frameworks */,
+				79FC58D02F57E97F00A20B7F /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				79FC58D42F57E97F00A20B7F /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				79FC58D52F57E97F00A20B7F /* aptaTests */,
+			);
+			name = aptaTests;
+			packageProductDependencies = (
+			);
+			productName = aptaTests;
+			productReference = 79FC58D22F57E97F00A20B7F /* aptaTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		79FC58DB2F57E97F00A20B7F /* aptaUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 79FC58EC2F57E97F00A20B7F /* Build configuration list for PBXNativeTarget "aptaUITests" */;
+			buildPhases = (
+				79FC58D82F57E97F00A20B7F /* Sources */,
+				79FC58D92F57E97F00A20B7F /* Frameworks */,
+				79FC58DA2F57E97F00A20B7F /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				79FC58DE2F57E97F00A20B7F /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				79FC58DF2F57E97F00A20B7F /* aptaUITests */,
+			);
+			name = aptaUITests;
+			packageProductDependencies = (
+			);
+			productName = aptaUITests;
+			productReference = 79FC58DC2F57E97F00A20B7F /* aptaUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		AABB00062F580000000AABB1 /* AptaWidgetsExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AABB000C2F580000000AABB1 /* Build configuration list for PBXNativeTarget "AptaWidgetsExtension" */;
+			buildPhases = (
+				AABB00082F580000000AABB1 /* Sources */,
+				AABB00052F580000000AABB1 /* Frameworks */,
+				AABB00072F580000000AABB1 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				AABB00042F580000000AABB1 /* AptaWidgets */,
+			);
+			name = AptaWidgetsExtension;
+			packageProductDependencies = (
+				AABB000D2F580000000AABB1 /* Adhan */,
+			);
+			productName = AptaWidgetsExtension;
+			productReference = AABB00032F580000000AABB1 /* AptaWidgetsExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		79FC58BB2F57E97E00A20B7F /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 2620;
+				LastUpgradeCheck = 2620;
+				TargetAttributes = {
+					79FC58C22F57E97E00A20B7F = {
+						CreatedOnToolsVersion = 26.2;
+					};
+					79FC58D12F57E97F00A20B7F = {
+						CreatedOnToolsVersion = 26.2;
+						TestTargetID = 79FC58C22F57E97E00A20B7F;
+					};
+					79FC58DB2F57E97F00A20B7F = {
+						CreatedOnToolsVersion = 26.2;
+						TestTargetID = 79FC58C22F57E97E00A20B7F;
+					};
+					AABB00062F580000000AABB1 = {
+						CreatedOnToolsVersion = 26.2;
+					};
+				};
+			};
+			buildConfigurationList = 79FC58BE2F57E97E00A20B7F /* Build configuration list for PBXProject "apta" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 79FC58BA2F57E97E00A20B7F;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				79FC59002F57EA0000A20B7F /* XCRemoteSwiftPackageReference "adhan-swift" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 79FC58C42F57E97E00A20B7F /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				79FC58C22F57E97E00A20B7F /* apta */,
+				79FC58D12F57E97F00A20B7F /* aptaTests */,
+				79FC58DB2F57E97F00A20B7F /* aptaUITests */,
+				AABB00062F580000000AABB1 /* AptaWidgetsExtension */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		79FC58C12F57E97E00A20B7F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		79FC58D02F57E97F00A20B7F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		79FC58DA2F57E97F00A20B7F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AABB00072F580000000AABB1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		79FC58BF2F57E97E00A20B7F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		79FC58CE2F57E97F00A20B7F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		79FC58D82F57E97F00A20B7F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AABB00082F580000000AABB1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		79FC58D42F57E97F00A20B7F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 79FC58C22F57E97E00A20B7F /* apta */;
+			targetProxy = 79FC58D32F57E97F00A20B7F /* PBXContainerItemProxy */;
+		};
+		79FC58DE2F57E97F00A20B7F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 79FC58C22F57E97E00A20B7F /* apta */;
+			targetProxy = 79FC58DD2F57E97F00A20B7F /* PBXContainerItemProxy */;
+		};
+		AABB00092F580000000AABB1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = AABB00062F580000000AABB1 /* AptaWidgetsExtension */;
+			targetProxy = AABB00022F580000000AABB1 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		79FC58E42F57E97F00A20B7F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = D3MM423T6V;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		79FC58E52F57E97F00A20B7F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = D3MM423T6V;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		79FC58E72F57E97F00A20B7F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = apta/apta.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = D3MM423T6V;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Your location is used to calculate accurate prayer times.";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = Gazi.apta;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		79FC58E82F57E97F00A20B7F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = apta/apta.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = D3MM423T6V;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Your location is used to calculate accurate prayer times.";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = Gazi.apta;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		79FC58EA2F57E97F00A20B7F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = D3MM423T6V;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = Gazi.aptaTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/apta.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/apta";
+			};
+			name = Debug;
+		};
+		79FC58EB2F57E97F00A20B7F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = D3MM423T6V;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = Gazi.aptaTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/apta.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/apta";
+			};
+			name = Release;
+		};
+		79FC58ED2F57E97F00A20B7F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = D3MM423T6V;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = Gazi.aptaUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = apta;
+			};
+			name = Debug;
+		};
+		79FC58EE2F57E97F00A20B7F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = D3MM423T6V;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = Gazi.aptaUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = apta;
+			};
+			name = Release;
+		};
+		AABB000A2F580000000AABB1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = AptaWidgets/AptaWidgets.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = D3MM423T6V;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = AptaWidgetsInfo.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = AptaWidgets;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = Gazi.apta.AptaWidgets;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		AABB000B2F580000000AABB1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = AptaWidgets/AptaWidgets.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = D3MM423T6V;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = AptaWidgetsInfo.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = AptaWidgets;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = Gazi.apta.AptaWidgets;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		79FC58BE2F57E97E00A20B7F /* Build configuration list for PBXProject "apta" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				79FC58E42F57E97F00A20B7F /* Debug */,
+				79FC58E52F57E97F00A20B7F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		79FC58E62F57E97F00A20B7F /* Build configuration list for PBXNativeTarget "apta" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				79FC58E72F57E97F00A20B7F /* Debug */,
+				79FC58E82F57E97F00A20B7F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		79FC58E92F57E97F00A20B7F /* Build configuration list for PBXNativeTarget "aptaTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				79FC58EA2F57E97F00A20B7F /* Debug */,
+				79FC58EB2F57E97F00A20B7F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		79FC58EC2F57E97F00A20B7F /* Build configuration list for PBXNativeTarget "aptaUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				79FC58ED2F57E97F00A20B7F /* Debug */,
+				79FC58EE2F57E97F00A20B7F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AABB000C2F580000000AABB1 /* Build configuration list for PBXNativeTarget "AptaWidgetsExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AABB000A2F580000000AABB1 /* Debug */,
+				AABB000B2F580000000AABB1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		79FC59002F57EA0000A20B7F /* XCRemoteSwiftPackageReference "adhan-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/batoulapps/adhan-swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		79FC59012F57EA0000A20B7F /* Adhan */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 79FC59002F57EA0000A20B7F /* XCRemoteSwiftPackageReference "adhan-swift" */;
+			productName = Adhan;
+		};
+		AABB000D2F580000000AABB1 /* Adhan */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 79FC59002F57EA0000A20B7F /* XCRemoteSwiftPackageReference "adhan-swift" */;
+			productName = Adhan;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 79FC58BB2F57E97E00A20B7F /* Project object */;
+}

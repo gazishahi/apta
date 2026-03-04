@@ -1,0 +1,12 @@
+{
+  "/Users/gazishahi/Documents/apta/apta/DesignSystem/AptaColors.swift" : {
+    "abi-baseline-json" : "/Users/gazishahi/Documents/apta/build/apta.build/Release-iphoneos/AptaWidgetsExtension.build/Objects-normal/arm64/AptaWidgetsExtension.abi.json",
+    "const-values" : "/Users/gazishahi/Documents/apta/build/apta.build/Release-iphoneos/AptaWidgetsExtension.build/Objects-normal/arm64/AptaWidgetsExtension-primary.swiftconstvalues",
+    "dependencies" : "/Users/gazishahi/Documents/apta/build/apta.build/Release-iphoneos/AptaWidgetsExtension.build/Objects-normal/arm64/AptaWidgetsExtension-primary.d",
+    "diagnostics" : "/Users/gazishahi/Documents/apta/build/apta.build/Release-iphoneos/AptaWidgetsExtension.build/Objects-normal/arm64/AptaWidgetsExtension-primary.dia",
+    "objc-header" : "/Users/gazishahi/Documents/apta/build/apta.build/Release-iphoneos/AptaWidgetsExtension.build/Objects-normal/arm64/AptaWidgetsExtension-Swift.h",
+    "swiftdoc" : "/Users/gazishahi/Documents/apta/build/apta.build/Release-iphoneos/AptaWidgetsExtension.build/Objects-normal/arm64/AptaWidgetsExtension.swiftdoc",
+    "swiftmodule" : "/Users/gazishahi/Documents/apta/build/apta.build/Release-iphoneos/AptaWidgetsExtension.build/Objects-normal/arm64/AptaWidgetsExtension.swiftmodule",
+    "swiftsourceinfo" : "/Users/gazishahi/Documents/apta/build/apta.build/Release-iphoneos/AptaWidgetsExtension.build/Objects-normal/arm64/AptaWidgetsExtension.swiftsourceinfo"
+  }
+}

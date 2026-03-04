@@ -1,0 +1,81 @@
+{
+  "" : {
+    "const-values" : "/Users/gazishahi/Documents/apta/build/apta.build/Release-iphoneos/AptaWidgetsExtension.build/Objects-normal/arm64/AptaWidgetsExtension-primary.swiftconstvalues",
+    "dependencies" : "/Users/gazishahi/Documents/apta/build/apta.build/Release-iphoneos/AptaWidgetsExtension.build/Objects-normal/arm64/AptaWidgetsExtension-primary.d",
+    "diagnostics" : "/Users/gazishahi/Documents/apta/build/apta.build/Release-iphoneos/AptaWidgetsExtension.build/Objects-normal/arm64/AptaWidgetsExtension-primary.dia",
+    "emit-module-dependencies" : "/Users/gazishahi/Documents/apta/build/apta.build/Release-iphoneos/AptaWidgetsExtension.build/Objects-normal/arm64/AptaWidgetsExtension-primary-emit-module.d",
+    "emit-module-diagnostics" : "/Users/gazishahi/Documents/apta/build/apta.build/Release-iphoneos/AptaWidgetsExtension.build/Objects-normal/arm64/AptaWidgetsExtension-primary-emit-module.dia",
+    "pch" : "/Users/gazishahi/Documents/apta/build/apta.build/Release-iphoneos/AptaWidgetsExtension.build/Objects-normal/arm64/AptaWidgetsExtension-primary-Bridging-header.pch",
+    "swift-dependencies" : "/Users/gazishahi/Documents/apta/build/apta.build/Release-iphoneos/AptaWidgetsExtension.build/Objects-normal/arm64/AptaWidgetsExtension-primary.swiftdeps"
+  },
+  "/Users/gazishahi/Documents/apta/AptaWidgets/AptaWidgets.swift" : {
+    "index-unit-output-path" : "/apta.build/Release-iphoneos/AptaWidgetsExtension.build/Objects-normal/arm64/AptaWidgets.o",
+    "llvm-bc" : "/Users/gazishahi/Documents/apta/build/apta.build/Release-iphoneos/AptaWidgetsExtension.build/Objects-normal/arm64/AptaWidgets.bc",
+    "object" : "/Users/gazishahi/Documents/apta/build/apta.build/Release-iphoneos/AptaWidgetsExtension.build/Objects-normal/arm64/AptaWidgets.o"
+  },
+  "/Users/gazishahi/Documents/apta/AptaWidgets/LargePrayerWidget.swift" : {
+    "index-unit-output-path" : "/apta.build/Release-iphoneos/AptaWidgetsExtension.build/Objects-normal/arm64/LargePrayerWidget.o",
+    "llvm-bc" : "/Users/gazishahi/Documents/apta/build/apta.build/Release-iphoneos/AptaWidgetsExtension.build/Objects-normal/arm64/LargePrayerWidget.bc",
+    "object" : "/Users/gazishahi/Documents/apta/build/apta.build/Release-iphoneos/AptaWidgetsExtension.build/Objects-normal/arm64/LargePrayerWidget.o"
+  },
+  "/Users/gazishahi/Documents/apta/AptaWidgets/LockScreenWidgets.swift" : {
+    "index-unit-output-path" : "/apta.build/Release-iphoneos/AptaWidgetsExtension.build/Objects-normal/arm64/LockScreenWidgets.o",
+    "llvm-bc" : "/Users/gazishahi/Documents/apta/build/apta.build/Release-iphoneos/AptaWidgetsExtension.build/Objects-normal/arm64/LockScreenWidgets.bc",
+    "object" : "/Users/gazishahi/Documents/apta/build/apta.build/Release-iphoneos/AptaWidgetsExtension.build/Objects-normal/arm64/LockScreenWidgets.o"
+  },
+  "/Users/gazishahi/Documents/apta/AptaWidgets/MediumPrayerWidget.swift" : {
+    "index-unit-output-path" : "/apta.build/Release-iphoneos/AptaWidgetsExtension.build/Objects-normal/arm64/MediumPrayerWidget.o",
+    "llvm-bc" : "/Users/gazishahi/Documents/apta/build/apta.build/Release-iphoneos/AptaWidgetsExtension.build/Objects-normal/arm64/MediumPrayerWidget.bc",
+    "object" : "/Users/gazishahi/Documents/apta/build/apta.build/Release-iphoneos/AptaWidgetsExtension.build/Objects-normal/arm64/MediumPrayerWidget.o"
+  },
+  "/Users/gazishahi/Documents/apta/AptaWidgets/PrayerTimelineProvider.swift" : {
+    "index-unit-output-path" : "/apta.build/Release-iphoneos/AptaWidgetsExtension.build/Objects-normal/arm64/PrayerTimelineProvider.o",
+    "llvm-bc" : "/Users/gazishahi/Documents/apta/build/apta.build/Release-iphoneos/AptaWidgetsExtension.build/Objects-normal/arm64/PrayerTimelineProvider.bc",
+    "object" : "/Users/gazishahi/Documents/apta/build/apta.build/Release-iphoneos/AptaWidgetsExtension.build/Objects-normal/arm64/PrayerTimelineProvider.o"
+  },
+  "/Users/gazishahi/Documents/apta/AptaWidgets/SmallPrayerWidget.swift" : {
+    "index-unit-output-path" : "/apta.build/Release-iphoneos/AptaWidgetsExtension.build/Objects-normal/arm64/SmallPrayerWidget.o",
+    "llvm-bc" : "/Users/gazishahi/Documents/apta/build/apta.build/Release-iphoneos/AptaWidgetsExtension.build/Objects-normal/arm64/SmallPrayerWidget.bc",
+    "object" : "/Users/gazishahi/Documents/apta/build/apta.build/Release-iphoneos/AptaWidgetsExtension.build/Objects-normal/arm64/SmallPrayerWidget.o"
+  },
+  "/Users/gazishahi/Documents/apta/AptaWidgets/WidgetEntry.swift" : {
+    "index-unit-output-path" : "/apta.build/Release-iphoneos/AptaWidgetsExtension.build/Objects-normal/arm64/WidgetEntry.o",
+    "llvm-bc" : "/Users/gazishahi/Documents/apta/build/apta.build/Release-iphoneos/AptaWidgetsExtension.build/Objects-normal/arm64/WidgetEntry.bc",
+    "object" : "/Users/gazishahi/Documents/apta/build/apta.build/Release-iphoneos/AptaWidgetsExtension.build/Objects-normal/arm64/WidgetEntry.o"
+  },
+  "/Users/gazishahi/Documents/apta/apta/DesignSystem/AptaColors.swift" : {
+    "index-unit-output-path" : "/apta.build/Release-iphoneos/AptaWidgetsExtension.build/Objects-normal/arm64/AptaColors.o",
+    "llvm-bc" : "/Users/gazishahi/Documents/apta/build/apta.build/Release-iphoneos/AptaWidgetsExtension.build/Objects-normal/arm64/AptaColors.bc",
+    "object" : "/Users/gazishahi/Documents/apta/build/apta.build/Release-iphoneos/AptaWidgetsExtension.build/Objects-normal/arm64/AptaColors.o"
+  },
+  "/Users/gazishahi/Documents/apta/apta/DesignSystem/Typography.swift" : {
+    "index-unit-output-path" : "/apta.build/Release-iphoneos/AptaWidgetsExtension.build/Objects-normal/arm64/Typography.o",
+    "llvm-bc" : "/Users/gazishahi/Documents/apta/build/apta.build/Release-iphoneos/AptaWidgetsExtension.build/Objects-normal/arm64/Typography.bc",
+    "object" : "/Users/gazishahi/Documents/apta/build/apta.build/Release-iphoneos/AptaWidgetsExtension.build/Objects-normal/arm64/Typography.o"
+  },
+  "/Users/gazishahi/Documents/apta/apta/Models/CalculationMethod.swift" : {
+    "index-unit-output-path" : "/apta.build/Release-iphoneos/AptaWidgetsExtension.build/Objects-normal/arm64/CalculationMethod.o",
+    "llvm-bc" : "/Users/gazishahi/Documents/apta/build/apta.build/Release-iphoneos/AptaWidgetsExtension.build/Objects-normal/arm64/CalculationMethod.bc",
+    "object" : "/Users/gazishahi/Documents/apta/build/apta.build/Release-iphoneos/AptaWidgetsExtension.build/Objects-normal/arm64/CalculationMethod.o"
+  },
+  "/Users/gazishahi/Documents/apta/apta/Models/PrayerName.swift" : {
+    "index-unit-output-path" : "/apta.build/Release-iphoneos/AptaWidgetsExtension.build/Objects-normal/arm64/PrayerName.o",
+    "llvm-bc" : "/Users/gazishahi/Documents/apta/build/apta.build/Release-iphoneos/AptaWidgetsExtension.build/Objects-normal/arm64/PrayerName.bc",
+    "object" : "/Users/gazishahi/Documents/apta/build/apta.build/Release-iphoneos/AptaWidgetsExtension.build/Objects-normal/arm64/PrayerName.o"
+  },
+  "/Users/gazishahi/Documents/apta/apta/Models/PrayerSettings.swift" : {
+    "index-unit-output-path" : "/apta.build/Release-iphoneos/AptaWidgetsExtension.build/Objects-normal/arm64/PrayerSettings.o",
+    "llvm-bc" : "/Users/gazishahi/Documents/apta/build/apta.build/Release-iphoneos/AptaWidgetsExtension.build/Objects-normal/arm64/PrayerSettings.bc",
+    "object" : "/Users/gazishahi/Documents/apta/build/apta.build/Release-iphoneos/AptaWidgetsExtension.build/Objects-normal/arm64/PrayerSettings.o"
+  },
+  "/Users/gazishahi/Documents/apta/apta/Models/SharedDefaults.swift" : {
+    "index-unit-output-path" : "/apta.build/Release-iphoneos/AptaWidgetsExtension.build/Objects-normal/arm64/SharedDefaults.o",
+    "llvm-bc" : "/Users/gazishahi/Documents/apta/build/apta.build/Release-iphoneos/AptaWidgetsExtension.build/Objects-normal/arm64/SharedDefaults.bc",
+    "object" : "/Users/gazishahi/Documents/apta/build/apta.build/Release-iphoneos/AptaWidgetsExtension.build/Objects-normal/arm64/SharedDefaults.o"
+  },
+  "/Users/gazishahi/Documents/apta/apta/Services/PrayerCalculationService.swift" : {
+    "index-unit-output-path" : "/apta.build/Release-iphoneos/AptaWidgetsExtension.build/Objects-normal/arm64/PrayerCalculationService.o",
+    "llvm-bc" : "/Users/gazishahi/Documents/apta/build/apta.build/Release-iphoneos/AptaWidgetsExtension.build/Objects-normal/arm64/PrayerCalculationService.bc",
+    "object" : "/Users/gazishahi/Documents/apta/build/apta.build/Release-iphoneos/AptaWidgetsExtension.build/Objects-normal/arm64/PrayerCalculationService.o"
+  }
+}

@@ -1,0 +1,6 @@
+Target dependency graph (3 targets)
+Target 'AptaWidgetsExtension' in project 'apta'
+➜ Explicit dependency on target 'Adhan' in project 'Adhan'
+Target 'Adhan' in project 'Adhan'
+➜ Explicit dependency on target 'Adhan' in project 'Adhan'
+Target 'Adhan' in project 'Adhan' (no dependencies)
