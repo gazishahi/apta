@@ -62,6 +62,22 @@ struct SettingsView: View {
                 }
 
                 Section {
+                    Toggle("Custom Fajr Angle", isOn: fajrAngleBinding)
+                    if settings.customFajrAngle != nil {
+                        Stepper("Fajr: \(String(format: "%.1f", settings.customFajrAngle ?? 15.0))°", value: fajrAngleValue, in: 5.0...25.0, step: 0.5)
+                    }
+
+                    Toggle("Custom Isha Angle", isOn: ishaAngleBinding)
+                    if settings.customIshaAngle != nil {
+                        Stepper("Isha: \(String(format: "%.1f", settings.customIshaAngle ?? 15.0))°", value: ishaAngleValue, in: 5.0...25.0, step: 0.5)
+                    }
+                } header: {
+                    sectionHeader("CUSTOM ANGLES")
+                } footer: {
+                    Text("Override the Fajr and Isha angles from your calculation method. Leave off to use the method defaults.")
+                }
+
+                Section {
                     Stepper("Adjustment: \(settings.hijriAdjustment > 0 ? "+" : "")\(settings.hijriAdjustment) day\(abs(settings.hijriAdjustment) == 1 ? "" : "s")", value: $settings.hijriAdjustment, in: -2...2)
                 } header: {
                     sectionHeader("HIJRI DATE")
@@ -133,6 +149,40 @@ struct SettingsView: View {
             .onChange(of: settings.maghribNotification) { save() }
             .onChange(of: settings.ishaNotification) { save() }
         }
+    }
+
+    private var fajrAngleBinding: Binding<Bool> {
+        Binding(
+            get: { settings.customFajrAngle != nil },
+            set: { enabled in
+                settings.customFajrAngle = enabled ? 15.0 : nil
+                save()
+            }
+        )
+    }
+
+    private var ishaAngleBinding: Binding<Bool> {
+        Binding(
+            get: { settings.customIshaAngle != nil },
+            set: { enabled in
+                settings.customIshaAngle = enabled ? 15.0 : nil
+                save()
+            }
+        )
+    }
+
+    private var fajrAngleValue: Binding<Double> {
+        Binding(
+            get: { settings.customFajrAngle ?? 15.0 },
+            set: { settings.customFajrAngle = $0; save() }
+        )
+    }
+
+    private var ishaAngleValue: Binding<Double> {
+        Binding(
+            get: { settings.customIshaAngle ?? 15.0 },
+            set: { settings.customIshaAngle = $0; save() }
+        )
     }
 
     private func sectionHeader(_ text: String) -> some View {

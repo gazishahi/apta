@@ -12,6 +12,12 @@ struct PrayerCalculationService {
         var params = settings.calculationMethod.adhanMethod.params
         params.madhab = settings.asrMethod.madhab
         params.highLatitudeRule = settings.highLatitudeRule.adhanRule
+        if let fajrAngle = settings.customFajrAngle {
+            params.fajrAngle = fajrAngle
+        }
+        if let ishaAngle = settings.customIshaAngle {
+            params.ishaAngle = ishaAngle
+        }
 
         let cal = Calendar(identifier: .gregorian)
         let components = cal.dateComponents([.year, .month, .day], from: date)
@@ -39,6 +45,12 @@ struct PrayerCalculationService {
         var params = settings.calculationMethod.adhanMethod.params
         params.madhab = settings.asrMethod.madhab
         params.highLatitudeRule = settings.highLatitudeRule.adhanRule
+        if let fajrAngle = settings.customFajrAngle {
+            params.fajrAngle = fajrAngle
+        }
+        if let ishaAngle = settings.customIshaAngle {
+            params.ishaAngle = ishaAngle
+        }
 
         let cal = Calendar(identifier: .gregorian)
         let components = cal.dateComponents([.year, .month, .day], from: Date())

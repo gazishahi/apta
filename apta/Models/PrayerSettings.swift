@@ -8,6 +8,8 @@ struct PrayerSettings: Codable {
     var theme: AppTheme = .system
     var timeFormat: TimeFormat = .twentyFour
     var hijriAdjustment: Int = 0
+    var customFajrAngle: Double?
+    var customIshaAngle: Double?
     var notificationsEnabled: Bool = false
     var notificationStyle: NotificationStyle = .fun
     var ramadanNotificationsEnabled: Bool = true
