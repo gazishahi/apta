@@ -8,6 +8,7 @@ struct PrayerTimesView: View {
 
     @State private var qiblaState: QiblaState = .idle
     @State private var lastTickDegree: Int = -999
+    @State private var smoothedHeading: Double = 0
 
     enum QiblaState: Equatable {
         case idle
@@ -123,8 +124,16 @@ struct PrayerTimesView: View {
             }
         }
         .animation(AnimationConstants.prayerTransition, value: viewModel.currentPrayer?.name)
-        .animation(AnimationConstants.prayerTransition, value: qiblaState)
         .onChange(of: locationService.heading) {
+            if let newHeading = locationService.heading {
+                // Shortest-path interpolation across 0°/360° boundary
+                var delta = newHeading - smoothedHeading
+                while delta > 180 { delta -= 360 }
+                while delta < -180 { delta += 360 }
+                withAnimation(.easeOut(duration: 0.15)) {
+                    smoothedHeading += delta
+                }
+            }
             guard qiblaState == .searching, let offset = qiblaOffset else { return }
             if abs(offset) <= qiblaThreshold {
                 Haptics.qiblaFound()
@@ -153,72 +162,75 @@ struct PrayerTimesView: View {
 
     @ViewBuilder
     private var qiblaView: some View {
-        Button {
-            switch qiblaState {
-            case .idle:
-                Haptics.light()
-                lastTickDegree = -999
-                withAnimation(AnimationConstants.prayerTransition) {
-                    qiblaState = .searching
+        VStack(spacing: 0) {
+            // Compass strip overlays above the button without shifting layout
+            ZStack {
+                if qiblaState == .searching, locationService.heading != nil {
+                    QiblaStripCompass(
+                        heading: smoothedHeading,
+                        qiblaDirection: viewModel.qiblaDirection
+                    )
+                    .padding(.horizontal, 24)
+                    .transition(.opacity.combined(with: .scale(scale: 0.95, anchor: .bottom)))
                 }
-                locationService.startHeadingUpdates()
-            case .searching:
-                Haptics.light()
-                withAnimation(AnimationConstants.prayerTransition) {
-                    qiblaState = .idle
-                }
-                locationService.stopHeadingUpdates()
-            case .found:
-                break
             }
-        } label: {
-            HStack {
-                if qiblaState == .searching, let offset = qiblaOffset, offset < -qiblaThreshold {
-                    Text("<")
-                        .font(.system(size: 15, weight: .regular))
-                        .foregroundStyle(AptaColors.primary)
-                        .transition(.opacity)
-                }
+            .frame(height: qiblaState == .searching ? 44 : 0)
+            .clipped()
+            .padding(.bottom, qiblaState == .searching ? 8 : 0)
 
-                Spacer()
-
+            Button {
                 switch qiblaState {
                 case .idle:
-                    Text("QIBLA")
-                        .font(.system(size: 13, weight: .medium))
-                        .kerning(2.0)
-                        .foregroundStyle(AptaColors.tertiary)
+                    Haptics.light()
+                    lastTickDegree = -999
+                    withAnimation(.easeInOut(duration: 0.35)) {
+                        qiblaState = .searching
+                    }
+                    locationService.startHeadingUpdates()
                 case .searching:
-                    if let offset = qiblaOffset {
-                        Text(abs(offset) <= qiblaThreshold ? "FOUND" : (offset > 0 ? "RIGHT" : "LEFT"))
-                            .font(.system(size: 13, weight: .medium))
-                            .kerning(2.0)
-                            .foregroundStyle(AptaColors.primary)
-                    } else {
-                        Text("SEARCHING")
+                    Haptics.light()
+                    withAnimation(.easeInOut(duration: 0.35)) {
+                        qiblaState = .idle
+                    }
+                    locationService.stopHeadingUpdates()
+                case .found:
+                    break
+                }
+            } label: {
+                HStack {
+                    Spacer()
+
+                    switch qiblaState {
+                    case .idle:
+                        Text("QIBLA")
                             .font(.system(size: 13, weight: .medium))
                             .kerning(2.0)
                             .foregroundStyle(AptaColors.tertiary)
+                    case .searching:
+                        if let offset = qiblaOffset {
+                            Text(abs(offset) <= qiblaThreshold ? "FOUND" : "QIBLA")
+                                .font(.system(size: 13, weight: .medium))
+                                .kerning(2.0)
+                                .foregroundStyle(abs(offset) <= qiblaThreshold ? AptaColors.primary : AptaColors.tertiary)
+                        } else {
+                            Text("SEARCHING")
+                                .font(.system(size: 13, weight: .medium))
+                                .kerning(2.0)
+                                .foregroundStyle(AptaColors.tertiary)
+                        }
+                    case .found:
+                        Text("FOUND")
+                            .font(.system(size: 13, weight: .medium))
+                            .kerning(2.0)
+                            .foregroundStyle(AptaColors.primary)
                     }
-                case .found:
-                    Text("FOUND")
-                        .font(.system(size: 13, weight: .medium))
-                        .kerning(2.0)
-                        .foregroundStyle(AptaColors.primary)
-                }
 
-                Spacer()
-
-                if qiblaState == .searching, let offset = qiblaOffset, offset > qiblaThreshold {
-                    Text(">")
-                        .font(.system(size: 15, weight: .regular))
-                        .foregroundStyle(AptaColors.primary)
-                        .transition(.opacity)
+                    Spacer()
                 }
+                .padding(.horizontal, 24)
             }
-            .padding(.horizontal, 24)
+            .disabled(qiblaState == .found)
         }
-        .disabled(qiblaState == .found)
     }
 
     @ViewBuilder

@@ -6,7 +6,7 @@ enum NotificationMessages {
 
     static let fajrMessages = [
         "Your bed is lying to you. Get up.",
-        "Yes it's early. Yes it's worth it.",
+        "Yes, it's early. Yes, it's worth it.",
         "Fajr alarm > regular alarm.",
         "The snooze button is not your friend right now.",
         "Technically you could sleep in. But you won't.",
@@ -22,7 +22,7 @@ enum NotificationMessages {
         "Dhuhr. Aka the midday reset button.",
         "Quick break from pretending to be productive.",
         "The sun is literally right above you. Take the hint.",
-        "Alt+Tab to prayer real quick.",
+        "Lock in to prayer real quick.",
         "Sandwich after. Salah first.",
     ]
 
@@ -70,11 +70,13 @@ enum NotificationMessages {
         "Eat something. Anything. You'll thank yourself at 2 PM.",
         "Fajr is coming and it's bringing a long day with it. Fuel up.",
         "That leftover biryani isn't going to eat itself. Hurry.",
+        "She doesn't want to go to Suhoor Fest with you bro, lock in."
     ]
 
     static let iftarMessages = [
         "Go eat. You've earned it.",
-        "Oily food: incoming this iftar.",
+        "Oily food: coming soon to an iftar near you.",
+        "Om nom nom.",
         "The longest day of your life is over. Again. Tomorrow you do it again.",
         "Date first. Then everything else. You know the order.",
         "Your stomach has been filing complaints all day. Time to respond.",

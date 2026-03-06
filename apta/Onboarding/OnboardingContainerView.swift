@@ -22,15 +22,8 @@ struct OnboardingContainerView: View {
 
     private var isLastStep: Bool { step == totalSteps - 1 }
 
-    private var showButton: Bool {
-        if isLastStep && locationService.location != nil {
-            return false
-        }
-        return true
-    }
-
     private var buttonDisabled: Bool {
-        isLastStep && locationService.authorizationStatus == .notDetermined && locationService.location == nil
+        isLastStep && locationService.location == nil
     }
 
     var body: some View {
@@ -47,7 +40,7 @@ struct OnboardingContainerView: View {
                     case 1:
                         OnboardingPreferencesView(asrMethod: $settings.asrMethod, highLatitudeRule: $settings.highLatitudeRule)
                     case 2:
-                        OnboardingLocationView(locationService: locationService)
+                        OnboardingLocationView(locationService: locationService, settings: $settings)
                     default:
                         EmptyView()
                     }
@@ -59,7 +52,6 @@ struct OnboardingContainerView: View {
 
                 Spacer()
 
-                if showButton {
                     Button {
                         Haptics.light()
                         advance()
@@ -75,17 +67,9 @@ struct OnboardingContainerView: View {
                     .padding(.horizontal, 24)
                     .padding(.bottom, 48)
                     .disabled(buttonDisabled)
-                }
             }
         }
         .animation(AnimationConstants.prayerTransition, value: step)
-        .onChange(of: locationService.location) {
-            if isLastStep && locationService.location != nil {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
-                    finish()
-                }
-            }
-        }
     }
 
     private func advance() {

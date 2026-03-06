@@ -9,8 +9,14 @@ enum Typography {
 
     static let countdown = Font.system(size: 14, weight: .light, design: .default)
 
-    static let upcomingPrayerName = Font.system(size: 17, weight: .regular, design: .default)
-    static let upcomingPrayerTime = Font.system(size: 17, weight: .regular, design: .default)
+    static var upcomingPrayerName: Font {
+        let size = PrayerSettings.current.prayerFontSize.upcomingNameSize
+        return Font.system(size: size, weight: .regular, design: .default)
+    }
+    static var upcomingPrayerTime: Font {
+        let size = PrayerSettings.current.prayerFontSize.upcomingTimeSize
+        return Font.system(size: size, weight: .regular, design: .default)
+    }
 
     static let splashLetter = Font.system(size: 48, weight: .bold, design: .default)
     static let splashWord = Font.system(size: 14, weight: .light, design: .default)

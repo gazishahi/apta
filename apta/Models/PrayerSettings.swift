@@ -6,18 +6,43 @@ struct PrayerSettings: Codable {
     var asrMethod: AsrMethod = .standard
     var highLatitudeRule: AppHighLatitudeRule = .middleOfTheNight
     var theme: AppTheme = .system
-    var timeFormat: TimeFormat = .twentyFour
+    var timeFormat: TimeFormat = .twelve
     var hijriAdjustment: Int = 0
     var customFajrAngle: Double?
     var customIshaAngle: Double?
     var notificationsEnabled: Bool = false
-    var notificationStyle: NotificationStyle = .fun
+    var notificationStyle: NotificationStyle = .simple
     var ramadanNotificationsEnabled: Bool = true
     var fajrNotification: Bool = true
     var dhuhrNotification: Bool = true
     var asrNotification: Bool = true
     var maghribNotification: Bool = true
     var ishaNotification: Bool = true
+    var prayerFontSize: PrayerFontSize = .medium
+
+    enum PrayerFontSize: String, CaseIterable, Codable, Identifiable {
+        case small = "Small"
+        case medium = "Medium"
+        case large = "Large"
+
+        var id: String { rawValue }
+
+        var upcomingNameSize: CGFloat {
+            switch self {
+            case .small: return 15
+            case .medium: return 17
+            case .large: return 20
+            }
+        }
+
+        var upcomingTimeSize: CGFloat {
+            switch self {
+            case .small: return 15
+            case .medium: return 17
+            case .large: return 20
+            }
+        }
+    }
 
     func isNotificationEnabled(for prayer: PrayerName) -> Bool {
         switch prayer {
