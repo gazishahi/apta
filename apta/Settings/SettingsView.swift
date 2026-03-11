@@ -8,150 +8,148 @@ struct SettingsView: View {
     var onSettingsChanged: () -> Void
 
     var body: some View {
-        NavigationStack {
-            List {
-                // SECTION 1: APPEARANCE
-                Section {
-                    Picker("Theme", selection: $settings.theme) {
-                        ForEach(PrayerSettings.AppTheme.allCases) { theme in
-                            Text(theme.rawValue).tag(theme)
-                        }
+        List {
+            // SECTION 1: APPEARANCE
+            Section {
+                Picker("Theme", selection: $settings.theme) {
+                    ForEach(PrayerSettings.AppTheme.allCases) { theme in
+                        Text(theme.rawValue).tag(theme)
                     }
-                    .pickerStyle(.menu)
-
-                    Picker("Text Size", selection: $settings.prayerFontSize) {
-                        ForEach(PrayerSettings.PrayerFontSize.allCases) { size in
-                            Text(size.rawValue).tag(size)
-                        }
-                    }
-                    .pickerStyle(.menu)
-
-                    Picker("Time Format", selection: $settings.timeFormat) {
-                        ForEach(PrayerSettings.TimeFormat.allCases) { format in
-                            Text(format.rawValue).tag(format)
-                        }
-                    }
-                    .pickerStyle(.menu)
-                } header: {
-                    sectionHeader("APPEARANCE")
                 }
+                .pickerStyle(.menu)
 
-                // SECTION 2: PRAYER CALCULATION
-                Section {
-                    Picker("Method", selection: $settings.calculationMethod) {
-                        ForEach(AppCalculationMethod.allCases.filter { $0 != .other }) { method in
-                            Text(method.rawValue).tag(method)
+                Picker("Text Size", selection: $settings.prayerFontSize) {
+                    ForEach(PrayerSettings.PrayerFontSize.allCases) { size in
+                        Text(size.rawValue).tag(size)
+                    }
+                }
+                .pickerStyle(.menu)
+
+                Picker("Time Format", selection: $settings.timeFormat) {
+                    ForEach(PrayerSettings.TimeFormat.allCases) { format in
+                        Text(format.rawValue).tag(format)
+                    }
+                }
+                .pickerStyle(.menu)
+            } header: {
+                sectionHeader("APPEARANCE")
+            }
+
+            // SECTION 2: PRAYER CALCULATION
+            Section {
+                Picker("Method", selection: $settings.calculationMethod) {
+                    ForEach(AppCalculationMethod.allCases.filter { $0 != .other }) { method in
+                        Text(method.rawValue).tag(method)
+                    }
+                }
+                .pickerStyle(.menu)
+
+                Picker("Asr Method", selection: $settings.asrMethod) {
+                    ForEach(PrayerSettings.AsrMethod.allCases) { method in
+                        Text(method.rawValue).tag(method)
+                    }
+                }
+                .pickerStyle(.menu)
+
+                DisclosureGroup("Advanced", isExpanded: $advancedExpanded) {
+                    Picker("High Latitude Rule", selection: $settings.highLatitudeRule) {
+                        ForEach(PrayerSettings.AppHighLatitudeRule.allCases) { rule in
+                            Text(rule.rawValue).tag(rule)
                         }
                     }
                     .pickerStyle(.menu)
 
-                    Picker("Asr Method", selection: $settings.asrMethod) {
-                        ForEach(PrayerSettings.AsrMethod.allCases) { method in
-                            Text(method.rawValue).tag(method)
-                        }
+                    Toggle("Custom Fajr Angle", isOn: fajrAngleBinding)
+                    if settings.customFajrAngle != nil {
+                        Stepper("Fajr: \(String(format: "%.1f", settings.customFajrAngle ?? 15.0))°", value: fajrAngleValue, in: 5.0...25.0, step: 0.5)
                     }
-                    .pickerStyle(.menu)
 
-                    DisclosureGroup("Advanced", isExpanded: $advancedExpanded) {
-                        Picker("High Latitude Rule", selection: $settings.highLatitudeRule) {
-                            ForEach(PrayerSettings.AppHighLatitudeRule.allCases) { rule in
-                                Text(rule.rawValue).tag(rule)
-                            }
-                        }
-                        .pickerStyle(.menu)
-
-                        Toggle("Custom Fajr Angle", isOn: fajrAngleBinding)
-                        if settings.customFajrAngle != nil {
-                            Stepper("Fajr: \(String(format: "%.1f", settings.customFajrAngle ?? 15.0))°", value: fajrAngleValue, in: 5.0...25.0, step: 0.5)
-                        }
-
-                        Toggle("Custom Isha Angle", isOn: ishaAngleBinding)
-                        if settings.customIshaAngle != nil {
-                            Stepper("Isha: \(String(format: "%.1f", settings.customIshaAngle ?? 15.0))°", value: ishaAngleValue, in: 5.0...25.0, step: 0.5)
-                        }
+                    Toggle("Custom Isha Angle", isOn: ishaAngleBinding)
+                    if settings.customIshaAngle != nil {
+                        Stepper("Isha: \(String(format: "%.1f", settings.customIshaAngle ?? 15.0))°", value: ishaAngleValue, in: 5.0...25.0, step: 0.5)
                     }
-                } header: {
-                    sectionHeader("PRAYER CALCULATION")
                 }
+            } header: {
+                sectionHeader("PRAYER CALCULATION")
+            }
 
-                // SECTION 3: HIJRI DATE
-                Section {
-                    Stepper("Adjustment: \(settings.hijriAdjustment > 0 ? "+" : "")\(settings.hijriAdjustment) day\(abs(settings.hijriAdjustment) == 1 ? "" : "s")", value: $settings.hijriAdjustment, in: -2...2)
-                } header: {
-                    sectionHeader("HIJRI DATE")
-                } footer: {
-                    Text("Adjust the Hijri date if it differs from your local moonsighting.")
-                }
+            // SECTION 3: HIJRI DATE
+            Section {
+                Stepper("Adjustment: \(settings.hijriAdjustment > 0 ? "+" : "")\(settings.hijriAdjustment) day\(abs(settings.hijriAdjustment) == 1 ? "" : "s")", value: $settings.hijriAdjustment, in: -2...2)
+            } header: {
+                sectionHeader("HIJRI DATE")
+            } footer: {
+                Text("Adjust the Hijri date if it differs from your local moonsighting.")
+            }
 
-                // SECTION 4: NOTIFICATIONS
-                Section {
-                    Toggle("Prayer Notifications", isOn: $settings.notificationsEnabled)
-                        .onChange(of: settings.notificationsEnabled) {
-                            if settings.notificationsEnabled {
-                                Task {
-                                    let granted = await NotificationScheduler.requestPermission()
-                                    if !granted {
-                                        settings.notificationsEnabled = false
-                                    }
-                                    save()
+            // SECTION 4: NOTIFICATIONS
+            Section {
+                Toggle("Prayer Notifications", isOn: $settings.notificationsEnabled)
+                    .onChange(of: settings.notificationsEnabled) {
+                        if settings.notificationsEnabled {
+                            Task {
+                                let granted = await NotificationScheduler.requestPermission()
+                                if !granted {
+                                    settings.notificationsEnabled = false
                                 }
-                            } else {
-                                NotificationScheduler.cancelAll()
                                 save()
                             }
+                        } else {
+                            NotificationScheduler.cancelAll()
+                            save()
                         }
-
-                    if settings.notificationsEnabled {
-                        Picker("Style", selection: $settings.notificationStyle) {
-                            ForEach(PrayerSettings.NotificationStyle.allCases) { style in
-                                Text(style.rawValue).tag(style)
-                            }
-                        }
-                        .pickerStyle(.menu)
-
-                        DisclosureGroup("Prayers", isExpanded: $prayersExpanded) {
-                            Toggle("Fajr", isOn: $settings.fajrNotification)
-                            Toggle("Dhuhr", isOn: $settings.dhuhrNotification)
-                            Toggle("Asr", isOn: $settings.asrNotification)
-                            Toggle("Maghrib", isOn: $settings.maghribNotification)
-                            Toggle("Isha", isOn: $settings.ishaNotification)
-                        }
-
-                        Toggle("Ramadan Alerts", isOn: $settings.ramadanNotificationsEnabled)
                     }
-                } header: {
-                    sectionHeader("NOTIFICATIONS")
-                }
 
-                // VERSION FOOTER
-                Section {
-                    HStack {
-                        Spacer()
-                        Text("apta v\(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0") (\(Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "1"))")
-                            .font(.system(size: 12, weight: .light))
-                            .foregroundStyle(Color(uiColor: .tertiaryLabel))
-                        Spacer()
+                if settings.notificationsEnabled {
+                    Picker("Style", selection: $settings.notificationStyle) {
+                        ForEach(PrayerSettings.NotificationStyle.allCases) { style in
+                            Text(style.rawValue).tag(style)
+                        }
                     }
-                    .listRowBackground(Color.clear)
+                    .pickerStyle(.menu)
+
+                    DisclosureGroup("Prayers", isExpanded: $prayersExpanded) {
+                        Toggle("Fajr", isOn: $settings.fajrNotification)
+                        Toggle("Dhuhr", isOn: $settings.dhuhrNotification)
+                        Toggle("Asr", isOn: $settings.asrNotification)
+                        Toggle("Maghrib", isOn: $settings.maghribNotification)
+                        Toggle("Isha", isOn: $settings.ishaNotification)
+                    }
+
+                    Toggle("Ramadan Alerts", isOn: $settings.ramadanNotificationsEnabled)
                 }
+            } header: {
+                sectionHeader("NOTIFICATIONS")
             }
-            .navigationTitle("Settings")
-            .navigationBarTitleDisplayMode(.inline)
-            .onChange(of: settings.calculationMethod) { save() }
-            .onChange(of: settings.asrMethod) { save() }
-            .onChange(of: settings.highLatitudeRule) { save() }
-            .onChange(of: settings.theme) { save() }
-            .onChange(of: settings.prayerFontSize) { save() }
-            .onChange(of: settings.timeFormat) { save() }
-            .onChange(of: settings.hijriAdjustment) { save() }
-            .onChange(of: settings.notificationStyle) { save() }
-            .onChange(of: settings.ramadanNotificationsEnabled) { save() }
-            .onChange(of: settings.fajrNotification) { save() }
-            .onChange(of: settings.dhuhrNotification) { save() }
-            .onChange(of: settings.asrNotification) { save() }
-            .onChange(of: settings.maghribNotification) { save() }
-            .onChange(of: settings.ishaNotification) { save() }
+
+            // VERSION FOOTER
+            Section {
+                HStack {
+                    Spacer()
+                    Text("apta v\(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0") (\(Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "1"))")
+                        .font(.system(size: 12, weight: .light))
+                        .foregroundStyle(Color(uiColor: .tertiaryLabel))
+                    Spacer()
+                }
+                .listRowBackground(Color.clear)
+            }
         }
+        .navigationTitle("Settings")
+        .navigationBarTitleDisplayMode(.inline)
+        .onChange(of: settings.calculationMethod) { save() }
+        .onChange(of: settings.asrMethod) { save() }
+        .onChange(of: settings.highLatitudeRule) { save() }
+        .onChange(of: settings.theme) { save() }
+        .onChange(of: settings.prayerFontSize) { save() }
+        .onChange(of: settings.timeFormat) { save() }
+        .onChange(of: settings.hijriAdjustment) { save() }
+        .onChange(of: settings.notificationStyle) { save() }
+        .onChange(of: settings.ramadanNotificationsEnabled) { save() }
+        .onChange(of: settings.fajrNotification) { save() }
+        .onChange(of: settings.dhuhrNotification) { save() }
+        .onChange(of: settings.asrNotification) { save() }
+        .onChange(of: settings.maghribNotification) { save() }
+        .onChange(of: settings.ishaNotification) { save() }
     }
 
     private var fajrAngleBinding: Binding<Bool> {

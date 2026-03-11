@@ -55,20 +55,23 @@ struct RootCoordinator: View {
                 }
 
             case .main:
-                PrayerTimesView(viewModel: viewModel, locationService: locationService) {
-                    showSettings = true
-                }
-                .sheet(isPresented: $showSettings) {
-                    SettingsView {
-                        viewModel.recalculate()
+                NavigationStack {
+                    PrayerTimesView(viewModel: viewModel, locationService: locationService) {
+                        showSettings = true
                     }
-                }
-                .onAppear {
-                    locationService.requestLocation()
-                    viewModel.start()
-                }
-                .onDisappear {
-                    viewModel.stop()
+                    .navigationBarHidden(true)
+                    .navigationDestination(isPresented: $showSettings) {
+                        SettingsView {
+                            viewModel.recalculate()
+                        }
+                    }
+                    .onAppear {
+                        locationService.requestLocation()
+                        viewModel.start()
+                    }
+                    .onDisappear {
+                        viewModel.stop()
+                    }
                 }
             }
         }
