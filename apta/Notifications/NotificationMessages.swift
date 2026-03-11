@@ -28,24 +28,24 @@ enum NotificationMessages {
 
     static let asrMessages = [
         "The 3 PM slump is real. Asr is realer.",
-        "You forgot about Asr didn't you. It's okay, that's why I'm here.",
-        "Afternoon vibes. Prayer vibes.",
+        "You forgot about Asr, didn't you? It's okay, that's why I'm here.",
         "This is your Asr reminder before you get busy and forget.",
         "Between Dhuhr and Maghrib there's this one. Don't skip it.",
         "Asr: the prayer that separates the casuals from the committed.",
         "Your phone just reminded you to pray. What a time to be alive.",
         "Yes, again. That's kind of the whole point.",
+        "Allah loves you and so do I. Now, go pray.",
     ]
 
     static let maghribMessages = [
         "Sun's gone. You know the drill.",
         "Golden hour is over. Maghrib hour begins.",
         "The sky is doing its thing. You do yours.",
-        "Sunset prayer. No filter needed.",
+        "You know what's nicer than the sunset? Maghrib. Now go.",
         "Day shift is over. Pray and clock out.",
         "Maghrib waits for no one. Literally, it's a short window.",
         "The sky turned orange for you. Least you can do.",
-        "Three down, two to go.",
+        "Instagram sunset pic can wait. You look chopped anyways."
     ]
 
     static let ishaMessages = [
@@ -65,11 +65,10 @@ enum NotificationMessages {
         "Alright, stop eating now.",
         "Last bite. I mean it.",
         "Chug that water like your life depends on it. Because your afternoon does.",
-        "Suhoor is closing. This is your 'kitchen is closed' announcement.",
+        "Look at you taking that last bite. Stop.",
         "You have mass-texted everyone 'suhoor?' and now it's actually time.",
         "Eat something. Anything. You'll thank yourself at 2 PM.",
         "Fajr is coming and it's bringing a long day with it. Fuel up.",
-        "That leftover biryani isn't going to eat itself. Hurry.",
         "She doesn't want to go to Suhoor Fest with you bro, lock in."
     ]
 
@@ -77,12 +76,13 @@ enum NotificationMessages {
         "Go eat. You've earned it.",
         "Oily food: coming soon to an iftar near you.",
         "Om nom nom.",
-        "The longest day of your life is over. Again. Tomorrow you do it again.",
+        "The longest day of your life is over. Again. Tomorrow, you do it again.",
         "Date first. Then everything else. You know the order.",
         "Your stomach has been filing complaints all day. Time to respond.",
         "Iftar time. Try not to eat everything in the first 3 minutes.",
         "You survived. Reward yourself. Responsibly.",
         "The samosas have been waiting for you.",
+        "Breaking our fast at the Yemeni coffee shop, are we?",
     ]
 
     // MARK: - Message Selection

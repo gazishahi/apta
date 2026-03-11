@@ -57,10 +57,13 @@ class PrayerTimesViewModel: ObservableObject {
     }
 
     private func updateHijriDate() {
+        hijriDateString = hijriDateString(for: Date())
+    }
+
+    func hijriDateString(for date: Date) -> String {
         let settings = PrayerSettings.current
         let calendar = Calendar(identifier: .islamicUmmAlQura)
-        let adjusted = Calendar.current.date(byAdding: .day, value: settings.hijriAdjustment, to: Date()) ?? Date()
-        let components = calendar.dateComponents([.year, .month, .day], from: adjusted)
+        let adjusted = Calendar.current.date(byAdding: .day, value: settings.hijriAdjustment, to: date) ?? date
 
         let formatter = DateFormatter()
         formatter.calendar = calendar
@@ -68,7 +71,13 @@ class PrayerTimesViewModel: ObservableObject {
         // "15 Ramadan 1447"
         formatter.dateFormat = "d MMMM y"
 
-        hijriDateString = formatter.string(from: adjusted)
+        return formatter.string(from: adjusted)
+    }
+
+    func prayers(for date: Date) -> [PrayerTimeEntry] {
+        guard let location = locationService.location else { return [] }
+        let settings = PrayerSettings.current
+        return PrayerCalculationService.calculate(for: date, location: location, settings: settings)
     }
 
     private func updateCurrentAndUpcoming() {

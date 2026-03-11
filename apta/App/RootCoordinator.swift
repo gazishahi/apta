@@ -37,7 +37,7 @@ struct RootCoordinator: View {
         ZStack {
             switch phase {
             case .splash:
-                SplashView {
+                SplashView(mode: PrayerSettings.hasCompletedOnboarding ? .logoOnly : .onboarding) {
                     withAnimation(AnimationConstants.prayerTransition) {
                         if PrayerSettings.hasCompletedOnboarding {
                             phase = .main
