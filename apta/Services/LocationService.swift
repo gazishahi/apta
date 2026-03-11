@@ -46,7 +46,7 @@ class LocationService: NSObject, ObservableObject {
 
     private func reverseGeocode(_ location: CLLocation) {
         geocoder.reverseGeocodeLocation(location) { [weak self] placemarks, _ in
-            Task { @MainActor in
+            Task { @MainActor [weak self] in
                 guard let self, let placemark = placemarks?.first else { return }
                 if let state = placemark.administrativeArea {
                     self.locationName = state
@@ -58,10 +58,10 @@ class LocationService: NSObject, ObservableObject {
     }
 }
 
-extension LocationService: @preconcurrency CLLocationManagerDelegate {
+extension LocationService: CLLocationManagerDelegate {
     nonisolated func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        Task { @MainActor in
-            guard let loc = locations.last else { return }
+        Task { @MainActor [weak self] in
+            guard let self, let loc = locations.last else { return }
             self.location = loc
             self.writeLocationToSharedDefaults(loc)
             self.reverseGeocode(loc)
@@ -69,7 +69,8 @@ extension LocationService: @preconcurrency CLLocationManagerDelegate {
     }
 
     nonisolated func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
-        Task { @MainActor in
+        Task { @MainActor [weak self] in
+            guard let self else { return }
             if newHeading.headingAccuracy >= 0 {
                 self.heading = newHeading.trueHeading
             }
@@ -77,13 +78,15 @@ extension LocationService: @preconcurrency CLLocationManagerDelegate {
     }
 
     nonisolated func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        Task { @MainActor in
+        Task { @MainActor [weak self] in
+            guard let self else { return }
             self.error = error
         }
     }
 
     nonisolated func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
-        Task { @MainActor in
+        Task { @MainActor [weak self] in
+            guard let self else { return }
             self.authorizationStatus = manager.authorizationStatus
             if manager.authorizationStatus == .authorizedWhenInUse ||
                manager.authorizationStatus == .authorizedAlways {

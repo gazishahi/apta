@@ -44,7 +44,7 @@ struct PrayerTimelineProvider: TimelineProvider {
             entries.append(buildEntry(date: prayer.time, allToday: today, allTomorrow: tomorrowPrayers, location: location, settings: settings))
         }
 
-        let lastDate = entries.last?.date ?? now.addingTimeInterval(3600)
+        _ = entries.last?.date ?? now.addingTimeInterval(3600)
         let timeline = Timeline(entries: entries, policy: .atEnd)
         completion(timeline)
     }
