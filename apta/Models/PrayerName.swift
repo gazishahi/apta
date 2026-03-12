@@ -8,6 +8,7 @@ enum PrayerName: String, CaseIterable, Identifiable {
     case asr = "Asr"
     case maghrib = "Maghrib"
     case isha = "Isha"
+    case ishraq = "Ishraq"
 
     var id: String { rawValue }
 
@@ -19,6 +20,7 @@ enum PrayerName: String, CaseIterable, Identifiable {
         case .asr: return .asr
         case .maghrib: return .maghrib
         case .isha: return .isha
+        case .ishraq: return .sunrise
         }
     }
 

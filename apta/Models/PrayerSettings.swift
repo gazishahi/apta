@@ -1,16 +1,20 @@
 import Foundation
 import Adhan
 
-struct PrayerSettings: Codable {
+struct PrayerSettings: Codable, Equatable {
     var calculationMethod: AppCalculationMethod = .northAmerica
     var asrMethod: AsrMethod = .standard
     var highLatitudeRule: AppHighLatitudeRule = .middleOfTheNight
-    var theme: AppTheme = .system
+    var theme: AppTheme = .auto
     var timeFormat: TimeFormat = .twelve
     var hijriAdjustment: Int = 0
     var customFajrAngle: Double?
     var customIshaAngle: Double?
     var notificationsEnabled: Bool = false
+    var showIshraq: Bool = false
+    var ishraqNotification: Bool = false
+    var simpleMode: Bool = false
+    var calendarType: CalendarType = .islamic
     var notificationStyle: NotificationStyle = .simple
     var ramadanNotificationsEnabled: Bool = true
     var fajrNotification: Bool = true
@@ -52,6 +56,7 @@ struct PrayerSettings: Codable {
         case .maghrib: return maghribNotification
         case .isha: return ishaNotification
         case .sunrise: return false
+        case .ishraq: return ishraqNotification
         }
     }
 
@@ -95,8 +100,14 @@ struct PrayerSettings: Codable {
     enum AppTheme: String, CaseIterable, Codable, Identifiable {
         case light = "Light"
         case dark = "Dark"
-        case system = "System"
         case auto = "Auto"
+
+        var id: String { rawValue }
+    }
+
+    enum CalendarType: String, CaseIterable, Codable, Identifiable {
+        case islamic = "Hijri"
+        case gregorian = "Gregorian"
 
         var id: String { rawValue }
     }

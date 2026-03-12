@@ -16,6 +16,9 @@ struct PrayerTimesView: View {
     @State private var dateChangeDirection: Int = 0
     @State private var showDatePicker = false
     @State private var wasAlignedWithQibla = false
+    @State private var headingHistory: [Double] = []
+    @State private var headingUnstable: Bool = false
+    @State private var cachedPrayers: [Date: [PrayerTimeEntry]] = [:]
 
     enum QiblaState: Equatable {
         case idle
@@ -48,11 +51,12 @@ struct PrayerTimesView: View {
     }
 
     private let qiblaThreshold: Double = 10.0
+    private let headingStabilityThreshold: Double = 30.0
+    private let headingHistorySize: Int = 5
 
     private var qiblaOffset: Double? {
         guard let heading = locationService.heading else { return nil }
         var diff = viewModel.qiblaDirection - heading
-        // Normalize to -180...180
         while diff > 180 { diff -= 360 }
         while diff < -180 { diff += 360 }
         return diff
@@ -63,115 +67,130 @@ struct PrayerTimesView: View {
             AptaColors.background.ignoresSafeArea()
 
             VStack(spacing: 0) {
-                // Top bar
-                HStack {
-                    if !locationService.locationName.isEmpty {
-                        Text(locationService.locationName.uppercased())
-                            .font(.system(size: 11, weight: .medium))
-                            .kerning(1.5)
-                            .foregroundStyle(AptaColors.tertiary)
-                    }
-                    Spacer()
-                    Button {
-                        Haptics.light()
-                        onOpenSettings()
-                    } label: {
-                        Image(systemName: "gearshape")
-                            .font(.system(size: 20, weight: .regular))
-                            .foregroundStyle(AptaColors.secondary)
-                    }
-                }
-                .padding(.horizontal, 24)
-                .padding(.top, 16)
+                topBar
 
                 Spacer()
 
-                // Hijri date
-                hijriNavigationRow
-                    .padding(.bottom, 6)
-
-                // Gregorian date (subtle, tappable via Hijri row)
-                Text(dateFormatter.string(from: selectedDate).uppercased())
-                    .font(.system(size: 11, weight: .medium))
-                    .kerning(1.2)
-                    .foregroundStyle(AptaColors.tertiary)
-                    .padding(.bottom, 20)
-
-                Group {
-                    if isToday {
-                        VStack(spacing: 0) {
-                            if let current = viewModel.currentPrayer {
-                                VStack(spacing: 8) {
-                                    Text(current.name.rawValue.uppercased())
-                                        .font(Typography.currentPrayerName)
-                                        .kerning(Typography.currentPrayerNameKerning)
-                                        .foregroundStyle(AptaColors.secondary)
-
-                                    currentTimeDisplay(for: current.time)
-
-                                    Text(viewModel.countdown)
-                                        .font(Typography.countdown)
-                                        .foregroundStyle(AptaColors.tertiary)
-                                }
-                            }
-
-                            Rectangle()
-                                .fill(AptaColors.separator)
-                                .frame(width: 40, height: 0.5)
-                                .padding(.vertical, 32)
-
-                            VStack(spacing: 0) {
-                                ForEach(viewModel.upcomingPrayers) { prayer in
-                                    HStack {
-                                        Text(prayer.name.rawValue)
-                                            .font(Typography.upcomingPrayerName)
-                                            .foregroundStyle(AptaColors.primary)
-                                        Spacer()
-                                        upcomingTimeDisplay(for: prayer.time)
-                                    }
-                                    .padding(.horizontal, 48)
-                                    .padding(.vertical, 10)
-                                }
-                            }
-                        }
-                        .transition(contentTransition)
-                    } else {
-                        // Full day list
-                        VStack(spacing: 0) {
-                            ForEach(viewModel.prayers(for: selectedDate)) { prayer in
-                                HStack {
-                                    Text(prayer.name.rawValue)
-                                        .font(Typography.upcomingPrayerName)
-                                        .foregroundStyle(AptaColors.primary)
-                                    Spacer()
-                                    upcomingTimeDisplay(for: prayer.time)
-                                }
-                                .padding(.horizontal, 48)
-                                .padding(.vertical, 10)
-                            }
-                        }
-                        .transition(contentTransition)
+                if settings.simpleMode {
+                    simpleModeContent
+                } else {
+                    VStack(spacing: 0) {
+                        dateNavigationSection
+                        prayerContentSection
                     }
                 }
-                .id(selectedDate)
-                .animation(.easeInOut(duration: 0.3), value: selectedDate)
-                .clipped()
 
                 Spacer()
 
-                // Qibla
                 qiblaView
                     .padding(.bottom, 24)
             }
 
             if showDatePicker {
-                Color.black.opacity(0.25)
-                    .ignoresSafeArea()
-                    .onTapGesture {
-                        showDatePicker = false
-                    }
+                datePickerOverlay
+            }
+        }
+        .animation(.easeInOut(duration: 0.2), value: showDatePicker)
+        .animation(AnimationConstants.prayerTransition, value: viewModel.currentPrayer?.name)
+        .onChange(of: locationService.heading) { handleHeadingChange() }
+        .onChange(of: viewModel.currentPrayer?.name) { Haptics.soft() }
+        .onChange(of: selectedDate) { cachePrayers(for: selectedDate) }
+        .onAppear { cachePrayers(for: selectedDate) }
+    }
 
-                VStack(spacing: 0) {
+    private var topBar: some View {
+        HStack {
+            if !settings.simpleMode && !locationService.locationName.isEmpty {
+                Text(locationService.locationName.uppercased())
+                    .font(.system(size: 11, weight: .medium))
+                    .kerning(1.5)
+                    .foregroundStyle(AptaColors.tertiary)
+            }
+            Spacer()
+            Button {
+                Haptics.light()
+                onOpenSettings()
+            } label: {
+                Image(systemName: "gearshape")
+                    .font(.system(size: 20, weight: .regular))
+                    .foregroundStyle(AptaColors.secondary)
+            }
+        }
+        .padding(.horizontal, 24)
+        .padding(.top, 16)
+    }
+
+    private var dateNavigationSection: some View {
+        VStack(spacing: 0) {
+            hijriNavigationRow
+                .padding(.bottom, 6)
+
+            if settings.calendarType == .islamic {
+                Text(dateFormatter.string(from: selectedDate).uppercased())
+                    .font(.system(size: 11, weight: .medium))
+                    .kerning(1.2)
+                    .foregroundStyle(AptaColors.tertiary)
+                    .padding(.bottom, 20)
+            }
+        }
+    }
+
+    private var prayerContentSection: some View {
+        TabView(selection: $selectedDate) {
+            ForEach(generateDateRange(), id: \.self) { date in
+                PrayerDayView(
+                    date: date,
+                    isToday: Calendar.current.isDateInToday(date),
+                    viewModel: viewModel,
+                    settings: settings,
+                    cachedPrayers: cachedPrayers[date] ?? viewModel.prayers(for: date)
+                )
+                .tag(date)
+            }
+        }
+        .tabViewStyle(.page(indexDisplayMode: .never))
+        .animation(.easeInOut(duration: 0.25), value: selectedDate)
+    }
+
+    private var simpleModeContent: some View {
+        VStack(spacing: 0) {
+            Spacer()
+
+            if let current = viewModel.currentPrayer {
+                VStack(spacing: 8) {
+                    Text(current.name.rawValue.uppercased())
+                        .font(Typography.currentPrayerName)
+                        .kerning(Typography.currentPrayerNameKerning)
+                        .foregroundStyle(AptaColors.secondary)
+
+                    currentTimeDisplay(for: current.time)
+
+                    Text(viewModel.countdown)
+                        .font(Typography.countdown)
+                        .foregroundStyle(AptaColors.tertiary)
+                }
+            }
+
+            Spacer()
+                .frame(height: 80)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+
+    private var datePickerOverlay: some View {
+        ZStack {
+            Color.black.opacity(colorScheme == .dark ? 0.6 : 0.3)
+                .ignoresSafeArea()
+                .onTapGesture { showDatePicker = false }
+
+            VStack(spacing: 0) {
+                if settings.calendarType == .islamic {
+                    IslamicCalendarView(
+                        selectedDate: $selectedDate,
+                        hijriAdjustment: settings.hijriAdjustment
+                    )
+                    .frame(height: 360)
+                } else {
                     DatePicker(
                         "Select Date",
                         selection: $selectedDate,
@@ -179,65 +198,36 @@ struct PrayerTimesView: View {
                     )
                     .datePickerStyle(.graphical)
                     .labelsHidden()
-                    .padding(20)
+                    .padding(.horizontal, 20)
+                    .padding(.top, 20)
+                }
 
-                    Button("Done") {
-                        showDatePicker = false
-                    }
-                    .font(.system(size: 15, weight: .semibold))
-                    .foregroundStyle(AptaColors.primary)
-                    .padding(.bottom, 16)
+                Button("Done") {
+                    showDatePicker = false
                 }
-                .background(AptaColors.background)
-                .clipShape(RoundedRectangle(cornerRadius: 18))
-                .padding(.horizontal, 24)
-                .transition(.scale(scale: 0.98).combined(with: .opacity))
+                .font(.system(size: 15, weight: .semibold))
+                .foregroundStyle(AptaColors.primary)
+                .padding(.bottom, 16)
             }
-        }
-        .animation(.easeInOut(duration: 0.2), value: showDatePicker)
-        .animation(AnimationConstants.prayerTransition, value: viewModel.currentPrayer?.name)
-        .onChange(of: locationService.heading) {
-            if let newHeading = locationService.heading {
-                // Shortest-path interpolation across 0°/360° boundary
-                var delta = newHeading - smoothedHeading
-                while delta > 180 { delta -= 360 }
-                while delta < -180 { delta += 360 }
-                withAnimation(.easeOut(duration: 0.15)) {
-                    smoothedHeading += delta
-                }
-            }
-            guard (qiblaState == .searching || qiblaState == .found), let offset = qiblaOffset else { return }
-            let isAligned = abs(offset) <= qiblaThreshold
-            if isAligned && !wasAlignedWithQibla {
-                Haptics.qiblaFound()
-                withAnimation(AnimationConstants.prayerTransition) {
-                    qiblaState = .found
-                }
-            } else if !isAligned && qiblaState == .found {
-                withAnimation(AnimationConstants.prayerTransition) {
-                    qiblaState = .searching
-                }
-            }
-            wasAlignedWithQibla = isAligned
-
-            if !isAligned {
-                // Tick every 5 degrees of rotation
-                let currentDegree = Int(offset) / 5
-                if currentDegree != lastTickDegree {
-                    lastTickDegree = currentDegree
-                    Haptics.qiblaTick()
-                }
-            }
-        }
-        .onChange(of: viewModel.currentPrayer?.name) {
-            Haptics.soft()
+            .background(AptaColors.background)
+            .clipShape(RoundedRectangle(cornerRadius: 18))
+            .overlay(
+                RoundedRectangle(cornerRadius: 18)
+                    .stroke(
+                        colorScheme == .dark
+                            ? Color.white.opacity(0.2)
+                            : Color.black.opacity(0.1),
+                        lineWidth: 1
+                    )
+            )
+            .padding(.horizontal, 24)
+            .transition(.scale(scale: 0.98).combined(with: .opacity))
         }
     }
 
     @ViewBuilder
     private var qiblaView: some View {
         VStack(spacing: 0) {
-            // Compass strip overlays above the button without shifting layout
             ZStack {
                 if (qiblaState == .searching || qiblaState == .found), locationService.heading != nil {
                     QiblaStripCompass(
@@ -253,77 +243,67 @@ struct PrayerTimesView: View {
             .padding(.bottom, (qiblaState == .searching || qiblaState == .found) ? 8 : 0)
 
             Button {
-                switch qiblaState {
-                case .idle:
-                    Haptics.light()
-                    lastTickDegree = -999
-                    wasAlignedWithQibla = false
-                    withAnimation(.easeInOut(duration: 0.35)) {
-                        qiblaState = .searching
-                    }
-                    locationService.startHeadingUpdates()
-                case .searching:
-                    Haptics.light()
-                    wasAlignedWithQibla = false
-                    withAnimation(.easeInOut(duration: 0.35)) {
-                        qiblaState = .idle
-                    }
-                    locationService.stopHeadingUpdates()
-                case .found:
-                    Haptics.light()
-                    wasAlignedWithQibla = false
-                    withAnimation(.easeInOut(duration: 0.35)) {
-                        qiblaState = .idle
-                    }
-                    locationService.stopHeadingUpdates()
-                }
+                toggleQiblaState()
             } label: {
                 HStack {
                     Spacer()
-
-                    switch qiblaState {
-                    case .idle:
-                        Text("QIBLA")
-                            .font(.system(size: 13, weight: .medium))
-                            .kerning(2.0)
-                            .foregroundStyle(colorScheme == .dark ? AptaColors.secondary : AptaColors.tertiary)
-                    case .searching:
-                        if let offset = qiblaOffset {
-                            Text(abs(offset) <= qiblaThreshold ? "FOUND" : "QIBLA")
-                                .font(.system(size: 13, weight: .medium))
-                                .kerning(2.0)
-                                .foregroundStyle(abs(offset) <= qiblaThreshold ? AptaColors.primary : (colorScheme == .dark ? AptaColors.secondary : AptaColors.tertiary))
-                        } else {
-                            Text("SEARCHING")
-                                .font(.system(size: 13, weight: .medium))
-                                .kerning(2.0)
-                                .foregroundStyle(AptaColors.tertiary)
-                        }
-                    case .found:
-                        if let offset = qiblaOffset, abs(offset) <= qiblaThreshold {
-                            Text("FOUND")
-                                .font(.system(size: 13, weight: .medium))
-                                .kerning(2.0)
-                                .foregroundStyle(AptaColors.primary)
-                        } else {
-                            Text("QIBLA")
-                                .font(.system(size: 13, weight: .medium))
-                                .kerning(2.0)
-                                .foregroundStyle(colorScheme == .dark ? AptaColors.secondary : AptaColors.tertiary)
-                        }
-                    }
-
+                    qiblaButtonText
                     Spacer()
                 }
                 .padding(.horizontal, 24)
             }
         }
-        .transition(.opacity)
         .animation(.easeInOut(duration: 0.3), value: selectedDate)
     }
 
+    @ViewBuilder
+    private var qiblaButtonText: some View {
+        switch qiblaState {
+        case .idle:
+            Text("QIBLA")
+                .font(.system(size: 13, weight: .medium))
+                .kerning(2.0)
+                .foregroundStyle(colorScheme == .dark ? AptaColors.secondary : AptaColors.tertiary)
+        case .searching:
+            if headingUnstable {
+                Text("STABILIZE")
+                    .font(.system(size: 13, weight: .medium))
+                    .kerning(2.0)
+                    .foregroundStyle(AptaColors.tertiary)
+            } else if let offset = qiblaOffset {
+                Text(abs(offset) <= qiblaThreshold ? "FOUND" : "QIBLA")
+                    .font(.system(size: 13, weight: .medium))
+                    .kerning(2.0)
+                    .foregroundStyle(abs(offset) <= qiblaThreshold ? AptaColors.primary : (colorScheme == .dark ? AptaColors.secondary : AptaColors.tertiary))
+            } else {
+                Text("SEARCHING")
+                    .font(.system(size: 13, weight: .medium))
+                    .kerning(2.0)
+                    .foregroundStyle(AptaColors.tertiary)
+            }
+        case .found:
+            if let offset = qiblaOffset, abs(offset) <= qiblaThreshold {
+                Text("FOUND")
+                    .font(.system(size: 13, weight: .medium))
+                    .kerning(2.0)
+                    .foregroundStyle(AptaColors.primary)
+            } else {
+                Text("QIBLA")
+                    .font(.system(size: 13, weight: .medium))
+                    .kerning(2.0)
+                    .foregroundStyle(colorScheme == .dark ? AptaColors.secondary : AptaColors.tertiary)
+            }
+        }
+    }
+
     private var hijriNavigationRow: some View {
-        let hijriDate = viewModel.hijriDateString(for: selectedDate).uppercased()
+        let dateText: String
+        if settings.calendarType == .islamic {
+            dateText = viewModel.hijriDateString(for: selectedDate).uppercased()
+        } else {
+            dateText = dateFormatter.string(from: selectedDate).uppercased()
+        }
+
         return HStack(spacing: 12) {
             Button {
                 Haptics.light()
@@ -337,12 +317,16 @@ struct PrayerTimesView: View {
 
             Button {
                 Haptics.light()
-                showDatePicker = true
+                if !isToday {
+                    selectedDate = Calendar.current.startOfDay(for: Date())
+                } else {
+                    showDatePicker = true
+                }
             } label: {
-                Text(hijriDate.isEmpty ? "TODAY" : hijriDate)
+                Text(dateText.isEmpty ? "TODAY" : dateText)
                     .font(.system(size: 13, weight: .regular))
                     .kerning(1.5)
-                    .foregroundStyle(AptaColors.tertiary)
+                    .foregroundStyle(isToday ? AptaColors.tertiary : AptaColors.primary)
             }
             .frame(height: 24)
 
@@ -356,34 +340,104 @@ struct PrayerTimesView: View {
             }
             .frame(width: 24, height: 24)
         }
-        .frame(height: 24)
-        .onChange(of: selectedDate) {
-            let normalized = Calendar.current.startOfDay(for: selectedDate)
-            dateChangeDirection = normalized >= lastSelectedDate ? 1 : -1
-            lastSelectedDate = normalized
-            withAnimation(.easeInOut(duration: 0.3)) {
-                selectedDate = normalized
+    }
+
+    private func toggleQiblaState() {
+        switch qiblaState {
+        case .idle:
+            Haptics.light()
+            lastTickDegree = -999
+            wasAlignedWithQibla = false
+            headingHistory = []
+            headingUnstable = false
+            withAnimation(.easeInOut(duration: 0.35)) {
+                qiblaState = .searching
+            }
+            locationService.startHeadingUpdates()
+        case .searching, .found:
+            Haptics.light()
+            wasAlignedWithQibla = false
+            headingHistory = []
+            headingUnstable = false
+            withAnimation(.easeInOut(duration: 0.35)) {
+                qiblaState = .idle
+            }
+            locationService.stopHeadingUpdates()
+        }
+    }
+
+    private func handleHeadingChange() {
+        guard let newHeading = locationService.heading else { return }
+
+        var delta = newHeading - smoothedHeading
+        while delta > 180 { delta -= 360 }
+        while delta < -180 { delta += 360 }
+        smoothedHeading += delta
+
+        headingHistory.append(newHeading)
+        if headingHistory.count > headingHistorySize {
+            headingHistory.removeFirst()
+        }
+
+        if headingHistory.count >= 3 {
+            let variance = calculateHeadingVariance()
+            headingUnstable = variance > headingStabilityThreshold
+        }
+
+        guard (qiblaState == .searching || qiblaState == .found), let offset = qiblaOffset else { return }
+        let isAligned = abs(offset) <= qiblaThreshold && !headingUnstable
+
+        if isAligned && !wasAlignedWithQibla {
+            Haptics.qiblaFound()
+            withAnimation(AnimationConstants.prayerTransition) {
+                qiblaState = .found
+            }
+        } else if !isAligned && qiblaState == .found {
+            withAnimation(AnimationConstants.prayerTransition) {
+                qiblaState = .searching
             }
         }
+        wasAlignedWithQibla = isAligned
+
+        if !isAligned {
+            let currentDegree = Int(offset) / 5
+            if currentDegree != lastTickDegree {
+                lastTickDegree = currentDegree
+                Haptics.qiblaTick()
+            }
+        }
+    }
+
+    private func calculateHeadingVariance() -> Double {
+        guard headingHistory.count >= 2 else { return 0 }
+        let diffs = zip(headingHistory, headingHistory.dropFirst()).map { abs($0 - $1) }
+        let normalizedDiffs = diffs.map { diff in
+            if diff > 180 { return 360 - diff }
+            return diff
+        }
+        return normalizedDiffs.reduce(0, +) / Double(normalizedDiffs.count)
     }
 
     private func shiftSelectedDate(by days: Int) {
         if let shifted = Calendar.current.date(byAdding: .day, value: days, to: selectedDate) {
             dateChangeDirection = days >= 0 ? 1 : -1
             lastSelectedDate = selectedDate
-            withAnimation(.easeInOut(duration: 0.3)) {
-                selectedDate = Calendar.current.startOfDay(for: shifted)
-            }
+            selectedDate = Calendar.current.startOfDay(for: shifted)
         }
     }
 
-    private var contentTransition: AnyTransition {
-        let insertionEdge: Edge = dateChangeDirection >= 0 ? .trailing : .leading
-        let removalEdge: Edge = dateChangeDirection >= 0 ? .leading : .trailing
-        return .asymmetric(
-            insertion: .move(edge: insertionEdge).combined(with: .opacity),
-            removal: .move(edge: removalEdge).combined(with: .opacity)
-        )
+    private func generateDateRange() -> [Date] {
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: Date())
+        return (-30...30).compactMap { offset in
+            calendar.date(byAdding: .day, value: offset, to: today)
+        }
+    }
+
+    private func cachePrayers(for date: Date) {
+        if cachedPrayers[date] == nil {
+            cachedPrayers[date] = viewModel.prayers(for: date)
+        }
     }
 
     @ViewBuilder
@@ -402,9 +456,9 @@ struct PrayerTimesView: View {
         } else {
             Text(timeFormatter.string(from: date))
                 .font(Typography.currentTime)
-                .kerning(Typography.currentTimeKerning)
-                .foregroundStyle(AptaColors.primary)
-                .monospacedDigit()
+                    .kerning(Typography.currentTimeKerning)
+                    .foregroundStyle(AptaColors.primary)
+                    .monospacedDigit()
         }
     }
 

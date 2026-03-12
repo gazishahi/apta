@@ -26,7 +26,7 @@ struct PrayerCalculationService {
             return []
         }
 
-        return [
+        var entries: [PrayerTimeEntry] = [
             PrayerTimeEntry(name: .fajr, time: prayers.fajr),
             PrayerTimeEntry(name: .sunrise, time: prayers.sunrise),
             PrayerTimeEntry(name: .dhuhr, time: prayers.dhuhr),
@@ -34,6 +34,13 @@ struct PrayerCalculationService {
             PrayerTimeEntry(name: .maghrib, time: prayers.maghrib),
             PrayerTimeEntry(name: .isha, time: prayers.isha),
         ]
+
+        if settings.showIshraq {
+            let ishraqTime = Calendar.current.date(byAdding: .minute, value: 15, to: prayers.sunrise) ?? prayers.sunrise
+            entries.append(PrayerTimeEntry(name: .ishraq, time: ishraqTime))
+        }
+
+        return entries
     }
 
     static func currentPrayer(location: CLLocation, settings: PrayerSettings) -> Prayer? {

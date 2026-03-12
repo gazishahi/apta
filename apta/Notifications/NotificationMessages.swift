@@ -49,14 +49,24 @@ enum NotificationMessages {
     ]
 
     static let ishaMessages = [
-        "Last one of the day. You got this.",
-        "Isha before Netflix. You know the rules.",
+        "Last one of day. You got this.",
+        "Isha before Netflix. You know rules.",
         "One more and you're done. For today, at least.",
         "The day's closing credits. Pray through them.",
         "Don't fall asleep before this one. I'm watching.",
-        "Isha: because the day doesn't end at Maghrib.",
+        "Isha: because day doesn't end at Maghrib.",
         "Toothbrush can wait 5 minutes.",
-        "Final boss of the daily prayers. Let's go.",
+        "Final boss of daily prayers. Let's go.",
+    ]
+
+    static let ishraqMessages = [
+        "Sunrise was 15 minutes ago. Ishraq time.",
+        "Recommended prayer, major rewards.",
+        "Two rakat sunnah after sunrise.",
+        "Beautiful time for prayer.",
+        "Blessed time to remember Allah.",
+        "The sun's up. Time to pray.",
+        "Quick prayer, big reward.",
     ]
 
     // MARK: - Ramadan Messages
@@ -104,6 +114,7 @@ enum NotificationMessages {
         case .asr: pool = asrMessages
         case .maghrib: pool = maghribMessages
         case .isha: pool = ishaMessages
+        case .ishraq: pool = ishraqMessages
         case .sunrise: return ""
         }
         return seededPick(from: pool, prayer: prayer, date: date)

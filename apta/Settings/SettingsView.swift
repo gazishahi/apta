@@ -75,6 +75,13 @@ struct SettingsView: View {
 
             // SECTION 3: HIJRI DATE
             Section {
+                Picker("Calendar Type", selection: $settings.calendarType) {
+                    ForEach(PrayerSettings.CalendarType.allCases) { type in
+                        Text(type.rawValue).tag(type)
+                    }
+                }
+                .pickerStyle(.menu)
+
                 Stepper("Adjustment: \(settings.hijriAdjustment > 0 ? "+" : "")\(settings.hijriAdjustment) day\(abs(settings.hijriAdjustment) == 1 ? "" : "s")", value: $settings.hijriAdjustment, in: -2...2)
             } header: {
                 sectionHeader("HIJRI DATE")
@@ -82,7 +89,17 @@ struct SettingsView: View {
                 Text("Adjust the Hijri date if it differs from your local moonsighting.")
             }
 
-            // SECTION 4: NOTIFICATIONS
+            // SECTION 4: DISPLAY
+            Section {
+                Toggle("Simple Mode", isOn: $settings.simpleMode)
+                Toggle("Show Ishraq", isOn: $settings.showIshraq)
+            } header: {
+                sectionHeader("DISPLAY")
+            } footer: {
+                Text("Simple Mode shows only the current prayer time and Qibla button.")
+            }
+
+            // SECTION 5: NOTIFICATIONS
             Section {
                 Toggle("Prayer Notifications", isOn: $settings.notificationsEnabled)
                     .onChange(of: settings.notificationsEnabled) {
@@ -114,6 +131,9 @@ struct SettingsView: View {
                         Toggle("Asr", isOn: $settings.asrNotification)
                         Toggle("Maghrib", isOn: $settings.maghribNotification)
                         Toggle("Isha", isOn: $settings.ishaNotification)
+                        if settings.showIshraq {
+                            Toggle("Ishraq", isOn: $settings.ishraqNotification)
+                        }
                     }
 
                     Toggle("Ramadan Alerts", isOn: $settings.ramadanNotificationsEnabled)
@@ -136,20 +156,7 @@ struct SettingsView: View {
         }
         .navigationTitle("Settings")
         .navigationBarTitleDisplayMode(.inline)
-        .onChange(of: settings.calculationMethod) { save() }
-        .onChange(of: settings.asrMethod) { save() }
-        .onChange(of: settings.highLatitudeRule) { save() }
-        .onChange(of: settings.theme) { save() }
-        .onChange(of: settings.prayerFontSize) { save() }
-        .onChange(of: settings.timeFormat) { save() }
-        .onChange(of: settings.hijriAdjustment) { save() }
-        .onChange(of: settings.notificationStyle) { save() }
-        .onChange(of: settings.ramadanNotificationsEnabled) { save() }
-        .onChange(of: settings.fajrNotification) { save() }
-        .onChange(of: settings.dhuhrNotification) { save() }
-        .onChange(of: settings.asrNotification) { save() }
-        .onChange(of: settings.maghribNotification) { save() }
-        .onChange(of: settings.ishaNotification) { save() }
+        .onChange(of: settings) { _ in save() }
     }
 
     private var fajrAngleBinding: Binding<Bool> {

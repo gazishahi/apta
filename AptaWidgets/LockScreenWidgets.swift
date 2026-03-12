@@ -54,6 +54,7 @@ struct CircularPrayerWidgetView: View {
         case .asr: return "ASR"
         case .maghrib: return "MGH"
         case .isha: return "ISH"
+        case .ishraq: return "ISH"
         }
     }
 
