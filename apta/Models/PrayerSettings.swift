@@ -5,7 +5,7 @@ struct PrayerSettings: Codable, Equatable {
     var calculationMethod: AppCalculationMethod = .northAmerica
     var asrMethod: AsrMethod = .standard
     var highLatitudeRule: AppHighLatitudeRule = .middleOfTheNight
-    var theme: AppTheme = .auto
+    var theme: AppTheme = .system
     var timeFormat: TimeFormat = .twelve
     var hijriAdjustment: Int = 0
     var customFajrAngle: Double?

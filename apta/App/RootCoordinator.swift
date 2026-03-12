@@ -45,7 +45,7 @@ struct RootCoordinator: View {
                             phase = .onboarding
                         }
                     }
-                }
+                }.statusBarHidden()
 
             case .onboarding:
                 OnboardingContainerView {
