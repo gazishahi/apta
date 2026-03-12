@@ -125,13 +125,26 @@ struct PrayerTimesView: View {
             hijriNavigationRow
                 .padding(.bottom, 6)
 
-            if settings.calendarType == .islamic {
-                Text(dateFormatter.string(from: selectedDate).uppercased())
-                    .font(.system(size: 11, weight: .medium))
-                    .kerning(1.2)
-                    .foregroundStyle(AptaColors.tertiary)
-                    .padding(.bottom, 20)
+            secondaryCalendarDate
+                .padding(.bottom, 20)
+
+            Button {
+                Haptics.light()
+                selectedDate = Calendar.current.startOfDay(for: Date())
+            } label: {
+                HStack(spacing: 4) {
+                    if !isToday {
+                        Image(systemName: "chevron.right")
+                            .font(.system(size: 10, weight: .semibold))
+                            .foregroundStyle(AptaColors.tertiary)
+                    }
+                    Text("TODAY")
+                        .font(.system(size: 11, weight: .medium))
+                        .kerning(1.2)
+                        .foregroundStyle(AptaColors.primary)
+                }
             }
+            .frame(height: 24)
         }
     }
 
@@ -172,7 +185,6 @@ struct PrayerTimesView: View {
             }
 
             Spacer()
-                .frame(height: 80)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
@@ -185,11 +197,16 @@ struct PrayerTimesView: View {
 
             VStack(spacing: 0) {
                 if settings.calendarType == .islamic {
-                    IslamicCalendarView(
-                        selectedDate: $selectedDate,
-                        hijriAdjustment: settings.hijriAdjustment
+                    DatePicker(
+                        "Select Date",
+                        selection: $selectedDate,
+                        displayedComponents: .date
                     )
-                    .frame(height: 360)
+                    .environment(\.calendar, Calendar(identifier: .islamicUmmAlQura))
+                    .datePickerStyle(.graphical)
+                    .labelsHidden()
+                    .padding(.horizontal, 20)
+                    .padding(.top, 20)
                 } else {
                     DatePicker(
                         "Select Date",
@@ -211,15 +228,6 @@ struct PrayerTimesView: View {
             }
             .background(AptaColors.background)
             .clipShape(RoundedRectangle(cornerRadius: 18))
-            .overlay(
-                RoundedRectangle(cornerRadius: 18)
-                    .stroke(
-                        colorScheme == .dark
-                            ? Color.white.opacity(0.2)
-                            : Color.black.opacity(0.1),
-                        lineWidth: 1
-                    )
-            )
             .padding(.horizontal, 24)
             .transition(.scale(scale: 0.98).combined(with: .opacity))
         }
@@ -317,16 +325,12 @@ struct PrayerTimesView: View {
 
             Button {
                 Haptics.light()
-                if !isToday {
-                    selectedDate = Calendar.current.startOfDay(for: Date())
-                } else {
-                    showDatePicker = true
-                }
+                showDatePicker = true
             } label: {
                 Text(dateText.isEmpty ? "TODAY" : dateText)
                     .font(.system(size: 13, weight: .regular))
                     .kerning(1.5)
-                    .foregroundStyle(isToday ? AptaColors.tertiary : AptaColors.primary)
+                    .foregroundStyle(isToday ? AptaColors.primary : AptaColors.tertiary)
             }
             .frame(height: 24)
 
@@ -340,6 +344,20 @@ struct PrayerTimesView: View {
             }
             .frame(width: 24, height: 24)
         }
+    }
+
+    private var secondaryCalendarDate: some View {
+        let secondaryText: String
+        if settings.calendarType == .islamic {
+            secondaryText = dateFormatter.string(from: selectedDate).uppercased()
+        } else {
+            secondaryText = viewModel.hijriDateString(for: selectedDate).uppercased()
+        }
+
+        return Text(secondaryText)
+            .font(.system(size: 11, weight: .medium))
+            .kerning(1.2)
+            .foregroundStyle(AptaColors.tertiary)
     }
 
     private func toggleQiblaState() {

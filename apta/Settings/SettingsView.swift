@@ -31,6 +31,9 @@ struct SettingsView: View {
                     }
                 }
                 .pickerStyle(.menu)
+
+                Toggle("Simple Mode", isOn: $settings.simpleMode)
+                Toggle("Show Ishraq", isOn: $settings.showIshraq)
             } header: {
                 sectionHeader("APPEARANCE")
             }
@@ -89,17 +92,7 @@ struct SettingsView: View {
                 Text("Adjust the Hijri date if it differs from your local moonsighting.")
             }
 
-            // SECTION 4: DISPLAY
-            Section {
-                Toggle("Simple Mode", isOn: $settings.simpleMode)
-                Toggle("Show Ishraq", isOn: $settings.showIshraq)
-            } header: {
-                sectionHeader("DISPLAY")
-            } footer: {
-                Text("Simple Mode shows only the current prayer time and Qibla button.")
-            }
-
-            // SECTION 5: NOTIFICATIONS
+            // SECTION 4: NOTIFICATIONS
             Section {
                 Toggle("Prayer Notifications", isOn: $settings.notificationsEnabled)
                     .onChange(of: settings.notificationsEnabled) {
@@ -125,7 +118,7 @@ struct SettingsView: View {
                     }
                     .pickerStyle(.menu)
 
-                    DisclosureGroup("Prayers", isExpanded: $prayersExpanded) {
+                    DisclosureGroup("Prayer Alerts", isExpanded: $prayersExpanded) {
                         Toggle("Fajr", isOn: $settings.fajrNotification)
                         Toggle("Dhuhr", isOn: $settings.dhuhrNotification)
                         Toggle("Asr", isOn: $settings.asrNotification)
