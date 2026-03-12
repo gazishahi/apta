@@ -53,6 +53,8 @@ struct SettingsView: View {
                     }
                 }
                 .pickerStyle(.menu)
+                
+                
 
                 DisclosureGroup("Advanced", isExpanded: $advancedExpanded) {
                     Picker("High Latitude Rule", selection: $settings.highLatitudeRule) {
@@ -75,23 +77,16 @@ struct SettingsView: View {
             } header: {
                 sectionHeader("PRAYER CALCULATION")
             }
-
+            
             // SECTION 3: HIJRI DATE
             Section {
-                Picker("Calendar Type", selection: $settings.calendarType) {
-                    ForEach(PrayerSettings.CalendarType.allCases) { type in
-                        Text(type.rawValue).tag(type)
-                    }
-                }
-                .pickerStyle(.menu)
-
                 Stepper("Adjustment: \(settings.hijriAdjustment > 0 ? "+" : "")\(settings.hijriAdjustment) day\(abs(settings.hijriAdjustment) == 1 ? "" : "s")", value: $settings.hijriAdjustment, in: -2...2)
-            } header: {
+            } header : {
                 sectionHeader("HIJRI DATE")
-            } footer: {
+            } footer : {
                 Text("Adjust the Hijri date if it differs from your local moonsighting.")
             }
-
+            
             // SECTION 4: NOTIFICATIONS
             Section {
                 Toggle("Prayer Notifications", isOn: $settings.notificationsEnabled)

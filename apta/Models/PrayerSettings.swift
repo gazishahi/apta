@@ -14,7 +14,6 @@ struct PrayerSettings: Codable, Equatable {
     var showIshraq: Bool = false
     var ishraqNotification: Bool = false
     var simpleMode: Bool = false
-    var calendarType: CalendarType = .islamic
     var notificationStyle: NotificationStyle = .simple
     var ramadanNotificationsEnabled: Bool = true
     var fajrNotification: Bool = true
@@ -100,6 +99,7 @@ struct PrayerSettings: Codable, Equatable {
     enum AppTheme: String, CaseIterable, Codable, Identifiable {
         case light = "Light"
         case dark = "Dark"
+        case system = "System"
         case auto = "Auto"
 
         var id: String { rawValue }

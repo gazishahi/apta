@@ -3,7 +3,7 @@ import SwiftUI
 struct PrayerDayView: View {
     let date: Date
     let isToday: Bool
-    let viewModel: PrayerTimesViewModel
+    @ObservedObject var viewModel: PrayerTimesViewModel
     let settings: PrayerSettings
     let cachedPrayers: [PrayerTimeEntry]
 
@@ -24,12 +24,13 @@ struct PrayerDayView: View {
                                 .font(Typography.countdown)
                                 .foregroundStyle(AptaColors.tertiary)
                         }
+                        .padding(.top, -24)
                     }
 
                     Rectangle()
                         .fill(AptaColors.separator)
                         .frame(width: 40, height: 0.5)
-                        .padding(.vertical, 32)
+                        .padding(.vertical, 12)
 
                     VStack(spacing: 0) {
                         ForEach(viewModel.upcomingPrayers) { prayer in

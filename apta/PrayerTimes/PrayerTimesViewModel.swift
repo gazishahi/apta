@@ -23,11 +23,13 @@ class PrayerTimesViewModel: ObservableObject {
 
     func start() {
         recalculate()
-        timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
+        let t = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
             Task { @MainActor [weak self] in
                 self?.tick()
             }
         }
+        RunLoop.main.add(t, forMode: .common)
+        timer = t
     }
 
     func stop() {
@@ -85,6 +87,7 @@ class PrayerTimesViewModel: ObservableObject {
 
         let upcoming = allPrayers.filter { $0.time > now }
 
+        let upcomingCount = PrayerSettings.current.showIshraq ? 6 : 5
         if upcoming.isEmpty {
             guard let location = locationService.location else { return }
             let settings = PrayerSettings.current
@@ -92,21 +95,21 @@ class PrayerTimesViewModel: ObservableObject {
             let tomorrowPrayers = PrayerCalculationService.calculate(for: tomorrow, location: location, settings: settings)
 
             self.currentPrayer = allPrayers.last
-            self.upcomingPrayers = Array(tomorrowPrayers.prefix(5))
+            self.upcomingPrayers = Array(tomorrowPrayers.prefix(upcomingCount))
         } else {
             let nextPrayer = upcoming.first!
             self.currentPrayer = nextPrayer
 
             var rest = Array(upcoming.dropFirst())
-            if rest.count < 5 {
+            if rest.count < upcomingCount {
                 guard let location = locationService.location else { return }
                 let settings = PrayerSettings.current
                 let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: now)!
                 let tomorrowPrayers = PrayerCalculationService.calculate(for: tomorrow, location: location, settings: settings)
-                let needed = 5 - rest.count
+                let needed = upcomingCount - rest.count
                 rest.append(contentsOf: tomorrowPrayers.prefix(needed))
             }
-            self.upcomingPrayers = Array(rest.prefix(5))
+            self.upcomingPrayers = Array(rest.prefix(upcomingCount))
         }
 
         updateCountdown()

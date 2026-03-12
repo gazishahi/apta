@@ -51,6 +51,10 @@ struct PrayerTimesView: View {
     }
 
     private let qiblaThreshold: Double = 10.0
+
+    private func invalidateCache() {
+        cachedPrayers.removeAll()
+    }
     private let headingStabilityThreshold: Double = 30.0
     private let headingHistorySize: Int = 5
 
@@ -85,16 +89,18 @@ struct PrayerTimesView: View {
                 qiblaView
                     .padding(.bottom, 24)
             }
-
+        }
+        .overlay {
             if showDatePicker {
                 datePickerOverlay
             }
         }
         .animation(.easeInOut(duration: 0.2), value: showDatePicker)
         .animation(AnimationConstants.prayerTransition, value: viewModel.currentPrayer?.name)
-        .onChange(of: locationService.heading) { handleHeadingChange() }
-        .onChange(of: viewModel.currentPrayer?.name) { Haptics.soft() }
-        .onChange(of: selectedDate) { cachePrayers(for: selectedDate) }
+        .onChange(of: locationService.heading) { _, _ in handleHeadingChange() }
+        .onChange(of: viewModel.currentPrayer?.name) { _, _ in Haptics.soft() }
+        .onChange(of: PrayerSettings.current) { _, _ in invalidateCache() }
+        .onChange(of: selectedDate) { _, newDate in cachePrayers(for: newDate) }
         .onAppear { cachePrayers(for: selectedDate) }
     }
 
@@ -126,26 +132,47 @@ struct PrayerTimesView: View {
                 .padding(.bottom, 6)
 
             secondaryCalendarDate
-                .padding(.bottom, 20)
+                .padding(.bottom, 6)
 
             Button {
                 Haptics.light()
                 selectedDate = Calendar.current.startOfDay(for: Date())
             } label: {
+                let calendar = Calendar.current
+                let selectedStart = calendar.startOfDay(for: selectedDate)
+                let todayStart = calendar.startOfDay(for: Date())
+                let daysToToday = calendar.dateComponents([.day], from: selectedStart, to: todayStart).day ?? 0
                 HStack(spacing: 4) {
-                    if !isToday {
+                    if daysToToday < 0 {
+                        Image(systemName: "chevron.left")
+                            .font(.system(size: 10, weight: .semibold))
+                            .foregroundStyle(AptaColors.tertiary)
+                        Text("TODAY")
+                            .font(.system(size: 11, weight: .medium))
+                            .kerning(1.2)
+                            .foregroundStyle(AptaColors.tertiary)
+                    } else if daysToToday > 0 {
+                        Text("TODAY")
+                            .font(.system(size: 11, weight: .medium))
+                            .kerning(1.2)
+                            .foregroundStyle(AptaColors.tertiary)
                         Image(systemName: "chevron.right")
                             .font(.system(size: 10, weight: .semibold))
                             .foregroundStyle(AptaColors.tertiary)
+                    } else {
+                        Text("")
+                            .font(.system(size: 11, weight: .medium))
+                            .kerning(1.2)
+                            .foregroundStyle(AptaColors.tertiary)
                     }
-                    Text("TODAY")
-                        .font(.system(size: 11, weight: .medium))
-                        .kerning(1.2)
-                        .foregroundStyle(AptaColors.primary)
                 }
             }
             .frame(height: 24)
         }
+    }
+
+    private var dateRange: ClosedRange<Int> {
+        -30...30
     }
 
     private var prayerContentSection: some View {
@@ -167,7 +194,7 @@ struct PrayerTimesView: View {
 
     private var simpleModeContent: some View {
         VStack(spacing: 0) {
-            Spacer()
+            
 
             if let current = viewModel.currentPrayer {
                 VStack(spacing: 8) {
@@ -185,8 +212,15 @@ struct PrayerTimesView: View {
             }
 
             Spacer()
+                .frame(height: 120)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+
+    private var datePickerTint: Color {
+        colorScheme == .dark
+            ? Color(red: 0.5, green: 0.65, blue: 1.0)
+            : Color(uiColor: .systemBlue)
     }
 
     private var datePickerOverlay: some View {
@@ -196,28 +230,17 @@ struct PrayerTimesView: View {
                 .onTapGesture { showDatePicker = false }
 
             VStack(spacing: 0) {
-                if settings.calendarType == .islamic {
-                    DatePicker(
-                        "Select Date",
-                        selection: $selectedDate,
-                        displayedComponents: .date
-                    )
-                    .environment(\.calendar, Calendar(identifier: .islamicUmmAlQura))
-                    .datePickerStyle(.graphical)
-                    .labelsHidden()
-                    .padding(.horizontal, 20)
-                    .padding(.top, 20)
-                } else {
-                    DatePicker(
-                        "Select Date",
-                        selection: $selectedDate,
-                        displayedComponents: .date
-                    )
-                    .datePickerStyle(.graphical)
-                    .labelsHidden()
-                    .padding(.horizontal, 20)
-                    .padding(.top, 20)
-                }
+                DatePicker(
+                    "Select Date",
+                    selection: $selectedDate,
+                    displayedComponents: .date
+                )
+                .datePickerStyle(.graphical)
+                .frame(width: 320)
+                .id(selectedDate)
+                .tint(datePickerTint)
+                .padding(.horizontal, 20)
+                .padding(.top, 20)
 
                 Button("Done") {
                     showDatePicker = false
@@ -305,12 +328,8 @@ struct PrayerTimesView: View {
     }
 
     private var hijriNavigationRow: some View {
-        let dateText: String
-        if settings.calendarType == .islamic {
-            dateText = viewModel.hijriDateString(for: selectedDate).uppercased()
-        } else {
-            dateText = dateFormatter.string(from: selectedDate).uppercased()
-        }
+        let hijriText = viewModel.hijriDateString(for: selectedDate).uppercased()
+        _ = dateFormatter.string(from: selectedDate).uppercased()
 
         return HStack(spacing: 12) {
             Button {
@@ -327,10 +346,10 @@ struct PrayerTimesView: View {
                 Haptics.light()
                 showDatePicker = true
             } label: {
-                Text(dateText.isEmpty ? "TODAY" : dateText)
+                Text(hijriText.isEmpty ? "TODAY" : hijriText)
                     .font(.system(size: 13, weight: .regular))
                     .kerning(1.5)
-                    .foregroundStyle(isToday ? AptaColors.primary : AptaColors.tertiary)
+                    .foregroundStyle(isToday ? AptaColors.secondary : AptaColors.tertiary)
             }
             .frame(height: 24)
 
@@ -347,14 +366,7 @@ struct PrayerTimesView: View {
     }
 
     private var secondaryCalendarDate: some View {
-        let secondaryText: String
-        if settings.calendarType == .islamic {
-            secondaryText = dateFormatter.string(from: selectedDate).uppercased()
-        } else {
-            secondaryText = viewModel.hijriDateString(for: selectedDate).uppercased()
-        }
-
-        return Text(secondaryText)
+        Text(dateFormatter.string(from: selectedDate).uppercased())
             .font(.system(size: 11, weight: .medium))
             .kerning(1.2)
             .foregroundStyle(AptaColors.tertiary)

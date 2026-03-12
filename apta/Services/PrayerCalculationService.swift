@@ -29,16 +29,17 @@ struct PrayerCalculationService {
         var entries: [PrayerTimeEntry] = [
             PrayerTimeEntry(name: .fajr, time: prayers.fajr),
             PrayerTimeEntry(name: .sunrise, time: prayers.sunrise),
-            PrayerTimeEntry(name: .dhuhr, time: prayers.dhuhr),
-            PrayerTimeEntry(name: .asr, time: prayers.asr),
-            PrayerTimeEntry(name: .maghrib, time: prayers.maghrib),
-            PrayerTimeEntry(name: .isha, time: prayers.isha),
         ]
-
         if settings.showIshraq {
             let ishraqTime = Calendar.current.date(byAdding: .minute, value: 15, to: prayers.sunrise) ?? prayers.sunrise
             entries.append(PrayerTimeEntry(name: .ishraq, time: ishraqTime))
         }
+        entries.append(contentsOf: [
+            PrayerTimeEntry(name: .dhuhr, time: prayers.dhuhr),
+            PrayerTimeEntry(name: .asr, time: prayers.asr),
+            PrayerTimeEntry(name: .maghrib, time: prayers.maghrib),
+            PrayerTimeEntry(name: .isha, time: prayers.isha),
+        ])
 
         return entries
     }

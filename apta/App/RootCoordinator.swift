@@ -23,6 +23,7 @@ struct RootCoordinator: View {
         switch settings.theme {
         case .light: return .light
         case .dark: return .dark
+        case .system: return nil
         case .auto:
             let now = Date()
             if let sunrise = viewModel.sunriseTime, let sunset = viewModel.sunsetTime {
