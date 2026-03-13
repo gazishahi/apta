@@ -672,7 +672,7 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = AptaWidgets/AptaWidgets.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_TEAM = D3MM423T6V;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = AptaWidgetsInfo.plist;
@@ -701,7 +701,7 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = AptaWidgets/AptaWidgets.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_TEAM = D3MM423T6V;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = AptaWidgetsInfo.plist;
