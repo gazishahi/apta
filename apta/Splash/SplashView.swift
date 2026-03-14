@@ -13,7 +13,7 @@ struct SplashView: View {
     @State private var letterOffsets: [CGFloat] = [-20, -20, -20, -20]
     @State private var suffixOpacities: [Double] = [0, 0, 0, 0]
     @State private var suffixOffsets: [CGFloat] = [-30, -30, -30, -30]
-    @State private var overallOpacity: Double = 1.0
+    @State private var overallOpacity: Double = 0.0
 
     private let letters = ["a", "p", "t", "a"]
     private let suffixes = ["nother", "rayer", "ime", "pp"]
@@ -21,7 +21,6 @@ struct SplashView: View {
 
     private func fittedFontSize(for width: CGFloat, height: CGFloat) -> CGFloat {
         let heightBased = height / 4.8
-        // Binary search for the largest font size where "another" fits in availableWidth
         var lo: CGFloat = 1
         var hi: CGFloat = heightBased
         while hi - lo > 0.5 {
@@ -77,6 +76,7 @@ struct SplashView: View {
                         .renderingMode(.original)
                         .scaledToFit()
                         .frame(width: logoSize, height: logoSize)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
             }
         }
@@ -84,6 +84,10 @@ struct SplashView: View {
         .onAppear {
             switch mode {
             case .onboarding:
+                withAnimation(.easeIn(duration: 0.3)) {
+                    overallOpacity = 1.0
+                }
+
                 for i in 0..<4 {
                     let delay = Double(i) * AnimationConstants.splashLetterStagger
                     withAnimation(AnimationConstants.spring.delay(delay)) {
@@ -109,10 +113,13 @@ struct SplashView: View {
                     onComplete()
                 }
             case .logoOnly:
-                withAnimation(.easeOut(duration: 0.3).delay(AnimationConstants.splashLogoFadeOutDelay)) {
+                withAnimation(.easeIn(duration: 0.3)) {
+                    overallOpacity = 1.0
+                }
+                withAnimation(.easeOut(duration: 0.3).delay(0.5)) {
                     overallOpacity = 0
                 }
-                DispatchQueue.main.asyncAfter(deadline: .now() + AnimationConstants.splashLogoTotalDuration) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.9) {
                     onComplete()
                 }
             }
