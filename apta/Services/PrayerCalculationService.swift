@@ -3,12 +3,7 @@ import Adhan
 import CoreLocation
 
 struct PrayerCalculationService {
-    static func calculate(for date: Date = Date(), location: CLLocation, settings: PrayerSettings) -> [PrayerTimeEntry] {
-        let coordinates = Coordinates(
-            latitude: location.coordinate.latitude,
-            longitude: location.coordinate.longitude
-        )
-
+    private static func buildParameters(from settings: PrayerSettings) -> CalculationParameters {
         var params = settings.calculationMethod.adhanMethod.params
         params.madhab = settings.asrMethod.madhab
         params.highLatitudeRule = settings.highLatitudeRule.adhanRule
@@ -18,7 +13,16 @@ struct PrayerCalculationService {
         if let ishaAngle = settings.customIshaAngle {
             params.ishaAngle = ishaAngle
         }
+        return params
+    }
 
+    static func calculate(for date: Date = Date(), location: CLLocation, settings: PrayerSettings) -> [PrayerTimeEntry] {
+        let coordinates = Coordinates(
+            latitude: location.coordinate.latitude,
+            longitude: location.coordinate.longitude
+        )
+
+        let params = buildParameters(from: settings)
         let cal = Calendar(identifier: .gregorian)
         let components = cal.dateComponents([.year, .month, .day], from: date)
 
@@ -50,16 +54,7 @@ struct PrayerCalculationService {
             longitude: location.coordinate.longitude
         )
 
-        var params = settings.calculationMethod.adhanMethod.params
-        params.madhab = settings.asrMethod.madhab
-        params.highLatitudeRule = settings.highLatitudeRule.adhanRule
-        if let fajrAngle = settings.customFajrAngle {
-            params.fajrAngle = fajrAngle
-        }
-        if let ishaAngle = settings.customIshaAngle {
-            params.ishaAngle = ishaAngle
-        }
-
+        let params = buildParameters(from: settings)
         let cal = Calendar(identifier: .gregorian)
         let components = cal.dateComponents([.year, .month, .day], from: Date())
 

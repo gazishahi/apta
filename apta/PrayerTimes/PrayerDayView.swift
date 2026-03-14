@@ -106,14 +106,10 @@ struct PrayerDayView: View {
     }
 
     private var timeFormatter: DateFormatter {
-        let f = DateFormatter()
-        f.dateFormat = settings.timeFormat == .twelve ? "h:mm" : "HH:mm"
-        return f
+        DateFormatterFactory.make(format: settings.timeFormat == .twelve ? "h:mm" : "HH:mm")
     }
 
     private var amPmFormatter: DateFormatter {
-        let f = DateFormatter()
-        f.dateFormat = "a"
-        return f
+        DateFormatterFactory.make(format: "a")
     }
 }

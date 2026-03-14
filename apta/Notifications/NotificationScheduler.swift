@@ -59,7 +59,8 @@ enum NotificationScheduler {
                 let comps = calendar.dateComponents([.year, .month, .day, .hour, .minute, .second], from: entry.time)
                 let trigger = UNCalendarNotificationTrigger(dateMatching: comps, repeats: false)
 
-                let id = "\(entry.name.rawValue)-\(comps.year!)-\(comps.month!)-\(comps.day!)"
+                guard let year = comps.year, let month = comps.month, let day = comps.day else { return }
+                let id = "\(entry.name.rawValue)-\(year)-\(month)-\(day)"
                 let request = UNNotificationRequest(identifier: id, content: content, trigger: trigger)
                 center.add(request)
             }

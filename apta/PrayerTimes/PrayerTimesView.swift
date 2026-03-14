@@ -333,7 +333,6 @@ struct PrayerTimesView: View {
 
     private var hijriNavigationRow: some View {
         let hijriText = viewModel.hijriDateString(for: selectedDate).uppercased()
-        _ = dateFormatter.string(from: selectedDate).uppercased()
 
         return HStack(spacing: 12) {
             Button {

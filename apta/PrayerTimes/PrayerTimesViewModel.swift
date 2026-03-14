@@ -17,6 +17,9 @@ class PrayerTimesViewModel: ObservableObject {
     private var timer: Timer?
     private var locationService: LocationService
 
+    private var cachedTomorrowPrayers: [PrayerTimeEntry]?
+    private var lastCacheDate: Date?
+
     init(locationService: LocationService) {
         self.locationService = locationService
     }
@@ -64,15 +67,9 @@ class PrayerTimesViewModel: ObservableObject {
 
     func hijriDateString(for date: Date) -> String {
         let settings = PrayerSettings.current
-        let calendar = Calendar(identifier: .islamicUmmAlQura)
         let adjusted = Calendar.current.date(byAdding: .day, value: settings.hijriAdjustment, to: date) ?? date
 
-        let formatter = DateFormatter()
-        formatter.calendar = calendar
-        formatter.locale = Locale(identifier: "en")
-        // "15 Ramadan 1447"
-        formatter.dateFormat = "d MMMM y"
-
+        let formatter = DateFormatterFactory.makeIslamic(format: "d MMMM y", locale: Locale(identifier: "en"))
         return formatter.string(from: adjusted)
     }
 
@@ -84,28 +81,29 @@ class PrayerTimesViewModel: ObservableObject {
 
     private func updateCurrentAndUpcoming() {
         let now = Date()
+        let today = Calendar.current.startOfDay(for: now)
 
         let upcoming = allPrayers.filter { $0.time > now }
 
         let upcomingCount = PrayerSettings.current.showIshraq ? 6 : 5
         if upcoming.isEmpty {
-            guard let location = locationService.location else { return }
+            guard let location = locationService.location,
+                  let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: now) else { return }
             let settings = PrayerSettings.current
-            let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: now)!
-            let tomorrowPrayers = PrayerCalculationService.calculate(for: tomorrow, location: location, settings: settings)
+            let tomorrowPrayers = getTomorrowPrayers(date: tomorrow, location: location, settings: settings, today: today)
 
             self.currentPrayer = allPrayers.last
             self.upcomingPrayers = Array(tomorrowPrayers.prefix(upcomingCount))
         } else {
-            let nextPrayer = upcoming.first!
+            guard let nextPrayer = upcoming.first else { return }
             self.currentPrayer = nextPrayer
 
             var rest = Array(upcoming.dropFirst())
             if rest.count < upcomingCount {
-                guard let location = locationService.location else { return }
+                guard let location = locationService.location,
+                      let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: now) else { return }
                 let settings = PrayerSettings.current
-                let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: now)!
-                let tomorrowPrayers = PrayerCalculationService.calculate(for: tomorrow, location: location, settings: settings)
+                let tomorrowPrayers = getTomorrowPrayers(date: tomorrow, location: location, settings: settings, today: today)
                 let needed = upcomingCount - rest.count
                 rest.append(contentsOf: tomorrowPrayers.prefix(needed))
             }
@@ -113,6 +111,17 @@ class PrayerTimesViewModel: ObservableObject {
         }
 
         updateCountdown()
+    }
+
+    private func getTomorrowPrayers(date: Date, location: CLLocation, settings: PrayerSettings, today: Date) -> [PrayerTimeEntry] {
+        if lastCacheDate == today, let cached = cachedTomorrowPrayers {
+            return cached
+        }
+
+        let prayers = PrayerCalculationService.calculate(for: date, location: location, settings: settings)
+        cachedTomorrowPrayers = prayers
+        lastCacheDate = today
+        return prayers
     }
 
     private func tick() {

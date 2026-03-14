@@ -40,18 +40,12 @@ class PurchaseManager: ObservableObject {
 
         do {
             let storeProducts = try await Product.products(for: [productID])
-            print("📦 StoreKit: Found \(storeProducts.count) products")
-            for p in storeProducts {
-                print("📦 Product: \(p.id) - \(p.displayName) - \(p.displayPrice)")
-            }
             product = storeProducts.first
             if product == nil {
                 errorMessage = "Product '\(productID)' not found. Check App Store Connect."
-                print("❌ StoreKit: Product not found for ID: \(productID)")
             }
         } catch {
             errorMessage = "Failed to load products: \(error.localizedDescription)"
-            print("❌ StoreKit error: \(error)")
         }
     }
 
