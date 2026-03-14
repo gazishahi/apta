@@ -3,6 +3,7 @@ import SwiftUI
 struct QiblaStripCompass: View, Animatable {
     var heading: Double
     let qiblaDirection: Double
+    @Environment(\.colorScheme) private var colorScheme
 
     var animatableData: Double {
         get { heading }
@@ -54,13 +55,13 @@ struct QiblaStripCompass: View, Animatable {
                             p.move(to: CGPoint(x: x, y: midY - tickHeight / 2))
                             p.addLine(to: CGPoint(x: x, y: midY + tickHeight / 2))
                         }
-                        context.stroke(path, with: .color(Color(uiColor: .tertiaryLabel)), lineWidth: normalizedDeg % 45 == 0 ? 1.5 : 0.8)
+                          context.stroke(path, with: .color(ThemeColors.tertiaryTextColor(for: colorScheme)), lineWidth: normalizedDeg % 45 == 0 ? 1.5 : 0.8)
 
                         // Cardinal labels
                         if let cardinal = Self.cardinals.first(where: { Int($0.0) == normalizedDeg }) {
                             let text = Text(cardinal.1)
                                 .font(.system(size: 10, weight: .medium))
-                                .foregroundColor(Color(uiColor: .secondaryLabel))
+                                  .foregroundColor(ThemeColors.secondaryTextColor(for: colorScheme))
                             context.draw(context.resolve(text), at: CGPoint(x: x, y: midY - 16))
                         }
                     } else if normalizedDeg % 5 == 0 {
@@ -69,7 +70,7 @@ struct QiblaStripCompass: View, Animatable {
                             p.move(to: CGPoint(x: x, y: midY - 3))
                             p.addLine(to: CGPoint(x: x, y: midY + 3))
                         }
-                        context.stroke(path, with: .color(Color(uiColor: .quaternaryLabel)), lineWidth: 0.5)
+                        context.stroke(path, with: .color(ThemeColors.quaternaryTextColor(for: colorScheme)), lineWidth: 0.5)
                     }
                 }
 
@@ -83,14 +84,14 @@ struct QiblaStripCompass: View, Animatable {
                         p.addLine(to: CGPoint(x: qiblaX + 5, y: midY - 14))
                         p.closeSubpath()
                     }
-                    context.fill(triangle, with: .color(Color(uiColor: .label)))
+                    context.fill(triangle, with: .color(ThemeColors.textColor(for: colorScheme)))
 
                     // Vertical line
                     let line = Path { p in
                         p.move(to: CGPoint(x: qiblaX, y: midY - 6))
                         p.addLine(to: CGPoint(x: qiblaX, y: midY + 10))
                     }
-                    context.stroke(line, with: .color(Color(uiColor: .label)), lineWidth: 1.5)
+                    context.stroke(line, with: .color(ThemeColors.textColor(for: colorScheme)), lineWidth: 1.5)
                 }
 
                 // Center indicator (your heading)
@@ -100,7 +101,7 @@ struct QiblaStripCompass: View, Animatable {
                     p.addLine(to: CGPoint(x: center + 3, y: midY + 20))
                     p.closeSubpath()
                 }
-                context.fill(centerLine, with: .color(Color(uiColor: .tertiaryLabel)))
+                context.fill(centerLine, with: .color(ThemeColors.tertiaryTextColor(for: colorScheme)))
             }
             // Fade edges
             .mask(

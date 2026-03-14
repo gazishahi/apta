@@ -76,7 +76,6 @@ enum NotificationMessages {
         "Last bite. I mean it.",
         "Chug that water like your life depends on it. Because your afternoon does.",
         "Look at you taking that last bite. Stop.",
-        "You have mass-texted everyone 'suhoor?' and now it's actually time.",
         "Eat something. Anything. You'll thank yourself at 2 PM.",
         "Fajr is coming and it's bringing a long day with it. Fuel up.",
         "She doesn't want to go to Suhoor Fest with you bro, lock in."

@@ -9,6 +9,9 @@ enum AnimationConstants {
 
     static let splashLogoFadeOutDelay: Double = 0.8
     static let splashLogoTotalDuration: Double = 1.2
+    static let splashLogoMergeDuration: Double = 0.5
+    static let splashLogoStartOffset: CGFloat = 80
+    static let splashLogoPtaMergeOffset: CGFloat = -40
 
     static let spring = Animation.spring(response: 0.5, dampingFraction: 0.8)
     static let prayerTransition = Animation.easeInOut(duration: 0.4)

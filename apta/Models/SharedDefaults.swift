@@ -11,4 +11,8 @@ enum SharedDefaults {
     static let latitudeKey = "shared_latitude"
     static let longitudeKey = "shared_longitude"
     static let locationTimestampKey = "shared_location_timestamp"
+
+    // Keys for background theme
+    static let backgroundThemeKey = "backgroundTheme"
+    static let isProUserKey = "isProUser"
 }

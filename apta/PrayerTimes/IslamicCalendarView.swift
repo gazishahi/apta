@@ -3,6 +3,7 @@ import SwiftUI
 struct IslamicCalendarView: UIViewRepresentable {
     @Binding var selectedDate: Date
     let hijriAdjustment: Int
+    @Environment(\.colorScheme) private var colorScheme
 
     func makeUIView(context: Context) -> UICalendarView {
         let calendarView = UICalendarView()
@@ -42,19 +43,27 @@ struct IslamicCalendarView: UIViewRepresentable {
 
         calendarView.reloadDecorations(forDateComponents: componentsToReload, animated: false)
         context.coordinator.lastSelectedComponents = components
+        context.coordinator.updateColorScheme(colorScheme)
     }
 
     func makeCoordinator() -> Coordinator {
-        Coordinator(self)
+        Coordinator(self, colorScheme: colorScheme)
     }
 
     class Coordinator: NSObject, UICalendarViewDelegate, UICalendarSelectionSingleDateDelegate {
         var parent: IslamicCalendarView
         weak var calendarView: UICalendarView?
         var lastSelectedComponents: DateComponents?
+        var effectiveColorScheme: ColorScheme
 
-        init(_ parent: IslamicCalendarView) {
+        init(_ parent: IslamicCalendarView, colorScheme: ColorScheme) {
             self.parent = parent
+            self.effectiveColorScheme = colorScheme
+        }
+
+        func updateColorScheme(_ colorScheme: ColorScheme) {
+            let theme = BackgroundTheme.current
+            effectiveColorScheme = theme.effectiveColorScheme(for: colorScheme)
         }
 
         func dateSelection(_ selection: UICalendarSelectionSingleDate, didSelectDate dateComponents: DateComponents?) {
@@ -98,7 +107,7 @@ struct IslamicCalendarView: UIViewRepresentable {
             let selectedInIslamic = calendar.startOfDay(for: adjustedSelected)
             let isSelected = calendar.isDate(date, inSameDayAs: selectedInIslamic)
 
-            let isDarkMode = calendarView.traitCollection.userInterfaceStyle == .dark
+            let isDarkMode = effectiveColorScheme == .dark
 
             if isSelected && !isToday {
                 return .customView {

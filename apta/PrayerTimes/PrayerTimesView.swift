@@ -68,7 +68,7 @@ struct PrayerTimesView: View {
 
     var body: some View {
         ZStack {
-            AptaColors.background.ignoresSafeArea()
+            ThemeColors.backgroundColor(for: colorScheme).ignoresSafeArea()
 
             VStack(spacing: 0) {
                 topBar
@@ -110,7 +110,7 @@ struct PrayerTimesView: View {
                 Text(locationService.locationName.uppercased())
                     .font(.system(size: 11, weight: .medium))
                     .kerning(1.5)
-                    .foregroundStyle(AptaColors.tertiary)
+                    .foregroundStyle(ThemeColors.tertiaryTextColor(for: colorScheme))
             }
             Spacer()
             Button {
@@ -119,7 +119,7 @@ struct PrayerTimesView: View {
             } label: {
                 Image(systemName: "gearshape")
                     .font(.system(size: 20, weight: .regular))
-                    .foregroundStyle(AptaColors.secondary)
+                    .foregroundStyle(ThemeColors.secondaryTextColor(for: colorScheme))
             }
         }
         .padding(.horizontal, 24)
@@ -146,24 +146,24 @@ struct PrayerTimesView: View {
                     if daysToToday < 0 {
                         Image(systemName: "chevron.left")
                             .font(.system(size: 10, weight: .semibold))
-                            .foregroundStyle(AptaColors.tertiary)
+                            .foregroundStyle(ThemeColors.tertiaryTextColor(for: colorScheme))
                         Text("TODAY")
                             .font(.system(size: 11, weight: .medium))
                             .kerning(1.2)
-                            .foregroundStyle(AptaColors.tertiary)
+                            .foregroundStyle(ThemeColors.tertiaryTextColor(for: colorScheme))
                     } else if daysToToday > 0 {
                         Text("TODAY")
                             .font(.system(size: 11, weight: .medium))
                             .kerning(1.2)
-                            .foregroundStyle(AptaColors.tertiary)
+                            .foregroundStyle(ThemeColors.tertiaryTextColor(for: colorScheme))
                         Image(systemName: "chevron.right")
                             .font(.system(size: 10, weight: .semibold))
-                            .foregroundStyle(AptaColors.tertiary)
+                            .foregroundStyle(ThemeColors.tertiaryTextColor(for: colorScheme))
                     } else {
                         Text("")
                             .font(.system(size: 11, weight: .medium))
                             .kerning(1.2)
-                            .foregroundStyle(AptaColors.tertiary)
+                            .foregroundStyle(ThemeColors.tertiaryTextColor(for: colorScheme))
                     }
                 }
             }
@@ -201,13 +201,13 @@ struct PrayerTimesView: View {
                     Text(current.name.rawValue.uppercased())
                         .font(Typography.currentPrayerName)
                         .kerning(Typography.currentPrayerNameKerning)
-                        .foregroundStyle(AptaColors.secondary)
+                        .foregroundStyle(ThemeColors.secondaryTextColor(for: colorScheme))
 
                     currentTimeDisplay(for: current.time)
 
                     Text(viewModel.countdown)
                         .font(Typography.countdown)
-                        .foregroundStyle(AptaColors.tertiary)
+                        .foregroundStyle(ThemeColors.tertiaryTextColor(for: colorScheme))
                 }
             }
 
@@ -218,14 +218,18 @@ struct PrayerTimesView: View {
     }
 
     private var datePickerTint: Color {
-        colorScheme == .dark
+        let theme = BackgroundTheme.current
+        let effectiveScheme = theme.effectiveColorScheme(for: colorScheme)
+        return effectiveScheme == .dark
             ? Color(red: 0.5, green: 0.65, blue: 1.0)
             : Color(uiColor: .systemBlue)
     }
 
     private var datePickerOverlay: some View {
         ZStack {
-            Color.black.opacity(colorScheme == .dark ? 0.6 : 0.3)
+            let theme = BackgroundTheme.current
+            let effectiveScheme = theme.effectiveColorScheme(for: colorScheme)
+            Color.black.opacity(effectiveScheme == .dark ? 0.6 : 0.3)
                 .ignoresSafeArea()
                 .onTapGesture { showDatePicker = false }
 
@@ -246,10 +250,10 @@ struct PrayerTimesView: View {
                     showDatePicker = false
                 }
                 .font(.system(size: 15, weight: .semibold))
-                .foregroundStyle(AptaColors.primary)
+                .foregroundStyle(ThemeColors.textColor(for: colorScheme))
                 .padding(.bottom, 16)
             }
-            .background(AptaColors.background)
+            .background(ThemeColors.backgroundColor(for: colorScheme))
             .clipShape(RoundedRectangle(cornerRadius: 18))
             .padding(.horizontal, 24)
             .transition(.scale(scale: 0.98).combined(with: .opacity))
@@ -294,35 +298,35 @@ struct PrayerTimesView: View {
             Text("QIBLA")
                 .font(.system(size: 13, weight: .medium))
                 .kerning(2.0)
-                .foregroundStyle(colorScheme == .dark ? AptaColors.secondary : AptaColors.tertiary)
+                .foregroundStyle(ThemeColors.tertiaryTextColor(for: colorScheme))
         case .searching:
             if headingUnstable {
                 Text("STABILIZE")
                     .font(.system(size: 13, weight: .medium))
                     .kerning(2.0)
-                    .foregroundStyle(AptaColors.tertiary)
+                    .foregroundStyle(ThemeColors.tertiaryTextColor(for: colorScheme))
             } else if let offset = qiblaOffset {
                 Text(abs(offset) <= qiblaThreshold ? "FOUND" : "QIBLA")
                     .font(.system(size: 13, weight: .medium))
                     .kerning(2.0)
-                    .foregroundStyle(abs(offset) <= qiblaThreshold ? AptaColors.primary : (colorScheme == .dark ? AptaColors.secondary : AptaColors.tertiary))
+                    .foregroundStyle(abs(offset) <= qiblaThreshold ? ThemeColors.textColor(for: colorScheme) : ThemeColors.tertiaryTextColor(for: colorScheme))
             } else {
                 Text("SEARCHING")
                     .font(.system(size: 13, weight: .medium))
                     .kerning(2.0)
-                    .foregroundStyle(AptaColors.tertiary)
+                    .foregroundStyle(ThemeColors.tertiaryTextColor(for: colorScheme))
             }
         case .found:
             if let offset = qiblaOffset, abs(offset) <= qiblaThreshold {
                 Text("FOUND")
                     .font(.system(size: 13, weight: .medium))
                     .kerning(2.0)
-                    .foregroundStyle(AptaColors.primary)
+                    .foregroundStyle(ThemeColors.textColor(for: colorScheme))
             } else {
                 Text("QIBLA")
                     .font(.system(size: 13, weight: .medium))
                     .kerning(2.0)
-                    .foregroundStyle(colorScheme == .dark ? AptaColors.secondary : AptaColors.tertiary)
+                    .foregroundStyle(ThemeColors.tertiaryTextColor(for: colorScheme))
             }
         }
     }
@@ -338,7 +342,7 @@ struct PrayerTimesView: View {
             } label: {
                 Image(systemName: "chevron.left")
                     .font(.system(size: 12, weight: .semibold))
-                    .foregroundStyle(AptaColors.secondary)
+                    .foregroundStyle(ThemeColors.secondaryTextColor(for: colorScheme))
             }
             .frame(width: 24, height: 24)
 
@@ -349,7 +353,7 @@ struct PrayerTimesView: View {
                 Text(hijriText.isEmpty ? "TODAY" : hijriText)
                     .font(.system(size: 13, weight: .regular))
                     .kerning(1.5)
-                    .foregroundStyle(isToday ? AptaColors.secondary : AptaColors.tertiary)
+                    .foregroundStyle(isToday ? ThemeColors.secondaryTextColor(for: colorScheme) : ThemeColors.tertiaryTextColor(for: colorScheme))
             }
             .frame(height: 24)
 
@@ -359,7 +363,7 @@ struct PrayerTimesView: View {
             } label: {
                 Image(systemName: "chevron.right")
                     .font(.system(size: 12, weight: .semibold))
-                    .foregroundStyle(AptaColors.secondary)
+                    .foregroundStyle(ThemeColors.secondaryTextColor(for: colorScheme))
             }
             .frame(width: 24, height: 24)
         }
@@ -369,7 +373,7 @@ struct PrayerTimesView: View {
         Text(dateFormatter.string(from: selectedDate).uppercased())
             .font(.system(size: 11, weight: .medium))
             .kerning(1.2)
-            .foregroundStyle(AptaColors.tertiary)
+            .foregroundStyle(ThemeColors.tertiaryTextColor(for: colorScheme))
     }
 
     private func toggleQiblaState() {
@@ -477,17 +481,17 @@ struct PrayerTimesView: View {
                 Text(timeFormatter.string(from: date))
                     .font(Typography.currentTime)
                     .kerning(Typography.currentTimeKerning)
-                    .foregroundStyle(AptaColors.primary)
+                    .foregroundStyle(ThemeColors.textColor(for: colorScheme))
                     .monospacedDigit()
                 Text(amPmFormatter.string(from: date))
                     .font(.system(size: 24, weight: .light))
-                    .foregroundStyle(AptaColors.tertiary)
+                    .foregroundStyle(ThemeColors.tertiaryTextColor(for: colorScheme))
             }
         } else {
             Text(timeFormatter.string(from: date))
                 .font(Typography.currentTime)
                     .kerning(Typography.currentTimeKerning)
-                    .foregroundStyle(AptaColors.primary)
+                    .foregroundStyle(ThemeColors.textColor(for: colorScheme))
                     .monospacedDigit()
         }
     }
@@ -498,15 +502,15 @@ struct PrayerTimesView: View {
             HStack(spacing: 3) {
                 Text(timeFormatter.string(from: date))
                     .font(Typography.upcomingPrayerTime)
-                    .foregroundStyle(AptaColors.secondary)
+                    .foregroundStyle(ThemeColors.secondaryTextColor(for: colorScheme))
                 Text(amPmFormatter.string(from: date))
                     .font(.system(size: 12, weight: .regular))
-                    .foregroundStyle(AptaColors.tertiary)
+                    .foregroundStyle(ThemeColors.tertiaryTextColor(for: colorScheme))
             }
         } else {
             Text(timeFormatter.string(from: date))
                 .font(Typography.upcomingPrayerTime)
-                .foregroundStyle(AptaColors.secondary)
+                .foregroundStyle(ThemeColors.secondaryTextColor(for: colorScheme))
         }
     }
 }

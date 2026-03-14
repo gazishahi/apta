@@ -3,6 +3,7 @@ import WidgetKit
 
 struct LargePrayerWidgetView: View {
     let entry: PrayerWidgetEntry
+    @Environment(\.colorScheme) private var colorScheme
 
     var body: some View {
         if !entry.hasLocation {
@@ -11,31 +12,29 @@ struct LargePrayerWidgetView: View {
                 .foregroundStyle(.secondary)
         } else {
             VStack(alignment: .leading, spacing: 0) {
-                // Header: Hijri date
                 Text(entry.hijriDateString)
                     .font(.system(size: 12, weight: .regular))
                     .kerning(1.5)
-                    .foregroundStyle(Color(uiColor: .tertiaryLabel))
+                    .foregroundStyle(tertiaryTextColor)
 
                 Spacer()
 
-                // Next prayer prominent
                 if let next = entry.nextPrayer, let time = entry.nextPrayerTime {
                     Text(next.rawValue.uppercased())
                         .font(.system(size: 28, weight: .medium))
                         .kerning(5.0)
-                        .foregroundStyle(Color(uiColor: .label))
+                        .foregroundStyle(textColor)
 
                     Spacer().frame(height: 6)
 
                     HStack(alignment: .firstTextBaseline) {
                         Text(formatTime(time))
                             .font(.system(size: 20, weight: .regular))
-                            .foregroundStyle(Color(uiColor: .secondaryLabel))
+                            .foregroundStyle(secondaryTextColor)
                         Spacer()
                         Text(countdown(to: time))
                             .font(.system(size: 15, weight: .light))
-                            .foregroundStyle(Color(uiColor: .secondaryLabel))
+                            .foregroundStyle(secondaryTextColor)
                     }
                 }
 
@@ -45,7 +44,6 @@ struct LargePrayerWidgetView: View {
 
                 Spacer().frame(height: 16)
 
-                // Full prayer list with generous spacing
                 ForEach(entry.allPrayers) { prayer in
                     let isNext = prayer.name == entry.nextPrayer
                     HStack(spacing: 0) {
@@ -58,7 +56,7 @@ struct LargePrayerWidgetView: View {
                         Text(formatTime(prayer.time))
                             .font(.system(size: 16, weight: .regular))
                     }
-                    .foregroundStyle(isNext ? Color(uiColor: .label) : Color(uiColor: .tertiaryLabel))
+                    .foregroundStyle(isNext ? textColor : tertiaryTextColor)
 
                     if prayer.name != entry.allPrayers.last?.name {
                         Spacer()
@@ -66,6 +64,25 @@ struct LargePrayerWidgetView: View {
                 }
             }
         }
+    }
+
+    private var textColor: Color {
+        let theme = WidgetBackgroundTheme.current
+        guard WidgetBackgroundTheme.isProUser, let preset = theme.preset else {
+            return Color(uiColor: .label)
+        }
+        if theme.isAdaptive {
+            return colorScheme == .dark ? preset.darkTextColor : preset.lightTextColor
+        }
+        return theme.preferredVariant == .dark ? preset.darkTextColor : preset.lightTextColor
+    }
+
+    private var secondaryTextColor: Color {
+        textColor.opacity(0.7)
+    }
+
+    private var tertiaryTextColor: Color {
+        textColor.opacity(0.5)
     }
 
     private func formatTime(_ date: Date) -> String {

@@ -3,6 +3,7 @@ import WidgetKit
 
 struct SmallPrayerWidgetView: View {
     let entry: PrayerWidgetEntry
+    @Environment(\.colorScheme) private var colorScheme
 
     var body: some View {
         if !entry.hasLocation {
@@ -24,11 +25,26 @@ struct SmallPrayerWidgetView: View {
                         Text(formatTime(prayer.time))
                             .font(.system(size: 12, weight: .regular))
                     }
-                    .foregroundStyle(isNext ? Color(uiColor: .label) : Color(uiColor: .tertiaryLabel))
+                    .foregroundStyle(isNext ? textColor : tertiaryTextColor)
                 }
             }
             .padding(2)
         }
+    }
+
+    private var textColor: Color {
+        let theme = WidgetBackgroundTheme.current
+        guard WidgetBackgroundTheme.isProUser, let preset = theme.preset else {
+            return Color(uiColor: .label)
+        }
+        if theme.isAdaptive {
+            return colorScheme == .dark ? preset.darkTextColor : preset.lightTextColor
+        }
+        return theme.preferredVariant == .dark ? preset.darkTextColor : preset.lightTextColor
+    }
+
+    private var tertiaryTextColor: Color {
+        textColor.opacity(0.5)
     }
 
     private func formatTime(_ date: Date) -> String {

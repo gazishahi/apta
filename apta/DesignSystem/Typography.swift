@@ -19,6 +19,7 @@ enum Typography {
     }
 
     static let splashLetter = Font.system(size: 48, weight: .bold, design: .default)
+    static let splashLogoText = Font.system(size: 48, weight: .bold, design: .default)
     static let splashWord = Font.system(size: 14, weight: .light, design: .default)
     static let splashWordKerning: CGFloat = 3.0
 

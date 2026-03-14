@@ -1,8 +1,6 @@
 import SwiftUI
 import WidgetKit
 
-// MARK: - Inline (accessoryInline)
-
 struct InlinePrayerWidgetView: View {
     let entry: PrayerWidgetEntry
 
@@ -20,8 +18,6 @@ struct InlinePrayerWidgetView: View {
         return formatter.string(from: date)
     }
 }
-
-// MARK: - Circular (accessoryCircular)
 
 struct CircularPrayerWidgetView: View {
     let entry: PrayerWidgetEntry
@@ -72,10 +68,9 @@ struct CircularPrayerWidgetView: View {
     }
 }
 
-// MARK: - Rectangular (accessoryRectangular)
-
 struct RectangularPrayerWidgetView: View {
     let entry: PrayerWidgetEntry
+    @Environment(\.colorScheme) private var colorScheme
 
     var body: some View {
         if let next = entry.nextPrayer, let time = entry.nextPrayerTime {

@@ -32,6 +32,12 @@ struct SettingsView: View {
                 }
                 .pickerStyle(.menu)
 
+                HStack {
+                    NavigationLink("Background") {
+                        BackgroundSettingsView()
+                    }
+                }
+
                 Toggle("Simple Mode", isOn: $settings.simpleMode)
                 Toggle("Show Ishraq", isOn: $settings.showIshraq)
             } header: {
@@ -134,6 +140,15 @@ struct SettingsView: View {
             Section {
                 HStack {
                     Spacer()
+                    if UserDefaults(suiteName: "group.Gazi.apta")?.bool(forKey: "isProUser") ?? false {
+                        Text("apta pro")
+                            .font(.system(size: 11, weight: .medium))
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 4)
+                            .background(Color.accentColor.opacity(0.2))
+                            .foregroundStyle(Color.accentColor)
+                            .clipShape(RoundedRectangle(cornerRadius: 10))
+                    }
                     Text("apta v\(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0") (\(Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "1"))")
                         .font(.system(size: 12, weight: .light))
                         .foregroundStyle(Color(uiColor: .tertiaryLabel))
@@ -144,7 +159,7 @@ struct SettingsView: View {
         }
         .navigationTitle("Settings")
         .navigationBarTitleDisplayMode(.inline)
-        .onChange(of: settings) { _ in save() }
+        .onChange(of: settings) { oldValue, newValue in save() }
     }
 
     private var fajrAngleBinding: Binding<Bool> {

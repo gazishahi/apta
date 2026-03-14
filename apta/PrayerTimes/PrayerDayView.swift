@@ -6,6 +6,7 @@ struct PrayerDayView: View {
     @ObservedObject var viewModel: PrayerTimesViewModel
     let settings: PrayerSettings
     let cachedPrayers: [PrayerTimeEntry]
+    @Environment(\.colorScheme) private var colorScheme
 
     var body: some View {
         Group {
@@ -16,19 +17,19 @@ struct PrayerDayView: View {
                             Text(current.name.rawValue.uppercased())
                                 .font(Typography.currentPrayerName)
                                 .kerning(Typography.currentPrayerNameKerning)
-                                .foregroundStyle(AptaColors.secondary)
+                                .foregroundStyle(ThemeColors.secondaryTextColor(for: colorScheme))
 
                             currentTimeDisplay(for: current.time)
 
                             Text(viewModel.countdown)
                                 .font(Typography.countdown)
-                                .foregroundStyle(AptaColors.tertiary)
+                                .foregroundStyle(ThemeColors.tertiaryTextColor(for: colorScheme))
                         }
                         .padding(.top, -24)
                     }
 
                     Rectangle()
-                        .fill(AptaColors.separator)
+                        .fill(ThemeColors.quaternaryTextColor(for: colorScheme))
                         .frame(width: 40, height: 0.5)
                         .padding(.vertical, 12)
 
@@ -37,7 +38,7 @@ struct PrayerDayView: View {
                             HStack {
                                 Text(prayer.name.rawValue)
                                     .font(Typography.upcomingPrayerName)
-                                    .foregroundStyle(AptaColors.primary)
+                                    .foregroundStyle(ThemeColors.textColor(for: colorScheme))
                                 Spacer()
                                 upcomingTimeDisplay(for: prayer.time)
                             }
@@ -52,7 +53,7 @@ struct PrayerDayView: View {
                         HStack {
                             Text(prayer.name.rawValue)
                                 .font(Typography.upcomingPrayerName)
-                                .foregroundStyle(AptaColors.primary)
+                                .foregroundStyle(ThemeColors.textColor(for: colorScheme))
                             Spacer()
                             upcomingTimeDisplay(for: prayer.time)
                         }
@@ -71,17 +72,17 @@ struct PrayerDayView: View {
                 Text(timeFormatter.string(from: date))
                     .font(Typography.currentTime)
                     .kerning(Typography.currentTimeKerning)
-                    .foregroundStyle(AptaColors.primary)
+                    .foregroundStyle(ThemeColors.textColor(for: colorScheme))
                     .monospacedDigit()
                 Text(amPmFormatter.string(from: date))
                     .font(.system(size: 24, weight: .light))
-                    .foregroundStyle(AptaColors.tertiary)
+                    .foregroundStyle(ThemeColors.tertiaryTextColor(for: colorScheme))
             }
         } else {
             Text(timeFormatter.string(from: date))
                 .font(Typography.currentTime)
                 .kerning(Typography.currentTimeKerning)
-                .foregroundStyle(AptaColors.primary)
+                .foregroundStyle(ThemeColors.textColor(for: colorScheme))
                 .monospacedDigit()
         }
     }
@@ -92,15 +93,15 @@ struct PrayerDayView: View {
             HStack(spacing: 3) {
                 Text(timeFormatter.string(from: date))
                     .font(Typography.upcomingPrayerTime)
-                    .foregroundStyle(AptaColors.secondary)
+                    .foregroundStyle(ThemeColors.secondaryTextColor(for: colorScheme))
                 Text(amPmFormatter.string(from: date))
                     .font(.system(size: 12, weight: .regular))
-                    .foregroundStyle(AptaColors.tertiary)
+                    .foregroundStyle(ThemeColors.tertiaryTextColor(for: colorScheme))
             }
         } else {
             Text(timeFormatter.string(from: date))
                 .font(Typography.upcomingPrayerTime)
-                .foregroundStyle(AptaColors.secondary)
+                .foregroundStyle(ThemeColors.secondaryTextColor(for: colorScheme))
         }
     }
 

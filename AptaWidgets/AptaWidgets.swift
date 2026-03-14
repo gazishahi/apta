@@ -1,15 +1,15 @@
 import WidgetKit
 import SwiftUI
 
-// MARK: - Home Screen Widget (resizable between small/medium/large)
-
 struct PrayerWidget: Widget {
     let kind = "PrayerWidget"
 
     var body: some WidgetConfiguration {
         StaticConfiguration(kind: kind, provider: PrayerTimelineProvider()) { entry in
             PrayerWidgetSwitcher(entry: entry)
-                .containerBackground(.fill.tertiary, for: .widget)
+                .containerBackground(for: .widget) {
+                    WidgetContainerBackground()
+                }
         }
         .configurationDisplayName("Prayer Times")
         .description("Prayer times for your location.")
@@ -34,8 +34,6 @@ struct PrayerWidgetSwitcher: View {
         }
     }
 }
-
-// MARK: - Lock Screen Widgets
 
 struct InlinePrayerWidget: Widget {
     let kind = "InlinePrayerWidget"
@@ -79,7 +77,28 @@ struct RectangularPrayerWidget: Widget {
     }
 }
 
-// MARK: - Widget Bundle
+struct WidgetContainerBackground: View {
+    @Environment(\.colorScheme) private var colorScheme
+
+    var body: some View {
+        if let color = backgroundColor {
+            color
+        } else {
+            Color(uiColor: .systemBackground)
+        }
+    }
+
+    private var backgroundColor: Color? {
+        let theme = WidgetBackgroundTheme.current
+        guard WidgetBackgroundTheme.isProUser, let preset = theme.preset else {
+            return nil
+        }
+        if theme.isAdaptive {
+            return colorScheme == .dark ? preset.darkColor : preset.lightColor
+        }
+        return theme.preferredVariant == .dark ? preset.darkColor : preset.lightColor
+    }
+}
 
 @main
 struct AptaWidgetsBundle: WidgetBundle {
