@@ -17,6 +17,14 @@ class LocationService: NSObject, ObservableObject {
         super.init()
         manager.delegate = self
         manager.desiredAccuracy = kCLLocationAccuracyKilometer
+
+        // Seed from cache so prayers show immediately, even before a fresh GPS fix
+        let defaults = SharedDefaults.suite
+        let lat = defaults.double(forKey: SharedDefaults.latitudeKey)
+        let lon = defaults.double(forKey: SharedDefaults.longitudeKey)
+        if lat != 0 || lon != 0 {
+            location = CLLocation(latitude: lat, longitude: lon)
+        }
     }
 
     func requestPermission() {

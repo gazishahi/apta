@@ -111,6 +111,7 @@ class PurchaseManager: ObservableObject {
         if transaction.productID == productID {
             isProUser = transaction.revocationDate == nil
             defaults.set(isProUser, forKey: isProKey)
+            WatchSyncService.shared.sendSettingsUpdate()
         }
         await transaction.finish()
     }

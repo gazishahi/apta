@@ -8,7 +8,7 @@ struct OnboardingContainerView: View {
     @State private var settings: PrayerSettings
     @StateObject private var locationService = LocationService()
 
-    private let totalSteps = 3
+    private let totalSteps = 4
     private let suggested: AppCalculationMethod
 
     init(onComplete: @escaping () -> Void) {
@@ -23,7 +23,13 @@ struct OnboardingContainerView: View {
     private var isLastStep: Bool { step == totalSteps - 1 }
 
     private var buttonDisabled: Bool {
-        isLastStep && locationService.location == nil
+        if step == 2 {
+            let status = locationService.authorizationStatus
+            return locationService.location == nil
+                && status != .denied
+                && status != .restricted
+        }
+        return false
     }
 
     var body: some View {
@@ -40,7 +46,9 @@ struct OnboardingContainerView: View {
                     case 1:
                         OnboardingPreferencesView(asrMethod: $settings.asrMethod, highLatitudeRule: $settings.highLatitudeRule)
                     case 2:
-                        OnboardingLocationView(locationService: locationService, settings: $settings)
+                        OnboardingLocationView(locationService: locationService)
+                    case 3:
+                        OnboardingNotificationView(settings: $settings)
                     default:
                         EmptyView()
                     }
@@ -69,20 +77,22 @@ struct OnboardingContainerView: View {
                     .disabled(buttonDisabled)
             }
         }
-        .animation(AnimationConstants.prayerTransition, value: step)
     }
 
     private func advance() {
-        if step < totalSteps - 1 {
-            step += 1
-        } else {
-            finish()
+        withAnimation(AnimationConstants.prayerTransition) {
+            if step < totalSteps - 1 {
+                step += 1
+            } else {
+                finish()
+            }
         }
     }
 
     private func finish() {
         PrayerSettings.current = settings
         PrayerSettings.hasCompletedOnboarding = true
+        Task.detached { WatchSyncService.shared.sendSettingsUpdate() }
         onComplete()
     }
 }

@@ -67,7 +67,7 @@ struct PrayerSettings: Codable, Equatable {
     }
 
     enum AsrMethod: String, CaseIterable, Codable, Identifiable {
-        case standard = "Standard (Shafi/Maliki/Hanbali)"
+        case standard = "Standard"
         case hanafi = "Hanafi"
 
         var id: String { rawValue }

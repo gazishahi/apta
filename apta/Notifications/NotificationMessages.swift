@@ -31,7 +31,6 @@ enum NotificationMessages {
         "You forgot about Asr, didn't you? It's okay, that's why I'm here.",
         "This is your Asr reminder before you get busy and forget.",
         "Between Dhuhr and Maghrib there's this one. Don't skip it.",
-        "Asr: the prayer that separates the casuals from the committed.",
         "Your phone just reminded you to pray. What a time to be alive.",
         "Yes, again. That's kind of the whole point.",
         "Allah loves you and so do I. Now, go pray.",
@@ -45,18 +44,17 @@ enum NotificationMessages {
         "Day shift is over. Pray and clock out.",
         "Maghrib waits for no one. Literally, it's a short window.",
         "The sky turned orange for you. Least you can do.",
-        "Instagram sunset pic can wait. You look chopped anyways."
+        "Instagram sunset pic can wait."
     ]
 
     static let ishaMessages = [
-        "Last one of day. You got this.",
-        "Isha before Netflix. You know rules.",
+        "Last one of the day. You got this.",
         "One more and you're done. For today, at least.",
         "The day's closing credits. Pray through them.",
         "Don't fall asleep before this one. I'm watching.",
-        "Isha: because day doesn't end at Maghrib.",
-        "Toothbrush can wait 5 minutes.",
-        "Final boss of daily prayers. Let's go.",
+        "The night is dark, but Isha brings light.",
+        "Save yourself before saving Gotham, Batman.",
+        "You must be so eepy. That's great. But go pray first."
     ]
 
     static let ishraqMessages = [
@@ -78,7 +76,6 @@ enum NotificationMessages {
         "Look at you taking that last bite. Stop.",
         "Eat something. Anything. You'll thank yourself at 2 PM.",
         "Fajr is coming and it's bringing a long day with it. Fuel up.",
-        "She doesn't want to go to Suhoor Fest with you bro, lock in."
     ]
 
     static let iftarMessages = [

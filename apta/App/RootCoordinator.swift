@@ -60,9 +60,11 @@ struct RootCoordinator: View {
                         showSettings = true
                     }
                     .navigationBarHidden(true)
-                    .navigationDestination(isPresented: $showSettings) {
-                        SettingsView {
-                            viewModel.recalculate()
+                    .sheet(isPresented: $showSettings) {
+                        NavigationStack {
+                            SettingsView {
+                                viewModel.recalculate()
+                            }
                         }
                     }
                     .onAppear {
@@ -80,6 +82,7 @@ struct RootCoordinator: View {
             viewModel.recalculate()
             if let loc = locationService.location {
                 NotificationScheduler.scheduleUpcoming(location: loc)
+                WatchSyncService.shared.sendSettingsUpdate()
             }
         }
     }

@@ -87,6 +87,9 @@ struct SettingsView: View {
             // SECTION 3: HIJRI DATE
             Section {
                 Stepper("Adjustment: \(settings.hijriAdjustment > 0 ? "+" : "")\(settings.hijriAdjustment) day\(abs(settings.hijriAdjustment) == 1 ? "" : "s")", value: $settings.hijriAdjustment, in: -2...2)
+                    .onChange(of: settings.hijriAdjustment) {
+                        UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                    }
             } header : {
                 sectionHeader("HIJRI DATE")
             } footer : {
@@ -134,6 +137,25 @@ struct SettingsView: View {
                 }
             } header: {
                 sectionHeader("NOTIFICATIONS")
+            }
+
+            // SECTION: WATCH
+            Section {
+                Button {
+                    WatchSyncService.shared.sendSettingsUpdate()
+                } label: {
+                    HStack {
+                        Text("Sync with Watch")
+                        Spacer()
+                        Image(systemName: "applewatch")
+                            .foregroundStyle(.secondary)
+                    }
+                }
+                .foregroundStyle(.primary)
+            } header: {
+                sectionHeader("APPLE WATCH")
+            } footer: {
+                Text("Push your current settings and prayer times to the Apple Watch app.")
             }
 
             // VERSION FOOTER
@@ -206,5 +228,6 @@ struct SettingsView: View {
         PrayerSettings.current = settings
         onSettingsChanged()
         WidgetCenter.shared.reloadAllTimelines()
+        WatchSyncService.shared.sendSettingsUpdate()
     }
 }

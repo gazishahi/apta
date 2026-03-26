@@ -7,12 +7,53 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		79955E842F69E5C300AC8098 /* Adhan in Frameworks */ = {isa = PBXBuildFile; productRef = 79955E832F69E5C300AC8098 /* Adhan */; };
+		79955E862F69E69800AC8098 /* Adhan in Frameworks */ = {isa = PBXBuildFile; productRef = 79955E852F69E69800AC8098 /* Adhan */; };
 		79BBC3322F57F1620040921E /* Adhan in Frameworks */ = {isa = PBXBuildFile; productRef = 79FC59012F57EA0000A20B7F /* Adhan */; };
+		79C7B2C62F6892B9008E8A1B /* AptaWatch Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 79C7B2A62F6892B8008E8A1B /* AptaWatch Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		79C7B2D82F68930F008E8A1B /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 79C7B2D72F68930F008E8A1B /* WidgetKit.framework */; };
+		79C7B2DA2F68930F008E8A1B /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 79C7B2D92F68930F008E8A1B /* SwiftUI.framework */; };
+		79C7B2E92F689311008E8A1B /* AptaWatchWidgetsExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 79C7B2D52F68930F008E8A1B /* AptaWatchWidgetsExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		AABB00012F580000000AABB1 /* Adhan in Frameworks */ = {isa = PBXBuildFile; productRef = AABB000D2F580000000AABB1 /* Adhan */; };
 		AABB00102F580000000AABB1 /* AptaWidgetsExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = AABB00032F580000000AABB1 /* AptaWidgetsExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		79C7B2B32F6892B9008E8A1B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 79FC58BB2F57E97E00A20B7F /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 79C7B2A52F6892B8008E8A1B;
+			remoteInfo = "AptaWatch Watch App";
+		};
+		79C7B2BD2F6892B9008E8A1B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 79FC58BB2F57E97E00A20B7F /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 79C7B2A52F6892B8008E8A1B;
+			remoteInfo = "AptaWatch Watch App";
+		};
+		79C7B2C42F6892B9008E8A1B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 79FC58BB2F57E97E00A20B7F /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 79C7B2A52F6892B8008E8A1B;
+			remoteInfo = "AptaWatch Watch App";
+		};
+		79C7B2E72F689311008E8A1B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 79FC58BB2F57E97E00A20B7F /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 79C7B2D42F68930F008E8A1B;
+			remoteInfo = AptaWatchWidgetsExtension;
+		};
+		79CC52812F6A0F70009DA92C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 79FC58BB2F57E97E00A20B7F /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 79C7B2D42F68930F008E8A1B;
+			remoteInfo = AptaWatchWidgetsExtension;
+		};
 		79FC58D32F57E97F00A20B7F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 79FC58BB2F57E97E00A20B7F /* Project object */;
@@ -37,6 +78,28 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		79C7B2CA2F6892B9008E8A1B /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+				79C7B2C62F6892B9008E8A1B /* AptaWatch Watch App.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		79C7B2EE2F689311008E8A1B /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				79C7B2E92F689311008E8A1B /* AptaWatchWidgetsExtension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		AABB000E2F580000000AABB1 /* Embed Foundation Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -51,13 +114,54 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		79C7B2A62F6892B8008E8A1B /* AptaWatch Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "AptaWatch Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		79C7B2B22F6892B9008E8A1B /* AptaWatch Watch AppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "AptaWatch Watch AppTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		79C7B2BC2F6892B9008E8A1B /* AptaWatch Watch AppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "AptaWatch Watch AppUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		79C7B2D52F68930F008E8A1B /* AptaWatchWidgetsExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = AptaWatchWidgetsExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		79C7B2D72F68930F008E8A1B /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
+		79C7B2D92F68930F008E8A1B /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		79FC58C32F57E97E00A20B7F /* apta.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = apta.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		79FC58D22F57E97F00A20B7F /* aptaTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = aptaTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		79FC58DC2F57E97F00A20B7F /* aptaUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = aptaUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		AABB00032F580000000AABB1 /* AptaWidgetsExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = AptaWidgetsExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		CC440001CC44000000CC4401 /* AptaWatch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AptaWatch.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		CC550001CC55000000CC5501 /* AptaWatchWidgets.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = AptaWatchWidgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		79C7B2EA2F689311008E8A1B /* Exceptions for "AptaWatchWidgets" folder in "AptaWatchWidgetsExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 79C7B2D42F68930F008E8A1B /* AptaWatchWidgetsExtension */;
+		};
+		79C7B3102F69E4E5008E8A1B /* Exceptions for "apta" folder in "AptaWatch Watch App" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Models/BackgroundPresets.swift,
+				Models/BackgroundTheme.swift,
+				Models/CalculationMethod.swift,
+				Models/PrayerName.swift,
+				Models/PrayerSettings.swift,
+				Models/SharedDefaults.swift,
+				Services/PrayerCalculationService.swift,
+			);
+			target = 79C7B2A52F6892B8008E8A1B /* AptaWatch Watch App */;
+		};
+		79C7B3112F69E4E5008E8A1B /* Exceptions for "apta" folder in "AptaWatchWidgetsExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Models/BackgroundPresets.swift,
+				Models/BackgroundTheme.swift,
+				Models/CalculationMethod.swift,
+				Models/PrayerName.swift,
+				Models/PrayerSettings.swift,
+				Models/SharedDefaults.swift,
+				Services/PrayerCalculationService.swift,
+			);
+			target = 79C7B2D42F68930F008E8A1B /* AptaWatchWidgetsExtension */;
+		};
 		AABB000F2F580000000AABB1 /* Exceptions for "apta" folder in "AptaWidgetsExtension" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -74,10 +178,35 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		79C7B2A72F6892B8008E8A1B /* AptaWatch Watch App */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "AptaWatch Watch App";
+			sourceTree = "<group>";
+		};
+		79C7B2B52F6892B9008E8A1B /* AptaWatch Watch AppTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "AptaWatch Watch AppTests";
+			sourceTree = "<group>";
+		};
+		79C7B2BF2F6892B9008E8A1B /* AptaWatch Watch AppUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "AptaWatch Watch AppUITests";
+			sourceTree = "<group>";
+		};
+		79C7B2DB2F68930F008E8A1B /* AptaWatchWidgets */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				79C7B2EA2F689311008E8A1B /* Exceptions for "AptaWatchWidgets" folder in "AptaWatchWidgetsExtension" target */,
+			);
+			path = AptaWatchWidgets;
+			sourceTree = "<group>";
+		};
 		79FC58C52F57E97E00A20B7F /* apta */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 				AABB000F2F580000000AABB1 /* Exceptions for "apta" folder in "AptaWidgetsExtension" target */,
+				79C7B3102F69E4E5008E8A1B /* Exceptions for "apta" folder in "AptaWatch Watch App" target */,
+				79C7B3112F69E4E5008E8A1B /* Exceptions for "apta" folder in "AptaWatchWidgetsExtension" target */,
 			);
 			path = apta;
 			sourceTree = "<group>";
@@ -97,9 +226,51 @@
 			path = AptaWidgets;
 			sourceTree = "<group>";
 		};
+		CC44000FCC44000000CC4401 /* AptaWatch */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = AptaWatch;
+			sourceTree = "<group>";
+		};
+		CC55000BCC55000000CC5501 /* AptaWatchWidgets */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = AptaWatchWidgets;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		79C7B2A32F6892B8008E8A1B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				79955E862F69E69800AC8098 /* Adhan in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		79C7B2AF2F6892B9008E8A1B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		79C7B2B92F6892B9008E8A1B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		79C7B2D22F68930F008E8A1B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				79955E842F69E5C300AC8098 /* Adhan in Frameworks */,
+				79C7B2DA2F68930F008E8A1B /* SwiftUI.framework in Frameworks */,
+				79C7B2D82F68930F008E8A1B /* WidgetKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		79FC58C02F57E97E00A20B7F /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -133,13 +304,29 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		79C7B2D62F68930F008E8A1B /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				79C7B2D72F68930F008E8A1B /* WidgetKit.framework */,
+				79C7B2D92F68930F008E8A1B /* SwiftUI.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		79FC58BA2F57E97E00A20B7F = {
 			isa = PBXGroup;
 			children = (
 				79FC58C52F57E97E00A20B7F /* apta */,
 				AABB00042F580000000AABB1 /* AptaWidgets */,
+				CC44000FCC44000000CC4401 /* AptaWatch */,
+				CC55000BCC55000000CC5501 /* AptaWatchWidgets */,
 				79FC58D52F57E97F00A20B7F /* aptaTests */,
 				79FC58DF2F57E97F00A20B7F /* aptaUITests */,
+				79C7B2A72F6892B8008E8A1B /* AptaWatch Watch App */,
+				79C7B2B52F6892B9008E8A1B /* AptaWatch Watch AppTests */,
+				79C7B2BF2F6892B9008E8A1B /* AptaWatch Watch AppUITests */,
+				79C7B2DB2F68930F008E8A1B /* AptaWatchWidgets */,
+				79C7B2D62F68930F008E8A1B /* Frameworks */,
 				79FC58C42F57E97E00A20B7F /* Products */,
 			);
 			sourceTree = "<group>";
@@ -151,6 +338,12 @@
 				79FC58D22F57E97F00A20B7F /* aptaTests.xctest */,
 				79FC58DC2F57E97F00A20B7F /* aptaUITests.xctest */,
 				AABB00032F580000000AABB1 /* AptaWidgetsExtension.appex */,
+				CC440001CC44000000CC4401 /* AptaWatch.app */,
+				CC550001CC55000000CC5501 /* AptaWatchWidgets.appex */,
+				79C7B2A62F6892B8008E8A1B /* AptaWatch Watch App.app */,
+				79C7B2B22F6892B9008E8A1B /* AptaWatch Watch AppTests.xctest */,
+				79C7B2BC2F6892B9008E8A1B /* AptaWatch Watch AppUITests.xctest */,
+				79C7B2D52F68930F008E8A1B /* AptaWatchWidgetsExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -158,6 +351,101 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		79C7B2A52F6892B8008E8A1B /* AptaWatch Watch App */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 79C7B2C72F6892B9008E8A1B /* Build configuration list for PBXNativeTarget "AptaWatch Watch App" */;
+			buildPhases = (
+				79C7B2A22F6892B8008E8A1B /* Sources */,
+				79C7B2A32F6892B8008E8A1B /* Frameworks */,
+				79C7B2A42F6892B8008E8A1B /* Resources */,
+				79C7B2EE2F689311008E8A1B /* Embed Foundation Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				79C7B2E82F689311008E8A1B /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				79C7B2A72F6892B8008E8A1B /* AptaWatch Watch App */,
+				CC44000FCC44000000CC4401 /* AptaWatch */,
+			);
+			name = "AptaWatch Watch App";
+			packageProductDependencies = (
+				79955E852F69E69800AC8098 /* Adhan */,
+			);
+			productName = "AptaWatch Watch App";
+			productReference = 79C7B2A62F6892B8008E8A1B /* AptaWatch Watch App.app */;
+			productType = "com.apple.product-type.application";
+		};
+		79C7B2B12F6892B9008E8A1B /* AptaWatch Watch AppTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 79C7B2CB2F6892B9008E8A1B /* Build configuration list for PBXNativeTarget "AptaWatch Watch AppTests" */;
+			buildPhases = (
+				79C7B2AE2F6892B9008E8A1B /* Sources */,
+				79C7B2AF2F6892B9008E8A1B /* Frameworks */,
+				79C7B2B02F6892B9008E8A1B /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				79C7B2B42F6892B9008E8A1B /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				79C7B2B52F6892B9008E8A1B /* AptaWatch Watch AppTests */,
+			);
+			name = "AptaWatch Watch AppTests";
+			packageProductDependencies = (
+			);
+			productName = "AptaWatch Watch AppTests";
+			productReference = 79C7B2B22F6892B9008E8A1B /* AptaWatch Watch AppTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		79C7B2BB2F6892B9008E8A1B /* AptaWatch Watch AppUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 79C7B2CE2F6892B9008E8A1B /* Build configuration list for PBXNativeTarget "AptaWatch Watch AppUITests" */;
+			buildPhases = (
+				79C7B2B82F6892B9008E8A1B /* Sources */,
+				79C7B2B92F6892B9008E8A1B /* Frameworks */,
+				79C7B2BA2F6892B9008E8A1B /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				79C7B2BE2F6892B9008E8A1B /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				79C7B2BF2F6892B9008E8A1B /* AptaWatch Watch AppUITests */,
+			);
+			name = "AptaWatch Watch AppUITests";
+			packageProductDependencies = (
+			);
+			productName = "AptaWatch Watch AppUITests";
+			productReference = 79C7B2BC2F6892B9008E8A1B /* AptaWatch Watch AppUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		79C7B2D42F68930F008E8A1B /* AptaWatchWidgetsExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 79C7B2EB2F689311008E8A1B /* Build configuration list for PBXNativeTarget "AptaWatchWidgetsExtension" */;
+			buildPhases = (
+				79C7B2D12F68930F008E8A1B /* Sources */,
+				79C7B2D22F68930F008E8A1B /* Frameworks */,
+				79C7B2D32F68930F008E8A1B /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				79C7B2DB2F68930F008E8A1B /* AptaWatchWidgets */,
+			);
+			name = AptaWatchWidgetsExtension;
+			packageProductDependencies = (
+				79955E832F69E5C300AC8098 /* Adhan */,
+			);
+			productName = AptaWatchWidgetsExtension;
+			productReference = 79C7B2D52F68930F008E8A1B /* AptaWatchWidgetsExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		79FC58C22F57E97E00A20B7F /* apta */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 79FC58E62F57E97F00A20B7F /* Build configuration list for PBXNativeTarget "apta" */;
@@ -166,11 +454,14 @@
 				79FC58C02F57E97E00A20B7F /* Frameworks */,
 				79FC58C12F57E97E00A20B7F /* Resources */,
 				AABB000E2F580000000AABB1 /* Embed Foundation Extensions */,
+				79C7B2CA2F6892B9008E8A1B /* Embed Watch Content */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				79CC52822F6A0F70009DA92C /* PBXTargetDependency */,
 				AABB00092F580000000AABB1 /* PBXTargetDependency */,
+				79C7B2C52F6892B9008E8A1B /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				79FC58C52F57E97E00A20B7F /* apta */,
@@ -259,9 +550,23 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 2620;
+				LastSwiftUpdateCheck = 2630;
 				LastUpgradeCheck = 2630;
 				TargetAttributes = {
+					79C7B2A52F6892B8008E8A1B = {
+						CreatedOnToolsVersion = 26.3;
+					};
+					79C7B2B12F6892B9008E8A1B = {
+						CreatedOnToolsVersion = 26.3;
+						TestTargetID = 79C7B2A52F6892B8008E8A1B;
+					};
+					79C7B2BB2F6892B9008E8A1B = {
+						CreatedOnToolsVersion = 26.3;
+						TestTargetID = 79C7B2A52F6892B8008E8A1B;
+					};
+					79C7B2D42F68930F008E8A1B = {
+						CreatedOnToolsVersion = 26.3;
+					};
 					79FC58C22F57E97E00A20B7F = {
 						CreatedOnToolsVersion = 26.2;
 					};
@@ -299,11 +604,43 @@
 				79FC58D12F57E97F00A20B7F /* aptaTests */,
 				79FC58DB2F57E97F00A20B7F /* aptaUITests */,
 				AABB00062F580000000AABB1 /* AptaWidgetsExtension */,
+				79C7B2A52F6892B8008E8A1B /* AptaWatch Watch App */,
+				79C7B2B12F6892B9008E8A1B /* AptaWatch Watch AppTests */,
+				79C7B2BB2F6892B9008E8A1B /* AptaWatch Watch AppUITests */,
+				79C7B2D42F68930F008E8A1B /* AptaWatchWidgetsExtension */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		79C7B2A42F6892B8008E8A1B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		79C7B2B02F6892B9008E8A1B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		79C7B2BA2F6892B9008E8A1B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		79C7B2D32F68930F008E8A1B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		79FC58C12F57E97E00A20B7F /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -335,6 +672,34 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		79C7B2A22F6892B8008E8A1B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		79C7B2AE2F6892B9008E8A1B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		79C7B2B82F6892B9008E8A1B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		79C7B2D12F68930F008E8A1B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		79FC58BF2F57E97E00A20B7F /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -366,6 +731,31 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		79C7B2B42F6892B9008E8A1B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 79C7B2A52F6892B8008E8A1B /* AptaWatch Watch App */;
+			targetProxy = 79C7B2B32F6892B9008E8A1B /* PBXContainerItemProxy */;
+		};
+		79C7B2BE2F6892B9008E8A1B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 79C7B2A52F6892B8008E8A1B /* AptaWatch Watch App */;
+			targetProxy = 79C7B2BD2F6892B9008E8A1B /* PBXContainerItemProxy */;
+		};
+		79C7B2C52F6892B9008E8A1B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 79C7B2A52F6892B8008E8A1B /* AptaWatch Watch App */;
+			targetProxy = 79C7B2C42F6892B9008E8A1B /* PBXContainerItemProxy */;
+		};
+		79C7B2E82F689311008E8A1B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 79C7B2D42F68930F008E8A1B /* AptaWatchWidgetsExtension */;
+			targetProxy = 79C7B2E72F689311008E8A1B /* PBXContainerItemProxy */;
+		};
+		79CC52822F6A0F70009DA92C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 79C7B2D42F68930F008E8A1B /* AptaWatchWidgetsExtension */;
+			targetProxy = 79CC52812F6A0F70009DA92C /* PBXContainerItemProxy */;
+		};
 		79FC58D42F57E97F00A20B7F /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 79FC58C22F57E97E00A20B7F /* apta */;
@@ -384,6 +774,232 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		79C7B2C82F6892B9008E8A1B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
+				CODE_SIGN_ENTITLEMENTS = "AptaWatch Watch App/AptaWatch Watch App.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 10;
+				DEVELOPMENT_TEAM = D3MM423T6V;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = apta;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = Gazi.apta;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = Gazi.apta.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 11.0;
+			};
+			name = Debug;
+		};
+		79C7B2C92F6892B9008E8A1B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
+				CODE_SIGN_ENTITLEMENTS = "AptaWatch Watch App/AptaWatch Watch App.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 10;
+				DEVELOPMENT_TEAM = D3MM423T6V;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = apta;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = Gazi.apta;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = Gazi.apta.watchkitapp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 11.0;
+			};
+			name = Release;
+		};
+		79C7B2CC2F6892B9008E8A1B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = D3MM423T6V;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "Gazi.AptaWatch-Watch-AppTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AptaWatch Watch App.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/AptaWatch Watch App";
+				WATCHOS_DEPLOYMENT_TARGET = 11.0;
+			};
+			name = Debug;
+		};
+		79C7B2CD2F6892B9008E8A1B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = D3MM423T6V;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "Gazi.AptaWatch-Watch-AppTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AptaWatch Watch App.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/AptaWatch Watch App";
+				WATCHOS_DEPLOYMENT_TARGET = 11.0;
+			};
+			name = Release;
+		};
+		79C7B2CF2F6892B9008E8A1B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = D3MM423T6V;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "Gazi.AptaWatch-Watch-AppUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_TARGET_NAME = "AptaWatch Watch App";
+				WATCHOS_DEPLOYMENT_TARGET = 11.0;
+			};
+			name = Debug;
+		};
+		79C7B2D02F6892B9008E8A1B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = D3MM423T6V;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "Gazi.AptaWatch-Watch-AppUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_TARGET_NAME = "AptaWatch Watch App";
+				WATCHOS_DEPLOYMENT_TARGET = 11.0;
+			};
+			name = Release;
+		};
+		79C7B2EC2F689311008E8A1B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 10;
+				DEVELOPMENT_TEAM = D3MM423T6V;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = AptaWatchWidgets/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = AptaWatchWidgets;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = Gazi.apta.watchkitapp.AptaWatchWidgets;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 11.0;
+			};
+			name = Debug;
+		};
+		79C7B2ED2F689311008E8A1B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 10;
+				DEVELOPMENT_TEAM = D3MM423T6V;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = AptaWatchWidgets/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = AptaWatchWidgets;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = Gazi.apta.watchkitapp.AptaWatchWidgets;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 11.0;
+			};
+			name = Release;
+		};
 		79FC58E42F57E97F00A20B7F /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -514,7 +1130,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = apta/apta.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_TEAM = D3MM423T6V;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -536,12 +1152,16 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Gazi.apta;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -552,7 +1172,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = apta/apta.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_TEAM = D3MM423T6V;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -574,12 +1194,16 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Gazi.apta;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
@@ -672,12 +1296,13 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = AptaWidgets/AptaWidgets.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_TEAM = D3MM423T6V;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = AptaWidgetsInfo.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = AptaWidgets;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -687,12 +1312,14 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Gazi.apta.AptaWidgets;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -701,12 +1328,13 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = AptaWidgets/AptaWidgets.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 10;
 				DEVELOPMENT_TEAM = D3MM423T6V;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = AptaWidgetsInfo.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = AptaWidgets;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -716,18 +1344,56 @@
 				PRODUCT_BUNDLE_IDENTIFIER = Gazi.apta.AptaWidgets;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		79C7B2C72F6892B9008E8A1B /* Build configuration list for PBXNativeTarget "AptaWatch Watch App" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				79C7B2C82F6892B9008E8A1B /* Debug */,
+				79C7B2C92F6892B9008E8A1B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		79C7B2CB2F6892B9008E8A1B /* Build configuration list for PBXNativeTarget "AptaWatch Watch AppTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				79C7B2CC2F6892B9008E8A1B /* Debug */,
+				79C7B2CD2F6892B9008E8A1B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		79C7B2CE2F6892B9008E8A1B /* Build configuration list for PBXNativeTarget "AptaWatch Watch AppUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				79C7B2CF2F6892B9008E8A1B /* Debug */,
+				79C7B2D02F6892B9008E8A1B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		79C7B2EB2F689311008E8A1B /* Build configuration list for PBXNativeTarget "AptaWatchWidgetsExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				79C7B2EC2F689311008E8A1B /* Debug */,
+				79C7B2ED2F689311008E8A1B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		79FC58BE2F57E97E00A20B7F /* Build configuration list for PBXProject "apta" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -787,6 +1453,16 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		79955E832F69E5C300AC8098 /* Adhan */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 79FC59002F57EA0000A20B7F /* XCRemoteSwiftPackageReference "adhan-swift" */;
+			productName = Adhan;
+		};
+		79955E852F69E69800AC8098 /* Adhan */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 79FC59002F57EA0000A20B7F /* XCRemoteSwiftPackageReference "adhan-swift" */;
+			productName = Adhan;
+		};
 		79FC59012F57EA0000A20B7F /* Adhan */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 79FC59002F57EA0000A20B7F /* XCRemoteSwiftPackageReference "adhan-swift" */;

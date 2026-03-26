@@ -200,6 +200,7 @@ struct BackgroundSettingsView: View {
     private func save() {
         BackgroundTheme.current = theme
         WidgetCenter.shared.reloadAllTimelines()
+        WatchSyncService.shared.sendSettingsUpdate()
     }
 }
 

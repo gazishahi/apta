@@ -41,6 +41,8 @@ class PrayerTimesViewModel: ObservableObject {
     }
 
     func recalculate() {
+        cachedTomorrowPrayers = nil
+        lastCacheDate = nil
         guard let location = locationService.location else { return }
         let settings = PrayerSettings.current
 
