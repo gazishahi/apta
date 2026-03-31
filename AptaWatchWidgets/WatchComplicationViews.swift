@@ -1,10 +1,6 @@
 import SwiftUI
 import WidgetKit
 
-private var isProUser: Bool {
-    UserDefaults(suiteName: "group.Gazi.apta")?.bool(forKey: "isProUser") ?? false
-}
-
 // MARK: - Inline (free)
 
 struct InlineComplicationView: View {
@@ -56,7 +52,7 @@ struct RectangularComplicationView: View {
     let entry: WatchEntry
 
     var body: some View {
-        if isProUser {
+        if entry.isProUser {
             proView
         } else {
             lockedView
@@ -114,7 +110,7 @@ struct CornerComplicationView: View {
 
     var body: some View {
         Group {
-            if isProUser {
+            if entry.isProUser {
                 if let name = entry.nextPrayerName, let time = entry.nextPrayerTime {
                     VStack(spacing: 0) {
                         Text(String(name.prefix(3)).uppercased())

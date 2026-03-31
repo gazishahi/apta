@@ -7,6 +7,7 @@ struct RootCoordinator: View {
         case main
     }
 
+    @Environment(\.scenePhase) private var scenePhase
     @State private var phase: AppPhase = .splash
     @State private var showSettings = false
     @StateObject private var locationService = LocationService()
@@ -78,6 +79,11 @@ struct RootCoordinator: View {
             }
         }
         .preferredColorScheme(resolvedColorScheme)
+        .onChange(of: scenePhase) {
+            if scenePhase == .active, phase == .main {
+                locationService.requestLocation()
+            }
+        }
         .onChange(of: locationService.location) {
             viewModel.recalculate()
             if let loc = locationService.location {
