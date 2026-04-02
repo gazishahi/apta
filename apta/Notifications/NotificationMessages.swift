@@ -53,8 +53,9 @@ enum NotificationMessages {
         "The day's closing credits. Pray through them.",
         "Don't fall asleep before this one. I'm watching.",
         "The night is dark, but Isha brings light.",
-        "Save yourself before saving Gotham, Batman.",
-        "You must be so eepy. That's great. But go pray first."
+        "You must be so eepy. That's great. But go pray first.",
+        "Last one and then a night of Tahajjud and dhikr!",
+        "The pillow will wait three more minutes."
     ]
 
     static let ishraqMessages = [

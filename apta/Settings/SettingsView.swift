@@ -5,10 +5,41 @@ struct SettingsView: View {
     @State private var settings = PrayerSettings.current
     @State private var advancedExpanded = false
     @State private var prayersExpanded = false
+    @StateObject private var purchaseManager = PurchaseManager.shared
+    @State private var showPaywall = false
     var onSettingsChanged: () -> Void
 
     var body: some View {
         List {
+            // SECTION 0: APTA PRO (only shown to non-pro users)
+            if !purchaseManager.isProUser {
+                Section {
+                    Button {
+                        showPaywall = true
+                    } label: {
+                        HStack {
+                            Text("Get apta pro")
+                                .foregroundStyle(.primary)
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                .font(.system(size: 13, weight: .medium))
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+
+                    Button("Restore Purchases") {
+                        Task {
+                            await purchaseManager.restorePurchases()
+                        }
+                    }
+                    .foregroundStyle(AptaColors.secondary)
+                } header: {
+                    sectionHeader("APTA PRO")
+                } footer: {
+                    Text("Unlock custom background colors for the app and widgets.")
+                }
+            }
+
             // SECTION 1: APPEARANCE
             Section {
                 Picker("Theme", selection: $settings.theme) {
@@ -179,6 +210,7 @@ struct SettingsView: View {
                 .listRowBackground(Color.clear)
             }
         }
+        .sheet(isPresented: $showPaywall) { PaywallView() }
         .navigationTitle("Settings")
         .navigationBarTitleDisplayMode(.inline)
         .onChange(of: settings) { oldValue, newValue in save() }
