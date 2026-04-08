@@ -65,3 +65,47 @@ struct PrayerCalculationService {
         return prayers.currentPrayer()
     }
 }
+
+struct PrayerWindowResolution {
+    let previousPrayer: PrayerTimeEntry?
+    let nextPrayer: PrayerTimeEntry?
+    let displayPrayers: [PrayerTimeEntry]
+
+    var currentPrayer: PrayerTimeEntry? { previousPrayer }
+    var progressStartTime: Date? { previousPrayer?.time }
+    var progressEndTime: Date? { nextPrayer?.time }
+}
+
+enum PrayerWindowResolver {
+    static func resolve(
+        at date: Date,
+        prayers: [PrayerTimeEntry],
+        calendar: Calendar = Calendar(identifier: .gregorian)
+    ) -> PrayerWindowResolution {
+        let sortedPrayers = prayers.sorted { $0.time < $1.time }
+        let previousPrayer = sortedPrayers.last(where: { $0.time <= date })
+        let nextPrayer = sortedPrayers.first(where: { $0.time > date })
+
+        let prayersByDay = Dictionary(grouping: sortedPrayers) { calendar.startOfDay(for: $0.time) }
+        let currentDay = calendar.startOfDay(for: date)
+        let currentDayPrayers = (prayersByDay[currentDay] ?? []).sorted { $0.time < $1.time }
+        let hasRemainingPrayerToday = currentDayPrayers.contains(where: { $0.time > date })
+
+        let displayDay: Date
+        if hasRemainingPrayerToday || nextPrayer == nil {
+            displayDay = currentDay
+        } else if let nextPrayer {
+            displayDay = calendar.startOfDay(for: nextPrayer.time)
+        } else {
+            displayDay = currentDay
+        }
+
+        let displayPrayers = (prayersByDay[displayDay] ?? []).sorted { $0.time < $1.time }
+
+        return PrayerWindowResolution(
+            previousPrayer: previousPrayer,
+            nextPrayer: nextPrayer,
+            displayPrayers: displayPrayers
+        )
+    }
+}

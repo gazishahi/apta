@@ -18,7 +18,12 @@ struct MediumPrayerWidgetView: View {
                     .foregroundStyle(tertiaryTextColor)
 
                 if let next = entry.nextPrayer, let time = entry.nextPrayerTime {
-                    VStack(alignment: .leading, spacing: 2) {
+                    VStack(alignment: .leading, spacing: 3) {
+                        Text("NEXT")
+                            .font(.system(size: 10, weight: .semibold))
+                            .kerning(1.6)
+                            .foregroundStyle(tertiaryTextColor)
+
                         Text(next.rawValue.uppercased())
                             .font(.system(size: 20, weight: .medium))
                             .kerning(3.0)
@@ -29,7 +34,7 @@ struct MediumPrayerWidgetView: View {
                                 .font(.system(size: 15, weight: .regular))
                                 .foregroundStyle(secondaryTextColor)
                             Spacer()
-                            Text(countdown(to: time))
+                            Text(time, style: .relative)
                                 .font(.system(size: 13, weight: .light))
                                 .foregroundStyle(secondaryTextColor)
                         }
@@ -39,13 +44,15 @@ struct MediumPrayerWidgetView: View {
                 Spacer(minLength: 2)
 
                 HStack(spacing: 0) {
-                    let others = entry.allPrayers.filter { $0.name != entry.nextPrayer }
+                    let others = displayedPrayers.filter { $0.name != entry.nextPrayer }
                     ForEach(Array(others.enumerated()), id: \.element.id) { index, prayer in
+                        let isCurrent = prayer.name == entry.currentPrayer
                         VStack(spacing: 1) {
                             Text(prayer.name.rawValue)
                                 .font(.system(size: 12, weight: .regular))
                             Text(formatTimeShort(prayer.time))
                                 .font(.system(size: 12, weight: .light))
+                                .underline(isCurrent)
                         }
                         .foregroundStyle(tertiaryTextColor)
                         if index < others.count - 1 {
@@ -56,6 +63,16 @@ struct MediumPrayerWidgetView: View {
             }
             .padding(2)
         }
+    }
+
+    private var displayedPrayers: [PrayerTimeEntry] {
+        var prayers = entry.allPrayers
+        if let currentPrayer = entry.currentPrayer,
+           let previousPrayerTime = entry.previousPrayerTime,
+           !prayers.contains(where: { $0.name == currentPrayer }) {
+            prayers.insert(PrayerTimeEntry(name: currentPrayer, time: previousPrayerTime), at: 0)
+        }
+        return prayers
     }
 
     private var textColor: Color {
@@ -90,12 +107,4 @@ struct MediumPrayerWidgetView: View {
         return formatter.string(from: date)
     }
 
-    private func countdown(to date: Date) -> String {
-        let diff = date.timeIntervalSince(entry.date)
-        guard diff > 0 else { return "now" }
-        let h = Int(diff) / 3600
-        let m = (Int(diff) % 3600) / 60
-        if h > 0 { return "in \(h)h \(m)m" }
-        return "in \(m)m"
-    }
 }

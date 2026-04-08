@@ -1,6 +1,7 @@
 import Foundation
 import CoreLocation
 import Combine
+import WidgetKit
 
 @MainActor
 class LocationService: NSObject, ObservableObject {
@@ -72,6 +73,7 @@ extension LocationService: CLLocationManagerDelegate {
             guard let self, let loc = locations.last else { return }
             self.location = loc
             self.writeLocationToSharedDefaults(loc)
+            WidgetCenter.shared.reloadAllTimelines()
             self.reverseGeocode(loc)
         }
     }

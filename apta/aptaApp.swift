@@ -1,5 +1,6 @@
 import SwiftUI
 import CoreLocation
+import WidgetKit
 
 @main
 struct aptaApp: App {
@@ -12,6 +13,7 @@ struct aptaApp: App {
         .onChange(of: scenePhase) {
             if scenePhase == .active {
                 rescheduleNotifications()
+                WidgetCenter.shared.reloadAllTimelines()
             }
         }
     }

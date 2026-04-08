@@ -298,7 +298,7 @@ struct PrayerTimesView: View {
             Text("QIBLA")
                 .font(.system(size: 13, weight: .medium))
                 .kerning(2.0)
-                .foregroundStyle(ThemeColors.tertiaryTextColor(for: colorScheme))
+                .foregroundStyle(ThemeColors.secondaryTextColor(for: colorScheme))
         case .searching:
             if headingUnstable {
                 Text("STABILIZE")

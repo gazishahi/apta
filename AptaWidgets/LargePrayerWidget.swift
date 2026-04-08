@@ -20,6 +20,13 @@ struct LargePrayerWidgetView: View {
                 Spacer()
 
                 if let next = entry.nextPrayer, let time = entry.nextPrayerTime {
+                    Text("NEXT")
+                        .font(.system(size: 11, weight: .semibold))
+                        .kerning(1.8)
+                        .foregroundStyle(tertiaryTextColor)
+
+                    Spacer().frame(height: 6)
+
                     Text(next.rawValue.uppercased())
                         .font(.system(size: 28, weight: .medium))
                         .kerning(5.0)
@@ -32,7 +39,7 @@ struct LargePrayerWidgetView: View {
                             .font(.system(size: 20, weight: .regular))
                             .foregroundStyle(secondaryTextColor)
                         Spacer()
-                        Text(countdown(to: time))
+                        Text(time, style: .relative)
                             .font(.system(size: 15, weight: .light))
                             .foregroundStyle(secondaryTextColor)
                     }
@@ -44,26 +51,36 @@ struct LargePrayerWidgetView: View {
 
                 Spacer().frame(height: 16)
 
-                ForEach(entry.allPrayers) { prayer in
+                ForEach(displayedPrayers) { prayer in
                     let isNext = prayer.name == entry.nextPrayer
+                    let isCurrent = prayer.name == entry.currentPrayer
                     HStack(spacing: 0) {
-                        Text(isNext ? ">" : " ")
-                            .font(.system(size: 16, weight: .medium))
-                            .frame(width: 14, alignment: .leading)
                         Text(prayer.name.rawValue)
                             .font(.system(size: 16, weight: isNext ? .medium : .regular))
+                            .underline(isCurrent)
                         Spacer()
                         Text(formatTime(prayer.time))
                             .font(.system(size: 16, weight: .regular))
+                            .underline(isCurrent)
                     }
-                    .foregroundStyle(isNext ? textColor : tertiaryTextColor)
+                    .foregroundStyle(rowColor(isNext: isNext, isCurrent: isCurrent))
 
-                    if prayer.name != entry.allPrayers.last?.name {
+                    if prayer.id != displayedPrayers.last?.id {
                         Spacer()
                     }
                 }
             }
         }
+    }
+
+    private var displayedPrayers: [PrayerTimeEntry] {
+        var prayers = entry.allPrayers
+        if let currentPrayer = entry.currentPrayer,
+           let previousPrayerTime = entry.previousPrayerTime,
+           !prayers.contains(where: { $0.name == currentPrayer }) {
+            prayers.insert(PrayerTimeEntry(name: currentPrayer, time: previousPrayerTime), at: 0)
+        }
+        return prayers
     }
 
     private var textColor: Color {
@@ -85,6 +102,16 @@ struct LargePrayerWidgetView: View {
         textColor.opacity(0.5)
     }
 
+    private func rowColor(isNext: Bool, isCurrent: Bool) -> Color {
+        if isNext {
+            return textColor
+        }
+        if isCurrent {
+            return secondaryTextColor
+        }
+        return tertiaryTextColor
+    }
+
     private func formatTime(_ date: Date) -> String {
         let settings = PrayerSettings.current
         let formatter = DateFormatter()
@@ -92,12 +119,4 @@ struct LargePrayerWidgetView: View {
         return formatter.string(from: date)
     }
 
-    private func countdown(to date: Date) -> String {
-        let diff = date.timeIntervalSince(entry.date)
-        guard diff > 0 else { return "now" }
-        let h = Int(diff) / 3600
-        let m = (Int(diff) % 3600) / 60
-        if h > 0 { return "in \(h)h \(m)m" }
-        return "in \(m)m"
-    }
 }

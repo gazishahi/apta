@@ -10,6 +10,10 @@ struct PrayerTimelineProvider: TimelineProvider {
     }
 
     func getSnapshot(in context: Context, completion: @escaping (PrayerWidgetEntry) -> Void) {
+        if context.isPreview {
+            completion(.placeholder)
+            return
+        }
         completion(makeEntry(for: Date()))
     }
 
@@ -22,68 +26,62 @@ struct PrayerTimelineProvider: TimelineProvider {
         }
 
         let settings = PrayerSettings.current
-        let today = PrayerCalculationService.calculate(for: now, location: location, settings: settings)
-            .filter { $0.name != .sunrise }
-
         let calendar = Calendar(identifier: .gregorian)
-        let tomorrow = calendar.date(byAdding: .day, value: 1, to: now)!
-        let tomorrowPrayers = PrayerCalculationService.calculate(for: tomorrow, location: location, settings: settings)
-            .filter { $0.name != .sunrise }
+        let today = calendar.startOfDay(for: now)
+        let tomorrow = calendar.date(byAdding: .day, value: 1, to: today)!
+        let boundaryPrayers = prayers(for: [today, tomorrow], location: location, settings: settings)
+        let upcomingBoundaries = boundaryPrayers
+            .map(\.time)
+            .filter { $0 > now }
+            .sorted()
 
-        var entries: [PrayerWidgetEntry] = []
+        var entries = [buildEntry(for: now, location: location, settings: settings)]
+        entries.append(contentsOf: upcomingBoundaries.map {
+            buildEntry(for: $0, location: location, settings: settings)
+        })
 
-        // Create an entry at each prayer transition
-        let allTimes = today + tomorrowPrayers
-        let futureTimes = allTimes.filter { $0.time > now }
-
-        // Entry for "now"
-        entries.append(buildEntry(date: now, allToday: today, allTomorrow: tomorrowPrayers, location: location, settings: settings))
-
-        // Entry at each future prayer time (so the "next prayer" updates)
-        for prayer in futureTimes.prefix(10) {
-            entries.append(buildEntry(date: prayer.time, allToday: today, allTomorrow: tomorrowPrayers, location: location, settings: settings))
-        }
-
-        _ = entries.last?.date ?? now.addingTimeInterval(3600)
         let timeline = Timeline(entries: entries, policy: .atEnd)
         completion(timeline)
     }
 
-    private func buildEntry(date: Date, allToday: [PrayerTimeEntry], allTomorrow: [PrayerTimeEntry], location: CLLocation, settings: PrayerSettings) -> PrayerWidgetEntry {
-        let upcoming = allToday.filter { $0.time > date }
-        let next = upcoming.first ?? allTomorrow.first
+    private func makeEntry(for date: Date) -> PrayerWidgetEntry {
+        guard let location = storedLocation() else { return .noLocation }
+        return buildEntry(for: date, location: location, settings: PrayerSettings.current)
+    }
 
-        let hijri = formatHijriDate(settings: settings, date: date)
+    private func buildEntry(for date: Date, location: CLLocation, settings: PrayerSettings) -> PrayerWidgetEntry {
+        let calendar = Calendar(identifier: .gregorian)
+        let surroundingDates = (-1...1).compactMap {
+            calendar.date(byAdding: .day, value: $0, to: calendar.startOfDay(for: date))
+        }
+        let resolved = PrayerWindowResolver.resolve(
+            at: date,
+            prayers: prayers(for: surroundingDates, location: location, settings: settings),
+            calendar: calendar
+        )
 
         return PrayerWidgetEntry(
             date: date,
-            nextPrayer: next?.name,
-            nextPrayerTime: next?.time,
-            allPrayers: allToday,
-            hijriDateString: hijri,
+            currentPrayer: resolved.currentPrayer?.name,
+            nextPrayer: resolved.nextPrayer?.name,
+            nextPrayerTime: resolved.nextPrayer?.time,
+            previousPrayerTime: resolved.previousPrayer?.time,
+            progressStartTime: resolved.progressStartTime,
+            progressEndTime: resolved.progressEndTime,
+            allPrayers: resolved.displayPrayers,
+            hijriDateString: formatHijriDate(settings: settings, date: date),
             locationName: "",
             hasLocation: true
         )
     }
 
-    private func makeEntry(for date: Date) -> PrayerWidgetEntry {
-        guard let location = storedLocation() else { return .noLocation }
-        let settings = PrayerSettings.current
-        let prayers = PrayerCalculationService.calculate(for: date, location: location, settings: settings)
-            .filter { $0.name != .sunrise }
-
-        let upcoming = prayers.filter { $0.time > date }
-        let next = upcoming.first
-
-        return PrayerWidgetEntry(
-            date: date,
-            nextPrayer: next?.name,
-            nextPrayerTime: next?.time,
-            allPrayers: prayers,
-            hijriDateString: formatHijriDate(settings: settings, date: date),
-            locationName: "",
-            hasLocation: true
-        )
+    private func prayers(for dates: [Date], location: CLLocation, settings: PrayerSettings) -> [PrayerTimeEntry] {
+        dates
+            .flatMap { date in
+                PrayerCalculationService.calculate(for: date, location: location, settings: settings)
+                    .filter { $0.name != .sunrise }
+            }
+            .sorted { $0.time < $1.time }
     }
 
     private func storedLocation() -> CLLocation? {

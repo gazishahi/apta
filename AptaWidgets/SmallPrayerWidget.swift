@@ -12,8 +12,9 @@ struct SmallPrayerWidgetView: View {
                 .foregroundStyle(.secondary)
         } else {
             VStack(alignment: .leading, spacing: 4) {
-                ForEach(entry.allPrayers) { prayer in
+                ForEach(displayedPrayers) { prayer in
                     let isNext = prayer.name == entry.nextPrayer
+                    let isCurrent = prayer.name == entry.currentPrayer
                     HStack(spacing: 0) {
                         Text(isNext ? ">" : " ")
                             .font(.system(size: 12, weight: .medium))
@@ -21,15 +22,27 @@ struct SmallPrayerWidgetView: View {
                         Text(prayer.name.rawValue.uppercased())
                             .font(.system(size: 12, weight: .regular))
                             .kerning(1.5)
+                            .underline(isCurrent)
                         Spacer()
                         Text(formatTime(prayer.time))
                             .font(.system(size: 12, weight: .regular))
+                            .underline(isCurrent)
                     }
-                    .foregroundStyle(isNext ? textColor : tertiaryTextColor)
+                    .foregroundStyle(rowColor(isNext: isNext, isCurrent: isCurrent))
                 }
             }
             .padding(2)
         }
+    }
+
+    private var displayedPrayers: [PrayerTimeEntry] {
+        var prayers = entry.allPrayers
+        if let currentPrayer = entry.currentPrayer,
+           let previousPrayerTime = entry.previousPrayerTime,
+           !prayers.contains(where: { $0.name == currentPrayer }) {
+            prayers.insert(PrayerTimeEntry(name: currentPrayer, time: previousPrayerTime), at: 0)
+        }
+        return Array(prayers.prefix(entry.allPrayers.count))
     }
 
     private var textColor: Color {
@@ -45,6 +58,20 @@ struct SmallPrayerWidgetView: View {
 
     private var tertiaryTextColor: Color {
         textColor.opacity(0.5)
+    }
+
+    private var secondaryTextColor: Color {
+        textColor.opacity(0.7)
+    }
+
+    private func rowColor(isNext: Bool, isCurrent: Bool) -> Color {
+        if isNext {
+            return textColor
+        }
+        if isCurrent {
+            return secondaryTextColor
+        }
+        return tertiaryTextColor
     }
 
     private func formatTime(_ date: Date) -> String {
