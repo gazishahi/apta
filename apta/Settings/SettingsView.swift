@@ -189,6 +189,44 @@ struct SettingsView: View {
                 Text("Push your current settings and prayer times to the Apple Watch app.")
             }
 
+            // SECTION: ABOUT
+            Section {
+                Link(destination: URL(string: "https://goapta.com")!) {
+                    HStack {
+                        Text("Website")
+                            .foregroundStyle(.primary)
+                        Spacer()
+                        Image(systemName: "arrow.up.right")
+                            .font(.system(size: 12, weight: .medium))
+                            .foregroundStyle(.secondary)
+                    }
+                }
+
+                Link(destination: URL(string: "https://goapta.com/privacy")!) {
+                    HStack {
+                        Text("Privacy Policy")
+                            .foregroundStyle(.primary)
+                        Spacer()
+                        Image(systemName: "arrow.up.right")
+                            .font(.system(size: 12, weight: .medium))
+                            .foregroundStyle(.secondary)
+                    }
+                }
+
+                Link(destination: URL(string: "mailto:shahi@khidma.io")!) {
+                    HStack {
+                        Text("Contact")
+                            .foregroundStyle(.primary)
+                        Spacer()
+                        Image(systemName: "envelope")
+                            .font(.system(size: 12, weight: .medium))
+                            .foregroundStyle(.secondary)
+                    }
+                }
+            } header: {
+                sectionHeader("ABOUT")
+            }
+
             // VERSION FOOTER
             Section {
                 HStack {
