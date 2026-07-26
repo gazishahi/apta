@@ -40,4 +40,16 @@ struct PrayerTimeEntry: Identifiable {
     let id = UUID()
     let name: PrayerName
     let time: Date
+    let supplementalTime: PrayerSupplementalTime?
+
+    init(name: PrayerName, time: Date, supplementalTime: PrayerSupplementalTime? = nil) {
+        self.name = name
+        self.time = time
+        self.supplementalTime = supplementalTime
+    }
+}
+
+struct PrayerSupplementalTime {
+    let label: String
+    let time: Date
 }

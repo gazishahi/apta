@@ -16,12 +16,70 @@ struct PrayerSettings: Codable, Equatable {
     var simpleMode: Bool = false
     var notificationStyle: NotificationStyle = .simple
     var ramadanNotificationsEnabled: Bool = true
+    var sunriseNotification: Bool = false
     var fajrNotification: Bool = true
     var dhuhrNotification: Bool = true
     var asrNotification: Bool = true
     var maghribNotification: Bool = true
     var ishaNotification: Bool = true
     var prayerFontSize: PrayerFontSize = .medium
+    var showHanbaliBoundaries: Bool = false
+    var boundaryNotificationsEnabled: Bool = true
+
+    init() {}
+
+    private enum CodingKeys: String, CodingKey {
+        case calculationMethod
+        case asrMethod
+        case highLatitudeRule
+        case theme
+        case timeFormat
+        case hijriAdjustment
+        case customFajrAngle
+        case customIshaAngle
+        case notificationsEnabled
+        case showIshraq
+        case ishraqNotification
+        case simpleMode
+        case notificationStyle
+        case ramadanNotificationsEnabled
+        case sunriseNotification
+        case fajrNotification
+        case dhuhrNotification
+        case asrNotification
+        case maghribNotification
+        case ishaNotification
+        case prayerFontSize
+        case showHanbaliBoundaries
+        case boundaryNotificationsEnabled
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        calculationMethod = try container.decodeIfPresent(AppCalculationMethod.self, forKey: .calculationMethod) ?? .northAmerica
+        asrMethod = try container.decodeIfPresent(AsrMethod.self, forKey: .asrMethod) ?? .standard
+        highLatitudeRule = try container.decodeIfPresent(AppHighLatitudeRule.self, forKey: .highLatitudeRule) ?? .middleOfTheNight
+        theme = try container.decodeIfPresent(AppTheme.self, forKey: .theme) ?? .system
+        timeFormat = try container.decodeIfPresent(TimeFormat.self, forKey: .timeFormat) ?? .twelve
+        hijriAdjustment = try container.decodeIfPresent(Int.self, forKey: .hijriAdjustment) ?? 0
+        customFajrAngle = try container.decodeIfPresent(Double.self, forKey: .customFajrAngle)
+        customIshaAngle = try container.decodeIfPresent(Double.self, forKey: .customIshaAngle)
+        notificationsEnabled = try container.decodeIfPresent(Bool.self, forKey: .notificationsEnabled) ?? false
+        showIshraq = try container.decodeIfPresent(Bool.self, forKey: .showIshraq) ?? false
+        ishraqNotification = try container.decodeIfPresent(Bool.self, forKey: .ishraqNotification) ?? false
+        simpleMode = try container.decodeIfPresent(Bool.self, forKey: .simpleMode) ?? false
+        notificationStyle = try container.decodeIfPresent(NotificationStyle.self, forKey: .notificationStyle) ?? .simple
+        ramadanNotificationsEnabled = try container.decodeIfPresent(Bool.self, forKey: .ramadanNotificationsEnabled) ?? true
+        sunriseNotification = try container.decodeIfPresent(Bool.self, forKey: .sunriseNotification) ?? false
+        fajrNotification = try container.decodeIfPresent(Bool.self, forKey: .fajrNotification) ?? true
+        dhuhrNotification = try container.decodeIfPresent(Bool.self, forKey: .dhuhrNotification) ?? true
+        asrNotification = try container.decodeIfPresent(Bool.self, forKey: .asrNotification) ?? true
+        maghribNotification = try container.decodeIfPresent(Bool.self, forKey: .maghribNotification) ?? true
+        ishaNotification = try container.decodeIfPresent(Bool.self, forKey: .ishaNotification) ?? true
+        prayerFontSize = try container.decodeIfPresent(PrayerFontSize.self, forKey: .prayerFontSize) ?? .medium
+        showHanbaliBoundaries = try container.decodeIfPresent(Bool.self, forKey: .showHanbaliBoundaries) ?? false
+        boundaryNotificationsEnabled = try container.decodeIfPresent(Bool.self, forKey: .boundaryNotificationsEnabled) ?? true
+    }
 
     enum PrayerFontSize: String, CaseIterable, Codable, Identifiable {
         case small = "Small"
@@ -45,6 +103,14 @@ struct PrayerSettings: Codable, Equatable {
             case .large: return 20
             }
         }
+
+        var countdownSize: CGFloat {
+            switch self {
+            case .small: return 13
+            case .medium: return 14
+            case .large: return 20
+            }
+        }
     }
 
     func isNotificationEnabled(for prayer: PrayerName) -> Bool {
@@ -54,7 +120,7 @@ struct PrayerSettings: Codable, Equatable {
         case .asr: return asrNotification
         case .maghrib: return maghribNotification
         case .isha: return ishaNotification
-        case .sunrise: return false
+        case .sunrise: return sunriseNotification
         case .ishraq: return ishraqNotification
         }
     }

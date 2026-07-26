@@ -71,7 +71,8 @@ struct PrayerTimelineProvider: TimelineProvider {
             allPrayers: resolved.displayPrayers,
             hijriDateString: formatHijriDate(settings: settings, date: date),
             locationName: "",
-            hasLocation: true
+            hasLocation: true,
+            circularDisplayMode: .time
         )
     }
 
@@ -79,7 +80,7 @@ struct PrayerTimelineProvider: TimelineProvider {
         dates
             .flatMap { date in
                 PrayerCalculationService.calculate(for: date, location: location, settings: settings)
-                    .filter { $0.name != .sunrise }
+                    .filter { $0.name != .ishraq }
             }
             .sorted { $0.time < $1.time }
     }

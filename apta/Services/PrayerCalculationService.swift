@@ -38,14 +38,74 @@ struct PrayerCalculationService {
             let ishraqTime = Calendar.current.date(byAdding: .minute, value: 15, to: prayers.sunrise) ?? prayers.sunrise
             entries.append(PrayerTimeEntry(name: .ishraq, time: ishraqTime))
         }
+        let boundaries = settings.showHanbaliBoundaries
+            ? hanbaliBoundaries(for: date, coordinates: coordinates, settings: settings, calendar: cal)
+            : nil
+
         entries.append(contentsOf: [
             PrayerTimeEntry(name: .dhuhr, time: prayers.dhuhr),
-            PrayerTimeEntry(name: .asr, time: prayers.asr),
+            PrayerTimeEntry(
+                name: .asr,
+                time: prayers.asr,
+                supplementalTime: boundaries?.endOfAsr.map {
+                    PrayerSupplementalTime(label: "ends", time: $0)
+                }
+            ),
             PrayerTimeEntry(name: .maghrib, time: prayers.maghrib),
-            PrayerTimeEntry(name: .isha, time: prayers.isha),
+            PrayerTimeEntry(
+                name: .isha,
+                time: prayers.isha,
+                supplementalTime: boundaries?.oneThirdNight.map {
+                    PrayerSupplementalTime(label: "best before", time: $0)
+                }
+            ),
         ])
 
         return entries
+    }
+
+    static func oneThirdOfNight(maghrib: Date, nextFajr: Date) -> Date {
+        maghrib.addingTimeInterval(nextFajr.timeIntervalSince(maghrib) / 3)
+    }
+
+    private static func hanbaliBoundaries(
+        for date: Date,
+        coordinates: Coordinates,
+        settings: PrayerSettings,
+        calendar: Calendar
+    ) -> (endOfAsr: Date?, oneThirdNight: Date?) {
+        let components = calendar.dateComponents([.year, .month, .day], from: date)
+        guard let standardPrayers = PrayerTimes(
+            coordinates: coordinates,
+            date: components,
+            calculationParameters: buildParameters(from: settings)
+        ) else {
+            return (nil, nil)
+        }
+
+        var hanafiParams = buildParameters(from: settings)
+        hanafiParams.madhab = .hanafi
+        let hanafiPrayers = PrayerTimes(
+            coordinates: coordinates,
+            date: components,
+            calculationParameters: hanafiParams
+        )
+
+        guard let tomorrow = calendar.date(byAdding: .day, value: 1, to: date) else {
+            return (hanafiPrayers?.asr, nil)
+        }
+        let tomorrowComponents = calendar.dateComponents([.year, .month, .day], from: tomorrow)
+        let tomorrowPrayers = PrayerTimes(
+            coordinates: coordinates,
+            date: tomorrowComponents,
+            calculationParameters: buildParameters(from: settings)
+        )
+
+        let oneThirdNight = tomorrowPrayers.map {
+            oneThirdOfNight(maghrib: standardPrayers.maghrib, nextFajr: $0.fajr)
+        }
+
+        return (hanafiPrayers?.asr, oneThirdNight)
     }
 
     static func currentPrayer(location: CLLocation, settings: PrayerSettings) -> Prayer? {

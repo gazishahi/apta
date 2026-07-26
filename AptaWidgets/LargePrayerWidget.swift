@@ -11,76 +11,68 @@ struct LargePrayerWidgetView: View {
                 .font(.caption)
                 .foregroundStyle(.secondary)
         } else {
-            VStack(alignment: .leading, spacing: 0) {
-                Text(entry.hijriDateString)
+            VStack(spacing: 0) {
+                Text(entry.hijriDateString.uppercased())
                     .font(.system(size: 12, weight: .regular))
-                    .kerning(1.5)
+                    .kerning(1.0)
                     .foregroundStyle(tertiaryTextColor)
 
-                Spacer()
+                Spacer(minLength: 14)
 
-                if let next = entry.nextPrayer, let time = entry.nextPrayerTime {
-                    Text("NEXT")
-                        .font(.system(size: 11, weight: .semibold))
-                        .kerning(1.8)
-                        .foregroundStyle(tertiaryTextColor)
-
-                    Spacer().frame(height: 6)
-
-                    Text(next.rawValue.uppercased())
-                        .font(.system(size: 28, weight: .medium))
-                        .kerning(5.0)
+                if let next = entry.nextDailyPrayer {
+                    Text(next.name.rawValue.uppercased())
+                        .font(.system(size: 30, weight: .medium))
+                        .kerning(2.5)
                         .foregroundStyle(textColor)
+                        .padding(.top, 2)
 
-                    Spacer().frame(height: 6)
+                    Text(formatHeroTime(next.time))
+                        .font(.system(size: 20, weight: .regular, design: .rounded))
+                        .monospacedDigit()
+                        .foregroundStyle(secondaryTextColor)
+                        .padding(.top, 2)
 
-                    HStack(alignment: .firstTextBaseline) {
-                        Text(formatTime(time))
-                            .font(.system(size: 20, weight: .regular))
-                            .foregroundStyle(secondaryTextColor)
-                        Spacer()
-                        Text(time, style: .relative)
-                            .font(.system(size: 15, weight: .light))
-                            .foregroundStyle(secondaryTextColor)
+                    if let progressInterval = entry.dailyProgressInterval {
+                        ProgressView(timerInterval: progressInterval, countsDown: false) {
+                            EmptyView()
+                        } currentValueLabel: {
+                            EmptyView()
+                        }
+                            .tint(textColor.opacity(0.62))
+                            .frame(width: 220, height: 3)
+                            .padding(.top, 10)
                     }
+
+                    Text(next.time, style: .timer)
+                        .font(.system(size: 26, weight: .medium, design: .rounded))
+                        .monospacedDigit()
+                        .foregroundStyle(textColor)
+                        .padding(.top, 10)
                 }
 
-                Spacer()
+                Spacer(minLength: 20)
 
-                Divider()
-
-                Spacer().frame(height: 16)
-
-                ForEach(displayedPrayers) { prayer in
-                    let isNext = prayer.name == entry.nextPrayer
-                    let isCurrent = prayer.name == entry.currentPrayer
-                    HStack(spacing: 0) {
-                        Text(prayer.name.rawValue)
-                            .font(.system(size: 16, weight: isNext ? .medium : .regular))
-                            .underline(isCurrent)
-                        Spacer()
-                        Text(formatTime(prayer.time))
-                            .font(.system(size: 16, weight: .regular))
-                            .underline(isCurrent)
-                    }
-                    .foregroundStyle(rowColor(isNext: isNext, isCurrent: isCurrent))
-
-                    if prayer.id != displayedPrayers.last?.id {
-                        Spacer()
+                LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 16) {
+                    ForEach(schedulePrayers) { prayer in
+                        VStack(spacing: 3) {
+                            Text(prayer.name.rawValue.uppercased())
+                                .font(.system(size: 13, weight: prayer.name == .sunrise ? .regular : .medium))
+                                .kerning(0.8)
+                            Text(formatTime(prayer.time))
+                                .font(.system(size: 20, weight: .regular, design: .rounded))
+                                .monospacedDigit()
+                        }
+                        .frame(maxWidth: .infinity)
+                        .foregroundStyle(prayer.name == .sunrise ? tertiaryTextColor : secondaryTextColor)
                     }
                 }
             }
+            .multilineTextAlignment(.center)
         }
     }
 
-    private var displayedPrayers: [PrayerTimeEntry] {
-        var prayers = entry.allPrayers
-        if let currentPrayer = entry.currentPrayer,
-           let previousPrayerTime = entry.previousPrayerTime,
-           !prayers.contains(where: { $0.name == currentPrayer }) {
-            prayers.insert(PrayerTimeEntry(name: currentPrayer, time: previousPrayerTime), at: 0)
-        }
-        return prayers
+    private var schedulePrayers: [PrayerTimeEntry] {
+        entry.allPrayers.filter { $0.name != .ishraq }
     }
 
     private var textColor: Color {
@@ -102,17 +94,19 @@ struct LargePrayerWidgetView: View {
         textColor.opacity(0.5)
     }
 
-    private func rowColor(isNext: Bool, isCurrent: Bool) -> Color {
-        if isNext {
-            return textColor
+    private func formatTime(_ date: Date) -> String {
+        let settings = PrayerSettings.current
+        let formatter = DateFormatter()
+        if settings.timeFormat == .twelve {
+            formatter.dateFormat = "h:mm"
+            let period = Calendar.current.component(.hour, from: date) < 12 ? "A" : "P"
+            return "\(formatter.string(from: date)) \(period)"
         }
-        if isCurrent {
-            return secondaryTextColor
-        }
-        return tertiaryTextColor
+        formatter.dateFormat = "HH:mm"
+        return formatter.string(from: date)
     }
 
-    private func formatTime(_ date: Date) -> String {
+    private func formatHeroTime(_ date: Date) -> String {
         let settings = PrayerSettings.current
         let formatter = DateFormatter()
         formatter.dateFormat = settings.timeFormat == .twelve ? "h:mm a" : "HH:mm"

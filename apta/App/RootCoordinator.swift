@@ -65,6 +65,7 @@ struct RootCoordinator: View {
                         NavigationStack {
                             SettingsView {
                                 viewModel.recalculate()
+                                NotificationScheduler.scheduleUpcoming(location: locationService.location)
                             }
                         }
                     }

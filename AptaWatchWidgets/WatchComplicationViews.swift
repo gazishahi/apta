@@ -29,11 +29,13 @@ struct CircularComplicationView: View {
         VStack(spacing: 1) {
             if let name = entry.nextPrayerName, let time = entry.nextPrayerTime {
                 Text(String(name.prefix(3)).uppercased())
-                    .font(.system(size: 10, weight: .semibold))
+                    .font(.system(size: 9, weight: .semibold, design: .rounded))
+                    .lineLimit(1)
                     .minimumScaleFactor(0.7)
                 Text(time, style: .timer)
-                    .font(.system(size: 9, weight: .thin, design: .monospaced))
-                    .minimumScaleFactor(0.6)
+                    .font(.system(size: 8, weight: .regular, design: .rounded))
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.45)
                     .monospacedDigit()
             } else {
                 Image(systemName: "moon.stars")
@@ -42,6 +44,9 @@ struct CircularComplicationView: View {
                     .font(.system(size: 9))
             }
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+        .multilineTextAlignment(.center)
+        .padding(.horizontal, 2)
         .containerBackground(.clear, for: .widget)
     }
 }
@@ -112,13 +117,46 @@ struct CornerComplicationView: View {
         Group {
             if entry.isProUser {
                 if let name = entry.nextPrayerName, let time = entry.nextPrayerTime {
-                    VStack(spacing: 0) {
-                        Text(String(name.prefix(3)).uppercased())
-                            .font(.system(size: 11, weight: .semibold))
-                        Text(shortTime(time))
-                            .font(.system(size: 9, weight: .thin, design: .monospaced))
-                            .monospacedDigit()
-                    }
+                    Text(shortTime(time))
+                        .font(.system(size: 17, weight: .semibold, design: .rounded))
+                        .foregroundStyle(.primary)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.8)
+                        .monospacedDigit()
+                        .widgetLabel {
+                            Text(name.uppercased())
+                                .font(.system(size: 13, weight: .semibold, design: .rounded))
+                                .foregroundStyle(.primary)
+                        }
+                }
+            } else {
+                Image(systemName: "lock.fill")
+                    .font(.system(size: 12))
+                    .foregroundStyle(.secondary)
+            }
+        }
+        .containerBackground(.clear, for: .widget)
+    }
+}
+
+struct CornerCountdownComplicationView: View {
+    let entry: WatchEntry
+
+    var body: some View {
+        Group {
+            if entry.isProUser {
+                if let name = entry.nextPrayerName, let time = entry.nextPrayerTime {
+                    Text(time, style: .timer)
+                        .font(.system(size: 16, weight: .semibold, design: .rounded))
+                        .foregroundStyle(.primary)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.7)
+                        .monospacedDigit()
+                        .widgetLabel {
+                            Text(name.uppercased())
+                                .font(.system(size: 13, weight: .semibold, design: .rounded))
+                                .foregroundStyle(.primary)
+                        }
                 }
             } else {
                 Image(systemName: "lock.fill")

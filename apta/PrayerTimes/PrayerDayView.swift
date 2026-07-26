@@ -23,7 +23,13 @@ struct PrayerDayView: View {
 
                             Text(viewModel.countdown)
                                 .font(Typography.countdown)
-                                .foregroundStyle(ThemeColors.tertiaryTextColor(for: colorScheme))
+                                .foregroundStyle(ThemeColors.secondaryTextColor(for: colorScheme))
+
+                            if let supplementalTime = current.supplementalTime {
+                                supplementalTimeText(supplementalTime)
+                                    .font(.system(size: 12, weight: .regular))
+                                    .foregroundStyle(ThemeColors.tertiaryTextColor(for: colorScheme))
+                            }
                         }
                         .padding(.top, -24)
                     }
@@ -40,7 +46,14 @@ struct PrayerDayView: View {
                                     .font(Typography.upcomingPrayerName)
                                     .foregroundStyle(ThemeColors.textColor(for: colorScheme))
                                 Spacer()
-                                upcomingTimeDisplay(for: prayer.time)
+                                VStack(alignment: .trailing, spacing: 2) {
+                                    upcomingTimeDisplay(for: prayer.time)
+                                    if let supplementalTime = prayer.supplementalTime {
+                                        supplementalTimeText(supplementalTime)
+                                            .font(.system(size: 11, weight: .regular))
+                                            .foregroundStyle(ThemeColors.tertiaryTextColor(for: colorScheme))
+                                    }
+                                }
                             }
                             .padding(.horizontal, 48)
                             .padding(.vertical, 10)
@@ -55,7 +68,14 @@ struct PrayerDayView: View {
                                 .font(Typography.upcomingPrayerName)
                                 .foregroundStyle(ThemeColors.textColor(for: colorScheme))
                             Spacer()
-                            upcomingTimeDisplay(for: prayer.time)
+                            VStack(alignment: .trailing, spacing: 2) {
+                                upcomingTimeDisplay(for: prayer.time)
+                                if let supplementalTime = prayer.supplementalTime {
+                                    supplementalTimeText(supplementalTime)
+                                        .font(.system(size: 11, weight: .regular))
+                                        .foregroundStyle(ThemeColors.tertiaryTextColor(for: colorScheme))
+                                }
+                            }
                         }
                         .padding(.horizontal, 48)
                         .padding(.vertical, 10)
@@ -111,5 +131,13 @@ struct PrayerDayView: View {
 
     private var amPmFormatter: DateFormatter {
         DateFormatterFactory.make(format: "a")
+    }
+
+    private func supplementalTimeText(_ supplementalTime: PrayerSupplementalTime) -> Text {
+        Text("\(supplementalTime.label) \(supplementalTimeFormatter.string(from: supplementalTime.time))")
+    }
+
+    private var supplementalTimeFormatter: DateFormatter {
+        DateFormatterFactory.make(format: settings.timeFormat == .twelve ? "h:mm a" : "HH:mm")
     }
 }

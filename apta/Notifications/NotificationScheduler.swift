@@ -30,7 +30,6 @@ enum NotificationScheduler {
             let isRamadan = settings.ramadanNotificationsEnabled && Self.isRamadan(on: date, hijriAdjustment: settings.hijriAdjustment)
 
             for entry in prayers {
-                guard entry.name != .sunrise else { continue }
                 guard entry.time > now else { continue }
                 guard settings.isNotificationEnabled(for: entry.name) else { continue }
 
@@ -44,11 +43,15 @@ enum NotificationScheduler {
                 }
 
                 let body: String
-                switch settings.notificationStyle {
-                case .fun:
-                    body = NotificationMessages.funMessage(for: entry.name, date: date, isRamadan: isRamadan)
-                case .simple:
+                if entry.name == .sunrise {
                     body = NotificationMessages.simpleMessage(for: entry.name, time: entry.time, settings: settings)
+                } else {
+                    switch settings.notificationStyle {
+                    case .fun:
+                        body = NotificationMessages.funMessage(for: entry.name, date: date, isRamadan: isRamadan)
+                    case .simple:
+                        body = NotificationMessages.simpleMessage(for: entry.name, time: entry.time, settings: settings)
+                    }
                 }
 
                 let content = UNMutableNotificationContent()
@@ -63,6 +66,31 @@ enum NotificationScheduler {
                 let id = "\(entry.name.rawValue)-\(year)-\(month)-\(day)"
                 let request = UNNotificationRequest(identifier: id, content: content, trigger: trigger)
                 center.add(request)
+            }
+
+            if settings.showHanbaliBoundaries && settings.boundaryNotificationsEnabled {
+                for entry in prayers {
+                    guard let supplemental = entry.supplementalTime else { continue }
+                    guard supplemental.time > now else { continue }
+
+                    let content = UNMutableNotificationContent()
+                    content.title = entry.name.rawValue
+                    content.body = NotificationMessages.boundaryMessage(
+                        label: supplemental.label,
+                        prayer: entry.name,
+                        time: supplemental.time,
+                        settings: settings
+                    )
+                    content.sound = .default
+
+                    let comps = calendar.dateComponents([.year, .month, .day, .hour, .minute, .second], from: supplemental.time)
+                    let trigger = UNCalendarNotificationTrigger(dateMatching: comps, repeats: false)
+
+                    guard let year = comps.year, let month = comps.month, let day = comps.day else { continue }
+                    let id = "\(entry.name.rawValue)-boundary-\(year)-\(month)-\(day)"
+                    let request = UNNotificationRequest(identifier: id, content: content, trigger: trigger)
+                    center.add(request)
+                }
             }
         }
     }

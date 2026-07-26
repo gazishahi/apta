@@ -23,6 +23,7 @@ struct InlinePrayerWidgetView: View {
 
 struct CircularPrayerWidgetView: View {
     let entry: PrayerWidgetEntry
+    let displayMode: CircularPrayerDisplayMode
 
     var body: some View {
         if let next = entry.nextPrayer, let time = entry.nextPrayerTime {
@@ -44,19 +45,28 @@ struct CircularPrayerWidgetView: View {
     }
 
     private func compactLabel(next: PrayerName, time: Date) -> some View {
-        VStack(spacing: 0) {
+        VStack(spacing: displayMode == .countdown ? 1 : 0) {
             Text(abbreviation(next))
-                .font(.system(size: 10, weight: .semibold, design: .rounded))
+                .font(.system(size: displayMode == .countdown ? 8 : 10, weight: .semibold, design: .rounded))
                 .lineLimit(1)
                 .minimumScaleFactor(0.7)
 
-            Text(formatTime(time))
-                .font(.system(size: 10, weight: .regular, design: .rounded))
-                .lineLimit(1)
-                .minimumScaleFactor(0.7)
-                .monospacedDigit()
+            if displayMode == .countdown {
+                Text(time, style: .timer)
+                    .font(.system(size: 8, weight: .medium, design: .rounded))
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.45)
+                    .monospacedDigit()
+            } else {
+                Text(formatTime(time))
+                    .font(.system(size: 10, weight: .regular, design: .rounded))
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.7)
+                    .monospacedDigit()
+            }
         }
         .multilineTextAlignment(.center)
+        .padding(.horizontal, displayMode == .countdown ? 5 : 0)
     }
 
     private func abbreviation(_ prayer: PrayerName) -> String {

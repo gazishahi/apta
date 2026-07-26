@@ -1,5 +1,6 @@
 import WidgetKit
 import SwiftUI
+import AppIntents
 
 struct PrayerWidget: Widget {
     let kind = "PrayerWidget"
@@ -53,12 +54,12 @@ struct CircularPrayerWidget: Widget {
     let kind = "CircularPrayerWidget"
 
     var body: some WidgetConfiguration {
-        StaticConfiguration(kind: kind, provider: PrayerTimelineProvider()) { entry in
-            CircularPrayerWidgetView(entry: entry)
+        AppIntentConfiguration(kind: kind, intent: CircularPrayerWidgetIntent.self, provider: ConfigurablePrayerTimelineProvider()) { entry in
+            CircularPrayerWidgetView(entry: entry, displayMode: entry.circularDisplayMode)
                 .containerBackground(.fill.tertiary, for: .widget)
         }
         .configurationDisplayName("Prayer Gauge")
-        .description("Next prayer with progress gauge.")
+        .description("Next prayer time or countdown with progress gauge.")
         .supportedFamilies([.accessoryCircular])
     }
 }

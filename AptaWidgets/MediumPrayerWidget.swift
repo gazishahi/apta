@@ -11,68 +11,72 @@ struct MediumPrayerWidgetView: View {
                 .font(.caption)
                 .foregroundStyle(.secondary)
         } else {
-            VStack(alignment: .leading, spacing: 6) {
-                Text(entry.hijriDateString)
-                    .font(.system(size: 11, weight: .regular))
-                    .kerning(1.0)
-                    .foregroundStyle(tertiaryTextColor)
-
-                if let next = entry.nextPrayer, let time = entry.nextPrayerTime {
-                    VStack(alignment: .leading, spacing: 3) {
-                        Text("NEXT")
-                            .font(.system(size: 10, weight: .semibold))
-                            .kerning(1.6)
-                            .foregroundStyle(tertiaryTextColor)
-
-                        Text(next.rawValue.uppercased())
-                            .font(.system(size: 20, weight: .medium))
-                            .kerning(3.0)
+            VStack(spacing: 0) {
+                if let next = entry.nextDailyPrayer {
+                    HStack(alignment: .firstTextBaseline, spacing: 8) {
+                        Text(next.name.rawValue.uppercased())
+                            .font(.system(size: 18, weight: .medium))
+                            .kerning(1.4)
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.75)
                             .foregroundStyle(textColor)
 
-                        HStack(alignment: .firstTextBaseline) {
-                            Text(formatTime(time))
-                                .font(.system(size: 15, weight: .regular))
-                                .foregroundStyle(secondaryTextColor)
-                            Spacer()
-                            Text(time, style: .relative)
-                                .font(.system(size: 13, weight: .light))
-                                .foregroundStyle(secondaryTextColor)
-                        }
+                        Spacer(minLength: 0)
+
+                        Text(formatTime(next.time))
+                            .font(.system(size: 18, weight: .regular, design: .rounded))
+                            .monospacedDigit()
+                            .foregroundStyle(secondaryTextColor)
                     }
+                    .frame(width: 220)
+
+                    if let progressInterval = entry.dailyProgressInterval {
+                        ProgressView(timerInterval: progressInterval, countsDown: false) {
+                            EmptyView()
+                        } currentValueLabel: {
+                            EmptyView()
+                        }
+                            .tint(textColor.opacity(0.62))
+                            .frame(width: 220, height: 3)
+                            .padding(.top, 10)
+                    }
+
+                    Text(next.time, style: .timer)
+                        .font(.system(size: 25, weight: .medium, design: .rounded))
+                        .monospacedDigit()
+                        .foregroundStyle(textColor)
+                        .multilineTextAlignment(.center)
+                        .frame(maxWidth: .infinity)
+                        .padding(.top, 10)
                 }
 
-                Spacer(minLength: 2)
+                Spacer(minLength: 8)
 
                 HStack(spacing: 0) {
-                    let others = displayedPrayers.filter { $0.name != entry.nextPrayer }
+                    let others = entry.dailyPrayers.filter { $0.name != entry.nextDailyPrayer?.name }
                     ForEach(Array(others.enumerated()), id: \.element.id) { index, prayer in
-                        let isCurrent = prayer.name == entry.currentPrayer
                         VStack(spacing: 1) {
-                            Text(prayer.name.rawValue)
-                                .font(.system(size: 12, weight: .regular))
+                            Text(abbreviation(for: prayer.name))
+                                .font(.system(size: 11, weight: .medium))
+                                .lineLimit(1)
+                                .minimumScaleFactor(0.7)
                             Text(formatTimeShort(prayer.time))
-                                .font(.system(size: 12, weight: .light))
-                                .underline(isCurrent)
+                                .font(.system(size: 16, weight: .regular, design: .rounded))
+                                .monospacedDigit()
                         }
-                        .foregroundStyle(tertiaryTextColor)
+                        .multilineTextAlignment(.center)
+                        .foregroundStyle(secondaryTextColor)
                         if index < others.count - 1 {
                             Spacer()
                         }
                     }
                 }
-            }
-            .padding(2)
-        }
-    }
 
-    private var displayedPrayers: [PrayerTimeEntry] {
-        var prayers = entry.allPrayers
-        if let currentPrayer = entry.currentPrayer,
-           let previousPrayerTime = entry.previousPrayerTime,
-           !prayers.contains(where: { $0.name == currentPrayer }) {
-            prayers.insert(PrayerTimeEntry(name: currentPrayer, time: previousPrayerTime), at: 0)
+            }
+            .padding(.horizontal, 2)
+            .padding(.vertical, 12)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
         }
-        return prayers
     }
 
     private var textColor: Color {
@@ -105,6 +109,18 @@ struct MediumPrayerWidgetView: View {
         let formatter = DateFormatter()
         formatter.dateFormat = PrayerSettings.current.timeFormat == .twelve ? "h:mm" : "HH:mm"
         return formatter.string(from: date)
+    }
+
+    private func abbreviation(for prayer: PrayerName) -> String {
+        switch prayer {
+        case .fajr: return "FJR"
+        case .dhuhr: return "DHR"
+        case .asr: return "ASR"
+        case .maghrib: return "MGB"
+        case .isha: return "ISH"
+        case .sunrise: return "SUN"
+        case .ishraq: return "ISQ"
+        }
     }
 
 }

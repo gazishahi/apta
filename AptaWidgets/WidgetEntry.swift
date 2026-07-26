@@ -13,6 +13,7 @@ struct PrayerWidgetEntry: TimelineEntry {
     let hijriDateString: String
     let locationName: String
     let hasLocation: Bool
+    let circularDisplayMode: CircularPrayerDisplayMode
 
     var progressInterval: ClosedRange<Date>? {
         guard let progressStartTime,
@@ -21,6 +22,21 @@ struct PrayerWidgetEntry: TimelineEntry {
             return nil
         }
         return progressStartTime...progressEndTime
+    }
+
+    var dailyPrayers: [PrayerTimeEntry] {
+        allPrayers.filter { $0.name != .sunrise && $0.name != .ishraq }
+    }
+
+    var nextDailyPrayer: PrayerTimeEntry? {
+        dailyPrayers.first { $0.time > date }
+    }
+
+    var dailyProgressInterval: ClosedRange<Date>? {
+        guard let nextPrayer = nextDailyPrayer else { return nil }
+        let previousPrayerTime = dailyPrayers.last { $0.time <= date }?.time ?? self.previousPrayerTime
+        guard let previousPrayerTime, previousPrayerTime < nextPrayer.time else { return nil }
+        return previousPrayerTime...nextPrayer.time
     }
 
     static var placeholder: PrayerWidgetEntry {
@@ -41,7 +57,8 @@ struct PrayerWidgetEntry: TimelineEntry {
             ],
             hijriDateString: "15 Ramadan 1447",
             locationName: "NY",
-            hasLocation: true
+            hasLocation: true,
+            circularDisplayMode: .time
         )
     }
 
@@ -57,7 +74,8 @@ struct PrayerWidgetEntry: TimelineEntry {
             allPrayers: [],
             hijriDateString: "",
             locationName: "",
-            hasLocation: false
+            hasLocation: false,
+            circularDisplayMode: .time
         )
     }
 }

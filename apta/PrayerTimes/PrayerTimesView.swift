@@ -40,6 +40,12 @@ struct PrayerTimesView: View {
         return f
     }
 
+    private var supplementalTimeFormatter: DateFormatter {
+        let f = DateFormatter()
+        f.dateFormat = settings.timeFormat == .twelve ? "h:mm a" : "HH:mm"
+        return f
+    }
+
     private var dateFormatter: DateFormatter {
         let f = DateFormatter()
         f.dateFormat = "EEE, MMM d"
@@ -207,7 +213,13 @@ struct PrayerTimesView: View {
 
                     Text(viewModel.countdown)
                         .font(Typography.countdown)
-                        .foregroundStyle(ThemeColors.tertiaryTextColor(for: colorScheme))
+                        .foregroundStyle(ThemeColors.secondaryTextColor(for: colorScheme))
+
+                    if let supplementalTime = current.supplementalTime {
+                        supplementalTimeText(supplementalTime)
+                            .font(.system(size: 12, weight: .regular))
+                            .foregroundStyle(ThemeColors.tertiaryTextColor(for: colorScheme))
+                    }
                 }
             }
 
@@ -511,5 +523,9 @@ struct PrayerTimesView: View {
                 .font(Typography.upcomingPrayerTime)
                 .foregroundStyle(ThemeColors.secondaryTextColor(for: colorScheme))
         }
+    }
+
+    private func supplementalTimeText(_ supplementalTime: PrayerSupplementalTime) -> Text {
+        Text("\(supplementalTime.label) \(supplementalTimeFormatter.string(from: supplementalTime.time))")
     }
 }

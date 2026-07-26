@@ -117,6 +117,20 @@ enum NotificationMessages {
         return seededPick(from: pool, prayer: prayer, date: date)
     }
 
+    static func boundaryMessage(label: String, prayer: PrayerName, time: Date, settings: PrayerSettings) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = settings.timeFormat == .twelve ? "h:mm a" : "HH:mm"
+        let timeStr = formatter.string(from: time)
+        switch label {
+        case "ends":
+            return "\(prayer.rawValue) time is ending — \(timeStr)"
+        case "best before":
+            return "Best time for \(prayer.rawValue) is ending — \(timeStr)"
+        default:
+            return "It's \(timeStr)"
+        }
+    }
+
     static func simpleMessage(for prayer: PrayerName, time: Date, settings: PrayerSettings) -> String {
         let formatter = DateFormatter()
         formatter.dateFormat = settings.timeFormat == .twelve ? "h:mm a" : "HH:mm"

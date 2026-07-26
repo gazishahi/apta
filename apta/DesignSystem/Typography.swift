@@ -7,7 +7,11 @@ enum Typography {
     static let currentTime = Font.system(size: 88, weight: .regular, design: .default)
     static let currentTimeKerning: CGFloat = -2.0
 
-    static let countdown = Font.system(size: 14, weight: .light, design: .default)
+    static var countdown: Font {
+        let size = PrayerSettings.current.prayerFontSize.countdownSize
+        let weight: Font.Weight = PrayerSettings.current.prayerFontSize == .large ? .medium : .regular
+        return Font.system(size: size, weight: weight, design: .default)
+    }
 
     static var upcomingPrayerName: Font {
         let size = PrayerSettings.current.prayerFontSize.upcomingNameSize

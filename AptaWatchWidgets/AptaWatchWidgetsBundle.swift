@@ -15,5 +15,6 @@ struct AptaWatchWidgetsBundle: WidgetBundle {
         AptaCircularComplication()
         AptaRectangularComplication()
         AptaCornerComplication()
+        AptaCornerCountdownComplication()
     }
 }

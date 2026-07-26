@@ -131,11 +131,12 @@ struct WatchComplicationProvider: TimelineProvider {
     }
 
     private func storedIsProUser() -> Bool {
+        let storedIsPro = SharedDefaults.suite.bool(forKey: SharedDefaults.isProUserKey)
         let ctx = applicationContext
         if let isPro = ctx[SharedDefaults.isProUserKey] as? Bool {
-            return isPro
+            return isPro || storedIsPro
         }
-        return SharedDefaults.suite.bool(forKey: SharedDefaults.isProUserKey)
+        return storedIsPro
     }
 
     private func storedPrayerSettings() -> PrayerSettings {

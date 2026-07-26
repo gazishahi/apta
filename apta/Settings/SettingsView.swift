@@ -110,6 +110,13 @@ struct SettingsView: View {
                     if settings.customIshaAngle != nil {
                         Stepper("Isha: \(String(format: "%.1f", settings.customIshaAngle ?? 15.0))°", value: ishaAngleValue, in: 5.0...25.0, step: 0.5)
                     }
+
+                    Toggle("Hanbali Boundaries", isOn: $settings.showHanbaliBoundaries)
+                        .onChange(of: settings.showHanbaliBoundaries) {
+                            if settings.showHanbaliBoundaries {
+                                settings.asrMethod = .standard
+                            }
+                        }
                 }
             } header: {
                 sectionHeader("PRAYER CALCULATION")
@@ -164,7 +171,12 @@ struct SettingsView: View {
                         }
                     }
 
+                    Toggle("Sunrise", isOn: $settings.sunriseNotification)
                     Toggle("Ramadan Alerts", isOn: $settings.ramadanNotificationsEnabled)
+
+                    if settings.showHanbaliBoundaries {
+                        Toggle("Hanbali Boundary Alerts", isOn: $settings.boundaryNotificationsEnabled)
+                    }
                 }
             } header: {
                 sectionHeader("NOTIFICATIONS")

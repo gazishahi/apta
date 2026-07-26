@@ -52,3 +52,16 @@ struct AptaCornerComplication: Widget {
         .supportedFamilies([.accessoryCorner])
     }
 }
+
+struct AptaCornerCountdownComplication: Widget {
+    let kind = "AptaCornerCountdownComplication"
+
+    var body: some WidgetConfiguration {
+        StaticConfiguration(kind: kind, provider: WatchComplicationProvider()) { entry in
+            CornerCountdownComplicationView(entry: entry)
+        }
+        .configurationDisplayName("apta Pro Countdown")
+        .description("Prayer countdown")
+        .supportedFamilies([.accessoryCorner])
+    }
+}
