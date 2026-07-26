@@ -148,7 +148,13 @@ class PrayerTimesViewModel: ObservableObject {
         let minutes = (Int(diff) % 3600) / 60
         let seconds = Int(diff) % 60
 
-        if hours > 0 {
+        if PrayerSettings.current.countdownStyle == .live {
+            if hours > 0 {
+                countdown = String(format: "%d:%02d:%02d", hours, minutes, seconds)
+            } else {
+                countdown = String(format: "%d:%02d", minutes, seconds)
+            }
+        } else if hours > 0 {
             countdown = "in \(hours)h \(minutes)m"
         } else if minutes > 0 {
             countdown = "in \(minutes)m \(seconds)s"

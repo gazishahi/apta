@@ -23,6 +23,8 @@ struct PrayerSettings: Codable, Equatable {
     var maghribNotification: Bool = true
     var ishaNotification: Bool = true
     var prayerFontSize: PrayerFontSize = .medium
+    var countdownStyle: CountdownStyle = .compact
+    var prominentCountdown: Bool = false
     var showHanbaliBoundaries: Bool = false
     var boundaryNotificationsEnabled: Bool = true
 
@@ -50,6 +52,8 @@ struct PrayerSettings: Codable, Equatable {
         case maghribNotification
         case ishaNotification
         case prayerFontSize
+        case countdownStyle
+        case prominentCountdown
         case showHanbaliBoundaries
         case boundaryNotificationsEnabled
     }
@@ -77,6 +81,8 @@ struct PrayerSettings: Codable, Equatable {
         maghribNotification = try container.decodeIfPresent(Bool.self, forKey: .maghribNotification) ?? true
         ishaNotification = try container.decodeIfPresent(Bool.self, forKey: .ishaNotification) ?? true
         prayerFontSize = try container.decodeIfPresent(PrayerFontSize.self, forKey: .prayerFontSize) ?? .medium
+        countdownStyle = try container.decodeIfPresent(CountdownStyle.self, forKey: .countdownStyle) ?? .compact
+        prominentCountdown = try container.decodeIfPresent(Bool.self, forKey: .prominentCountdown) ?? false
         showHanbaliBoundaries = try container.decodeIfPresent(Bool.self, forKey: .showHanbaliBoundaries) ?? false
         boundaryNotificationsEnabled = try container.decodeIfPresent(Bool.self, forKey: .boundaryNotificationsEnabled) ?? true
     }
@@ -111,6 +117,13 @@ struct PrayerSettings: Codable, Equatable {
             case .large: return 20
             }
         }
+    }
+
+    enum CountdownStyle: String, CaseIterable, Codable, Identifiable {
+        case compact = "Compact"
+        case live = "Live"
+
+        var id: String { rawValue }
     }
 
     func isNotificationEnabled(for prayer: PrayerName) -> Bool {

@@ -213,7 +213,8 @@ struct PrayerTimesView: View {
 
                     Text(viewModel.countdown)
                         .font(Typography.countdown)
-                        .foregroundStyle(ThemeColors.secondaryTextColor(for: colorScheme))
+                        .foregroundStyle(settings.prominentCountdown ? ThemeColors.textColor(for: colorScheme) : ThemeColors.secondaryTextColor(for: colorScheme))
+                        .monospacedDigit()
 
                     if let supplementalTime = current.supplementalTime {
                         supplementalTimeText(supplementalTime)

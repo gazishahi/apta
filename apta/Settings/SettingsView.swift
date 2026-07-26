@@ -4,6 +4,7 @@ import WidgetKit
 struct SettingsView: View {
     @State private var settings = PrayerSettings.current
     @State private var advancedExpanded = false
+    @State private var appearanceAdvancedExpanded = false
     @State private var prayersExpanded = false
     @StateObject private var purchaseManager = PurchaseManager.shared
     @State private var showPaywall = false
@@ -70,7 +71,18 @@ struct SettingsView: View {
                 }
 
                 Toggle("Simple Mode", isOn: $settings.simpleMode)
-                Toggle("Show Ishraq", isOn: $settings.showIshraq)
+
+                DisclosureGroup("Advanced", isExpanded: $appearanceAdvancedExpanded) {
+                    Picker("Countdown", selection: $settings.countdownStyle) {
+                        ForEach(PrayerSettings.CountdownStyle.allCases) { style in
+                            Text(style.rawValue).tag(style)
+                        }
+                    }
+                    .pickerStyle(.menu)
+
+                    Toggle("Prominent Countdown", isOn: $settings.prominentCountdown)
+                    Toggle("Show Ishraq", isOn: $settings.showIshraq)
+                }
             } header: {
                 sectionHeader("APPEARANCE")
             }

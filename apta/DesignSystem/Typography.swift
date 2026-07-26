@@ -8,9 +8,16 @@ enum Typography {
     static let currentTimeKerning: CGFloat = -2.0
 
     static var countdown: Font {
-        let size = PrayerSettings.current.prayerFontSize.countdownSize
-        let weight: Font.Weight = PrayerSettings.current.prayerFontSize == .large ? .medium : .regular
-        return Font.system(size: size, weight: weight, design: .default)
+        let settings = PrayerSettings.current
+        if settings.prominentCountdown {
+            let size: CGFloat = settings.countdownStyle == .live ? 28 : 24
+            return Font.system(size: size, weight: .semibold, design: .rounded)
+        }
+
+        let size = settings.prayerFontSize.countdownSize
+        let weight: Font.Weight = settings.countdownStyle == .live || settings.prayerFontSize == .large ? .medium : .regular
+        let design: Font.Design = settings.countdownStyle == .live ? .rounded : .default
+        return Font.system(size: size, weight: weight, design: design)
     }
 
     static var upcomingPrayerName: Font {
