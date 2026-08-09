@@ -12,6 +12,28 @@ enum PrayerName: String, CaseIterable, Identifiable {
 
     var id: String { rawValue }
 
+    /// Canonical 3-letter abbreviation, used everywhere a compact label is needed.
+    var shortLabel: String {
+        switch self {
+        case .fajr: return "FJR"
+        case .sunrise: return "SUN"
+        case .dhuhr: return "DHR"
+        case .asr: return "ASR"
+        case .maghrib: return "MGB"
+        case .isha: return "ISH"
+        case .ishraq: return "ISQ"
+        }
+    }
+
+    /// Label for watch corner complications: full name, except the longest
+    /// names which fall back to the canonical abbreviation.
+    var cornerLabel: String {
+        switch self {
+        case .maghrib, .sunrise, .ishraq: return shortLabel
+        default: return rawValue.uppercased()
+        }
+    }
+
     var adhanPrayer: Prayer {
         switch self {
         case .fajr: return .fajr

@@ -14,7 +14,7 @@ class WatchPrayerViewModel: ObservableObject {
 
     func calculate(location: CLLocation) {
         SharedDefaults.suite.synchronize()
-        isProUser = SharedDefaults.suite.bool(forKey: SharedDefaults.isProUserKey)
+        isProUser = SharedDefaults.isProUser
         backgroundPreset = BackgroundTheme.current.preset
         let settings = PrayerSettings.current
         let now = Date()

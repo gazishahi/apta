@@ -45,40 +45,28 @@ struct CircularPrayerWidgetView: View {
     }
 
     private func compactLabel(next: PrayerName, time: Date) -> some View {
-        VStack(spacing: displayMode == .countdown ? 1 : 0) {
-            Text(abbreviation(next))
-                .font(.system(size: displayMode == .countdown ? 8 : 10, weight: .semibold, design: .rounded))
+        VStack(spacing: 0) {
+            Text(next.shortLabel)
+                .font(.system(size: displayMode == .countdown ? 10 : 12, weight: .semibold, design: .rounded))
                 .lineLimit(1)
                 .minimumScaleFactor(0.7)
 
             if displayMode == .countdown {
                 Text(time, style: .timer)
-                    .font(.system(size: 8, weight: .medium, design: .rounded))
+                    .font(.system(size: 10, weight: .medium, design: .rounded))
                     .lineLimit(1)
                     .minimumScaleFactor(0.45)
                     .monospacedDigit()
             } else {
                 Text(formatTime(time))
-                    .font(.system(size: 10, weight: .regular, design: .rounded))
+                    .font(.system(size: 12, weight: .regular, design: .rounded))
                     .lineLimit(1)
-                    .minimumScaleFactor(0.7)
+                    .minimumScaleFactor(0.6)
                     .monospacedDigit()
             }
         }
         .multilineTextAlignment(.center)
-        .padding(.horizontal, displayMode == .countdown ? 5 : 0)
-    }
-
-    private func abbreviation(_ prayer: PrayerName) -> String {
-        switch prayer {
-        case .fajr: return "FJR"
-        case .sunrise: return "SUN"
-        case .dhuhr: return "DHR"
-        case .asr: return "ASR"
-        case .maghrib: return "MGH"
-        case .isha: return "ISH"
-        case .ishraq: return "ISQ"
-        }
+        .padding(.horizontal, displayMode == .countdown ? 4 : 0)
     }
 
     private func formatTime(_ date: Date) -> String {
@@ -88,6 +76,50 @@ struct CircularPrayerWidgetView: View {
     }
 }
 
+// MARK: - Circular next prayer (no ring)
+
+struct CircularCountdownWidgetView: View {
+    let entry: PrayerWidgetEntry
+    let displayMode: CircularPrayerDisplayMode
+
+    var body: some View {
+        if let next = entry.nextPrayer, let time = entry.nextPrayerTime {
+            VStack(spacing: 0) {
+                Text(next.shortLabel)
+                    .font(.system(size: 13, weight: .semibold, design: .rounded))
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.7)
+                if displayMode == .countdown {
+                    Text(time, style: .timer)
+                        .font(.system(size: 12, weight: .medium, design: .rounded))
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.5)
+                        .monospacedDigit()
+                        .foregroundStyle(.secondary)
+                } else {
+                    Text(formatTime(time))
+                        .font(.system(size: 13, weight: .medium, design: .rounded))
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.6)
+                        .monospacedDigit()
+                        .foregroundStyle(.secondary)
+                }
+            }
+            .multilineTextAlignment(.center)
+            .padding(.horizontal, 3)
+        } else {
+            Text("--").font(.caption)
+        }
+    }
+
+    private func formatTime(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = PrayerSettings.current.timeFormat == .twelve ? "h:mm" : "HH:mm"
+        return formatter.string(from: date)
+    }
+
+}
+
 // MARK: - Rectangular Lock Screen Widget
 
 struct RectangularPrayerWidgetView: View {
@@ -95,14 +127,17 @@ struct RectangularPrayerWidgetView: View {
 
     var body: some View {
         if let next = entry.nextPrayer, let time = entry.nextPrayerTime {
-            VStack(alignment: .leading, spacing: 3) {
-                HStack {
+            VStack(alignment: .leading, spacing: 4) {
+                HStack(alignment: .firstTextBaseline) {
                     Text(next.rawValue.uppercased())
-                        .font(.system(size: 13, weight: .medium))
+                        .font(.system(size: 15, weight: .medium))
                         .kerning(1.5)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.8)
                     Spacer()
                     Text(formatTime(time))
-                        .font(.system(size: 12, weight: .regular))
+                        .font(.system(size: 14, weight: .regular))
+                        .monospacedDigit()
                 }
                 if let interval = entry.progressInterval {
                     ProgressView(timerInterval: interval, countsDown: false) {
@@ -116,7 +151,8 @@ struct RectangularPrayerWidgetView: View {
                         .progressViewStyle(.linear)
                 }
                 Text(time, style: .timer)
-                    .font(.system(size: 11, weight: .light))
+                    .font(.system(size: 13, weight: .regular))
+                    .monospacedDigit()
             }
         } else {
             Text("Open apta").font(.caption)

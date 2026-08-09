@@ -64,8 +64,7 @@ struct WidgetBackgroundTheme: Codable {
     }
 
     static var isProUser: Bool {
-        let defaults = UserDefaults(suiteName: "group.Gazi.apta") ?? .standard
-        return defaults.bool(forKey: "isProUser")
+        SharedDefaults.isProUser
     }
 }
 

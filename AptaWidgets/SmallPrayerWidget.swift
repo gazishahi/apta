@@ -11,27 +11,35 @@ struct SmallPrayerWidgetView: View {
                 .font(.caption)
                 .foregroundStyle(.secondary)
         } else {
-            VStack(alignment: .leading, spacing: 4) {
-                ForEach(displayedPrayers) { prayer in
+            VStack(alignment: .leading, spacing: 0) {
+                ForEach(Array(displayedPrayers.enumerated()), id: \.element.id) { index, prayer in
                     let isNext = prayer.name == entry.nextPrayer
                     let isCurrent = prayer.name == entry.currentPrayer
+                    if index > 0 {
+                        Spacer(minLength: 4)
+                    }
                     HStack(spacing: 0) {
                         Text(isNext ? ">" : " ")
-                            .font(.system(size: 12, weight: .medium))
-                            .frame(width: 10, alignment: .leading)
+                            .font(.system(size: 14, weight: .medium))
+                            .frame(width: 11, alignment: .leading)
                         Text(prayer.name.rawValue.uppercased())
-                            .font(.system(size: 12, weight: .regular))
+                            .font(.system(size: 14, weight: .regular))
                             .kerning(1.5)
                             .underline(isCurrent)
-                        Spacer()
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.8)
+                        Spacer(minLength: 4)
                         Text(formatTime(prayer.time))
-                            .font(.system(size: 12, weight: .regular))
+                            .font(.system(size: 14, weight: .regular))
+                            .monospacedDigit()
                             .underline(isCurrent)
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.8)
                     }
                     .foregroundStyle(rowColor(isNext: isNext, isCurrent: isCurrent))
                 }
             }
-            .padding(2)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
     }
 

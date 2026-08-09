@@ -39,25 +39,27 @@ struct QiblaWatchView: View {
     }
 
     private var proContent: some View {
-        VStack(spacing: 8) {
-            // Label — switches to FOUND when aligned
-            Text(isAligned ? "FOUND" : "QIBLA")
-                .font(.system(size: 11, weight: isAligned ? .semibold : .light))
-                .tracking(2)
-                .foregroundColor(isAligned ? WatchThemeColors.textColor() : WatchThemeColors.secondaryTextColor())
-                .animation(.easeInOut(duration: 0.2), value: isAligned)
-
+        // Dial fills the screen; label and degree readout sit in its empty center.
+        ZStack {
             WatchQiblaCompass(
                 heading: locationService.heading,
                 qiblaDirection: viewModel.qiblaDirection
             )
 
-            Text(String(format: "%.0f°", abs(offset)))
-                .font(.system(size: 13, weight: .thin, design: .monospaced))
-                .foregroundColor(WatchThemeColors.secondaryTextColor())
-                .monospacedDigit()
+            VStack(spacing: 2) {
+                Text(isAligned ? "FOUND" : "QIBLA")
+                    .font(.system(size: 11, weight: isAligned ? .semibold : .light))
+                    .tracking(2)
+                    .foregroundColor(isAligned ? WatchThemeColors.textColor() : WatchThemeColors.secondaryTextColor())
+                    .animation(.easeInOut(duration: 0.2), value: isAligned)
+
+                Text(String(format: "%.0f°", abs(offset)))
+                    .font(.system(size: 18, weight: .thin, design: .monospaced))
+                    .foregroundColor(WatchThemeColors.textColor())
+                    .monospacedDigit()
+            }
         }
-        .padding(.horizontal, 8)
+        .padding(4)
     }
 
     private var lockedContent: some View {

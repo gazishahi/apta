@@ -8,15 +8,25 @@ struct WatchEntry: TimelineEntry {
     let date: Date
     let nextPrayerName: String?
     let nextPrayerTime: Date?
+    let previousPrayerTime: Date?
     let upcomingPrayers: [(name: String, time: Date)]
     let hasLocation: Bool
     let isProUser: Bool
+
+    var progressInterval: ClosedRange<Date>? {
+        guard let previousPrayerTime, let nextPrayerTime,
+              previousPrayerTime < nextPrayerTime else {
+            return nil
+        }
+        return previousPrayerTime...nextPrayerTime
+    }
 
     static var placeholder: WatchEntry {
         WatchEntry(
             date: Date(),
             nextPrayerName: "Maghrib",
             nextPrayerTime: Date().addingTimeInterval(3600),
+            previousPrayerTime: Date().addingTimeInterval(-3600),
             upcomingPrayers: [
                 ("Isha", Date().addingTimeInterval(7200)),
                 ("Fajr", Date().addingTimeInterval(14400)),
@@ -27,7 +37,7 @@ struct WatchEntry: TimelineEntry {
     }
 
     static var noLocation: WatchEntry {
-        WatchEntry(date: Date(), nextPrayerName: nil, nextPrayerTime: nil,
+        WatchEntry(date: Date(), nextPrayerName: nil, nextPrayerTime: nil, previousPrayerTime: nil,
                    upcomingPrayers: [], hasLocation: false, isProUser: false)
     }
 }
@@ -51,35 +61,56 @@ struct WatchComplicationProvider: TimelineProvider {
 
         let settings = storedPrayerSettings()
         let isPro    = storedIsProUser()
-        let calendar = Calendar(identifier: .gregorian)
-        let tomorrow = calendar.date(byAdding: .day, value: 1, to: now)!
+        let prayers  = prayers(spanningDaysFrom: now, location: location, settings: settings)
 
-        let today = PrayerCalculationService.calculate(for: now, location: location, settings: settings)
-            .filter { $0.name != .ishraq }
-        let tomorrowPrayers = PrayerCalculationService.calculate(for: tomorrow, location: location, settings: settings)
-            .filter { $0.name != .ishraq }
-
-        var entries: [WatchEntry] = []
-        entries.append(buildEntry(date: now, allToday: today, allTomorrow: tomorrowPrayers, isProUser: isPro))
-
-        let allTimes = today + tomorrowPrayers
-        for prayer in allTimes.filter({ $0.time > now }).prefix(10) {
-            entries.append(buildEntry(date: prayer.time, allToday: today, allTomorrow: tomorrowPrayers, isProUser: isPro))
+        // Entries at every prayer boundary, plus 10-minute steps for the next
+        // 24h so non-live elements (the corner progress gauge and its
+        // time-remaining label) keep advancing between prayers.
+        var dates = Set(prayers.map(\.time).filter { $0 > now })
+        var step = now.addingTimeInterval(600)
+        let denseLimit = now.addingTimeInterval(24 * 3600)
+        while step < denseLimit {
+            dates.insert(step)
+            step = step.addingTimeInterval(600)
         }
 
-        completion(Timeline(entries: entries, policy: .atEnd))
+        var entries: [WatchEntry] = []
+        entries.append(buildEntry(date: now, prayers: prayers, isProUser: isPro))
+        for date in dates.sorted() {
+            entries.append(buildEntry(date: date, prayers: prayers, isProUser: isPro))
+        }
+
+        // Roll the window forward daily so the timeline never runs dry even if
+        // the watch app isn't opened for days.
+        let calendar = Calendar(identifier: .gregorian)
+        let nextMidnight = calendar.startOfDay(for: calendar.date(byAdding: .day, value: 1, to: now)!)
+        completion(Timeline(entries: entries, policy: .after(nextMidnight)))
     }
 
     // MARK: - Entry builders
 
-    private func buildEntry(date: Date, allToday: [PrayerTimeEntry], allTomorrow: [PrayerTimeEntry], isProUser: Bool) -> WatchEntry {
-        let upcoming = allToday.filter { $0.time > date }
-        let next = upcoming.first ?? allTomorrow.first
+    // Includes yesterday so entries before today's Fajr still have a previous
+    // prayer to anchor the progress interval.
+    private func prayers(spanningDaysFrom date: Date, location: CLLocation, settings: PrayerSettings) -> [PrayerTimeEntry] {
+        let calendar = Calendar(identifier: .gregorian)
+        let startOfDay = calendar.startOfDay(for: date)
+        return (-1...2)
+            .compactMap { calendar.date(byAdding: .day, value: $0, to: startOfDay) }
+            .flatMap { PrayerCalculationService.calculate(for: $0, location: location, settings: settings) }
+            .filter { $0.name != .ishraq }
+            .sorted { $0.time < $1.time }
+    }
+
+    private func buildEntry(date: Date, prayers: [PrayerTimeEntry], isProUser: Bool) -> WatchEntry {
+        let upcoming = prayers.filter { $0.time > date }
+        let next = upcoming.first
+        let previous = prayers.last { $0.time <= date }
         let rest = upcoming.dropFirst().prefix(2).map { ($0.name.rawValue, $0.time) }
         return WatchEntry(
             date: date,
             nextPrayerName: next?.name.rawValue,
             nextPrayerTime: next?.time,
+            previousPrayerTime: previous?.time,
             upcomingPrayers: Array(rest),
             hasLocation: true,
             isProUser: isProUser
@@ -88,19 +119,11 @@ struct WatchComplicationProvider: TimelineProvider {
 
     private func makeEntry(for date: Date) -> WatchEntry {
         guard let location = storedLocation() else { return .noLocation }
-        let settings  = storedPrayerSettings()
-        let isPro     = storedIsProUser()
-        let prayers   = PrayerCalculationService.calculate(for: date, location: location, settings: settings)
-            .filter { $0.name != .ishraq }
-        let upcoming  = prayers.filter { $0.time > date }
-        let next      = upcoming.first
-        let rest      = upcoming.dropFirst().prefix(2).map { ($0.name.rawValue, $0.time) }
-        return WatchEntry(
+        let settings = storedPrayerSettings()
+        let isPro    = storedIsProUser()
+        return buildEntry(
             date: date,
-            nextPrayerName: next?.name.rawValue,
-            nextPrayerTime: next?.time,
-            upcomingPrayers: Array(rest),
-            hasLocation: true,
+            prayers: prayers(spanningDaysFrom: date, location: location, settings: settings),
             isProUser: isPro
         )
     }
@@ -131,7 +154,7 @@ struct WatchComplicationProvider: TimelineProvider {
     }
 
     private func storedIsProUser() -> Bool {
-        let storedIsPro = SharedDefaults.suite.bool(forKey: SharedDefaults.isProUserKey)
+        let storedIsPro = SharedDefaults.isProUser
         let ctx = applicationContext
         if let isPro = ctx[SharedDefaults.isProUserKey] as? Bool {
             return isPro || storedIsPro

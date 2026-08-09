@@ -15,4 +15,14 @@ enum SharedDefaults {
     // Keys for background theme
     static let backgroundThemeKey = "backgroundTheme"
     static let isProUserKey = "isProUser"
+
+    /// Pro status. Simulator builds always report Pro so paid features are
+    /// testable without StoreKit; simulator code can never ship to devices.
+    static var isProUser: Bool {
+        #if targetEnvironment(simulator)
+        return true
+        #else
+        return suite.bool(forKey: isProUserKey)
+        #endif
+    }
 }

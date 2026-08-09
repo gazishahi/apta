@@ -6,6 +6,7 @@ import WidgetKit
 struct AptaWatchApp: App {
     @StateObject private var locationService = WatchLocationService()
     @StateObject private var viewModel = WatchPrayerViewModel()
+    @Environment(\.scenePhase) private var scenePhase
 
     var body: some Scene {
         WindowGroup {
@@ -37,6 +38,13 @@ struct AptaWatchApp: App {
                     if let next = viewModel.nextPrayer, next.time <= Date() {
                         viewModel.calculate(location: loc)
                     }
+                }
+                .onChange(of: scenePhase) { phase in
+                    guard phase == .active else { return }
+                    if let loc = locationService.location {
+                        viewModel.calculate(location: loc)
+                    }
+                    WidgetCenter.shared.reloadAllTimelines()
                 }
         }
     }

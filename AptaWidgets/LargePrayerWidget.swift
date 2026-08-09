@@ -21,13 +21,13 @@ struct LargePrayerWidgetView: View {
 
                 if let next = entry.nextDailyPrayer {
                     Text(next.name.rawValue.uppercased())
-                        .font(.system(size: 30, weight: .medium))
-                        .kerning(2.5)
+                        .font(.system(size: 36, weight: .medium))
+                        .kerning(3)
                         .foregroundStyle(textColor)
                         .padding(.top, 2)
 
                     Text(formatHeroTime(next.time))
-                        .font(.system(size: 20, weight: .regular, design: .rounded))
+                        .font(.system(size: 22, weight: .regular, design: .rounded))
                         .monospacedDigit()
                         .foregroundStyle(secondaryTextColor)
                         .padding(.top, 2)
@@ -39,27 +39,27 @@ struct LargePrayerWidgetView: View {
                             EmptyView()
                         }
                             .tint(textColor.opacity(0.62))
-                            .frame(width: 220, height: 3)
+                            .frame(width: 140, height: 3)
                             .padding(.top, 10)
                     }
 
                     Text(next.time, style: .timer)
-                        .font(.system(size: 26, weight: .medium, design: .rounded))
+                        .font(.system(size: 32, weight: .medium, design: .rounded))
                         .monospacedDigit()
                         .foregroundStyle(textColor)
-                        .padding(.top, 10)
+                        .padding(.top, 8)
                 }
 
                 Spacer(minLength: 20)
 
-                LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 16) {
+                LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 12) {
                     ForEach(schedulePrayers) { prayer in
-                        VStack(spacing: 3) {
+                        VStack(spacing: 2) {
                             Text(prayer.name.rawValue.uppercased())
                                 .font(.system(size: 13, weight: prayer.name == .sunrise ? .regular : .medium))
-                                .kerning(0.8)
+                                .kerning(1)
                             Text(formatTime(prayer.time))
-                                .font(.system(size: 20, weight: .regular, design: .rounded))
+                                .font(.system(size: 19, weight: .regular, design: .rounded))
                                 .monospacedDigit()
                         }
                         .frame(maxWidth: .infinity)
@@ -67,6 +67,7 @@ struct LargePrayerWidgetView: View {
                     }
                 }
             }
+            .padding(.vertical, 6)
             .multilineTextAlignment(.center)
         }
     }

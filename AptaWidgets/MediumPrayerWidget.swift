@@ -15,8 +15,8 @@ struct MediumPrayerWidgetView: View {
                 if let next = entry.nextDailyPrayer {
                     HStack(alignment: .firstTextBaseline, spacing: 8) {
                         Text(next.name.rawValue.uppercased())
-                            .font(.system(size: 18, weight: .medium))
-                            .kerning(1.4)
+                            .font(.system(size: 22, weight: .medium))
+                            .kerning(1.6)
                             .lineLimit(1)
                             .minimumScaleFactor(0.75)
                             .foregroundStyle(textColor)
@@ -24,11 +24,11 @@ struct MediumPrayerWidgetView: View {
                         Spacer(minLength: 0)
 
                         Text(formatTime(next.time))
-                            .font(.system(size: 18, weight: .regular, design: .rounded))
+                            .font(.system(size: 22, weight: .regular, design: .rounded))
                             .monospacedDigit()
                             .foregroundStyle(secondaryTextColor)
                     }
-                    .frame(width: 220)
+                    .frame(maxWidth: .infinity)
 
                     if let progressInterval = entry.dailyProgressInterval {
                         ProgressView(timerInterval: progressInterval, countsDown: false) {
@@ -37,31 +37,32 @@ struct MediumPrayerWidgetView: View {
                             EmptyView()
                         }
                             .tint(textColor.opacity(0.62))
-                            .frame(width: 220, height: 3)
-                            .padding(.top, 10)
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 3)
+                            .padding(.top, 8)
                     }
 
                     Text(next.time, style: .timer)
-                        .font(.system(size: 25, weight: .medium, design: .rounded))
+                        .font(.system(size: 32, weight: .medium, design: .rounded))
                         .monospacedDigit()
                         .foregroundStyle(textColor)
                         .multilineTextAlignment(.center)
                         .frame(maxWidth: .infinity)
-                        .padding(.top, 10)
+                        .padding(.top, 6)
                 }
 
-                Spacer(minLength: 8)
+                Spacer(minLength: 10)
 
                 HStack(spacing: 0) {
                     let others = entry.dailyPrayers.filter { $0.name != entry.nextDailyPrayer?.name }
                     ForEach(Array(others.enumerated()), id: \.element.id) { index, prayer in
-                        VStack(spacing: 1) {
-                            Text(abbreviation(for: prayer.name))
-                                .font(.system(size: 11, weight: .medium))
+                        VStack(spacing: 2) {
+                            Text(prayer.name.shortLabel)
+                                .font(.system(size: 12, weight: .medium))
                                 .lineLimit(1)
                                 .minimumScaleFactor(0.7)
                             Text(formatTimeShort(prayer.time))
-                                .font(.system(size: 16, weight: .regular, design: .rounded))
+                                .font(.system(size: 17, weight: .regular, design: .rounded))
                                 .monospacedDigit()
                         }
                         .multilineTextAlignment(.center)
@@ -73,8 +74,7 @@ struct MediumPrayerWidgetView: View {
                 }
 
             }
-            .padding(.horizontal, 2)
-            .padding(.vertical, 12)
+            .padding(.vertical, 4)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
         }
     }
@@ -109,18 +109,6 @@ struct MediumPrayerWidgetView: View {
         let formatter = DateFormatter()
         formatter.dateFormat = PrayerSettings.current.timeFormat == .twelve ? "h:mm" : "HH:mm"
         return formatter.string(from: date)
-    }
-
-    private func abbreviation(for prayer: PrayerName) -> String {
-        switch prayer {
-        case .fajr: return "FJR"
-        case .dhuhr: return "DHR"
-        case .asr: return "ASR"
-        case .maghrib: return "MGB"
-        case .isha: return "ISH"
-        case .sunrise: return "SUN"
-        case .ishraq: return "ISQ"
-        }
     }
 
 }

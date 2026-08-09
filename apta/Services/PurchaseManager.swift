@@ -31,7 +31,7 @@ class PurchaseManager: ObservableObject {
     }
 
     private func loadStoredPurchase() {
-        isProUser = defaults.bool(forKey: isProKey)
+        isProUser = SharedDefaults.isProUser
     }
 
     func loadProduct() async {

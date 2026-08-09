@@ -27,6 +27,19 @@ struct AptaCircularComplication: Widget {
     }
 }
 
+struct AptaCircularProgressComplication: Widget {
+    let kind = "AptaCircularProgressComplication"
+
+    var body: some WidgetConfiguration {
+        StaticConfiguration(kind: kind, provider: WatchComplicationProvider()) { entry in
+            CircularProgressComplicationView(entry: entry)
+        }
+        .configurationDisplayName("apta Pro Progress")
+        .description("Progress ring toward the next prayer")
+        .supportedFamilies([.accessoryCircular])
+    }
+}
+
 struct AptaRectangularComplication: Widget {
     let kind = "AptaRectangularComplication"
 
@@ -49,6 +62,19 @@ struct AptaCornerComplication: Widget {
         }
         .configurationDisplayName("apta Pro")
         .description("Prayer name and time")
+        .supportedFamilies([.accessoryCorner])
+    }
+}
+
+struct AptaCornerProgressComplication: Widget {
+    let kind = "AptaCornerProgressComplication"
+
+    var body: some WidgetConfiguration {
+        StaticConfiguration(kind: kind, provider: WatchComplicationProvider()) { entry in
+            CornerProgressComplicationView(entry: entry)
+        }
+        .configurationDisplayName("apta Pro Progress")
+        .description("Prayer progress arc")
         .supportedFamilies([.accessoryCorner])
     }
 }

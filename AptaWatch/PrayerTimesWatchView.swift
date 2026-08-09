@@ -2,6 +2,7 @@ import SwiftUI
 
 struct PrayerTimesWatchView: View {
     @ObservedObject var viewModel: WatchPrayerViewModel
+    @Environment(\.isLuminanceReduced) private var isLuminanceReduced
 
     var body: some View {
         ZStack {
@@ -26,10 +27,22 @@ struct PrayerTimesWatchView: View {
                             .tracking(2)
                             .foregroundColor(WatchThemeColors.textColor())
 
-                        Text(next.time, style: .timer)
-                            .font(.system(size: 18, weight: .thin, design: .monospaced))
-                            .foregroundColor(WatchThemeColors.textColor())
-                            .monospacedDigit()
+                        // Always-On disallows per-second updates, making style .timer
+                        // fall back to verbose text that overflows — show a compact
+                        // minute-level countdown there instead.
+                        if isLuminanceReduced {
+                            TimelineView(.everyMinute) { context in
+                                Text(compactRemaining(until: next.time, from: context.date))
+                                    .font(.system(size: 18, weight: .thin, design: .monospaced))
+                                    .foregroundColor(WatchThemeColors.textColor())
+                                    .monospacedDigit()
+                            }
+                        } else {
+                            Text(next.time, style: .timer)
+                                .font(.system(size: 18, weight: .thin, design: .monospaced))
+                                .foregroundColor(WatchThemeColors.textColor())
+                                .monospacedDigit()
+                        }
                     }
                     .padding(.bottom, 7)
 
@@ -62,5 +75,13 @@ struct PrayerTimesWatchView: View {
                     .foregroundColor(WatchThemeColors.secondaryTextColor())
             }
         }
+    }
+
+    private func compactRemaining(until end: Date, from now: Date) -> String {
+        let minutes = max(Int(end.timeIntervalSince(now) / 60), 0)
+        if minutes >= 60 {
+            return "\(minutes / 60)h \(minutes % 60)m"
+        }
+        return "\(minutes)m"
     }
 }

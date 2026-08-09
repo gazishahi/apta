@@ -13,8 +13,10 @@ struct AptaWatchWidgetsBundle: WidgetBundle {
     var body: some Widget {
         AptaInlineComplication()
         AptaCircularComplication()
+        AptaCircularProgressComplication()
         AptaRectangularComplication()
         AptaCornerComplication()
         AptaCornerCountdownComplication()
+        AptaCornerProgressComplication()
     }
 }

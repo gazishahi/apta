@@ -64,6 +64,20 @@ struct CircularPrayerWidget: Widget {
     }
 }
 
+struct CircularCountdownWidget: Widget {
+    let kind = "CircularCountdownWidget"
+
+    var body: some WidgetConfiguration {
+        AppIntentConfiguration(kind: kind, intent: CircularPrayerWidgetIntent.self, provider: ConfigurablePrayerTimelineProvider()) { entry in
+            CircularCountdownWidgetView(entry: entry, displayMode: entry.circularDisplayMode)
+                .containerBackground(.fill.tertiary, for: .widget)
+        }
+        .configurationDisplayName("Next Prayer")
+        .description("Next prayer time or countdown, without a ring.")
+        .supportedFamilies([.accessoryCircular])
+    }
+}
+
 struct RectangularPrayerWidget: Widget {
     let kind = "RectangularPrayerWidget"
 
@@ -105,8 +119,10 @@ struct WidgetContainerBackground: View {
 struct AptaWidgetsBundle: WidgetBundle {
     var body: some Widget {
         PrayerWidget()
+        NextPrayerWidget()
         InlinePrayerWidget()
         CircularPrayerWidget()
+        CircularCountdownWidget()
         RectangularPrayerWidget()
     }
 }
