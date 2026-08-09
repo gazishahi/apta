@@ -39,7 +39,7 @@ struct LargePrayerWidgetView: View {
                             EmptyView()
                         }
                             .tint(textColor.opacity(0.62))
-                            .frame(width: 190, height: 3)
+                            .frame(width: 220, height: 3)
                             .padding(.top, 10)
                     }
 
