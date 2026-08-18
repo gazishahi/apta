@@ -27,6 +27,7 @@ struct PrayerSettings: Codable, Equatable {
     var prominentCountdown: Bool = false
     var showHanbaliBoundaries: Bool = false
     var boundaryNotificationsEnabled: Bool = true
+    var preNotificationMinutes: Int = 0
 
     init() {}
 
@@ -56,6 +57,7 @@ struct PrayerSettings: Codable, Equatable {
         case prominentCountdown
         case showHanbaliBoundaries
         case boundaryNotificationsEnabled
+        case preNotificationMinutes
     }
 
     init(from decoder: Decoder) throws {
@@ -85,7 +87,10 @@ struct PrayerSettings: Codable, Equatable {
         prominentCountdown = try container.decodeIfPresent(Bool.self, forKey: .prominentCountdown) ?? false
         showHanbaliBoundaries = try container.decodeIfPresent(Bool.self, forKey: .showHanbaliBoundaries) ?? false
         boundaryNotificationsEnabled = try container.decodeIfPresent(Bool.self, forKey: .boundaryNotificationsEnabled) ?? true
+        preNotificationMinutes = try container.decodeIfPresent(Int.self, forKey: .preNotificationMinutes) ?? 0
     }
+
+    static let preNotificationOptions = [0, 5, 10, 15, 20, 30]
 
     enum PrayerFontSize: String, CaseIterable, Codable, Identifiable {
         case small = "Small"

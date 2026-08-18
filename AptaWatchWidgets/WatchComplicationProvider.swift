@@ -8,6 +8,7 @@ struct WatchEntry: TimelineEntry {
     let date: Date
     let nextPrayerName: String?
     let nextPrayerTime: Date?
+    let previousPrayerName: String?
     let previousPrayerTime: Date?
     let upcomingPrayers: [(name: String, time: Date)]
     let hasLocation: Bool
@@ -26,6 +27,7 @@ struct WatchEntry: TimelineEntry {
             date: Date(),
             nextPrayerName: "Maghrib",
             nextPrayerTime: Date().addingTimeInterval(3600),
+            previousPrayerName: "Asr",
             previousPrayerTime: Date().addingTimeInterval(-3600),
             upcomingPrayers: [
                 ("Isha", Date().addingTimeInterval(7200)),
@@ -37,8 +39,8 @@ struct WatchEntry: TimelineEntry {
     }
 
     static var noLocation: WatchEntry {
-        WatchEntry(date: Date(), nextPrayerName: nil, nextPrayerTime: nil, previousPrayerTime: nil,
-                   upcomingPrayers: [], hasLocation: false, isProUser: false)
+        WatchEntry(date: Date(), nextPrayerName: nil, nextPrayerTime: nil, previousPrayerName: nil,
+                   previousPrayerTime: nil, upcomingPrayers: [], hasLocation: false, isProUser: false)
     }
 }
 
@@ -110,6 +112,7 @@ struct WatchComplicationProvider: TimelineProvider {
             date: date,
             nextPrayerName: next?.name.rawValue,
             nextPrayerTime: next?.time,
+            previousPrayerName: previous?.name.rawValue,
             previousPrayerTime: previous?.time,
             upcomingPrayers: Array(rest),
             hasLocation: true,

@@ -66,6 +66,29 @@ enum NotificationScheduler {
                 let id = "\(entry.name.rawValue)-\(year)-\(month)-\(day)"
                 let request = UNNotificationRequest(identifier: id, content: content, trigger: trigger)
                 center.add(request)
+
+                // Early reminder ("15 minutes until Fajr"), skipped for
+                // informational times that aren't prayers to head to.
+                if settings.preNotificationMinutes > 0,
+                   entry.name != .sunrise, entry.name != .ishraq {
+                    let preTime = entry.time.addingTimeInterval(TimeInterval(-settings.preNotificationMinutes * 60))
+                    if preTime > now {
+                        let preContent = UNMutableNotificationContent()
+                        preContent.title = title
+                        preContent.body = NotificationMessages.preMessage(
+                            for: entry.name,
+                            minutes: settings.preNotificationMinutes,
+                            time: entry.time,
+                            settings: settings
+                        )
+                        preContent.sound = .default
+
+                        let preComps = calendar.dateComponents([.year, .month, .day, .hour, .minute, .second], from: preTime)
+                        let preTrigger = UNCalendarNotificationTrigger(dateMatching: preComps, repeats: false)
+                        let preId = "\(entry.name.rawValue)-pre-\(year)-\(month)-\(day)"
+                        center.add(UNNotificationRequest(identifier: preId, content: preContent, trigger: preTrigger))
+                    }
+                }
             }
 
             if settings.showHanbaliBoundaries && settings.boundaryNotificationsEnabled {

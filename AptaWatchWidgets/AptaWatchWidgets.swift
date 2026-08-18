@@ -53,6 +53,19 @@ struct AptaRectangularComplication: Widget {
     }
 }
 
+struct AptaSmartStackComplication: Widget {
+    let kind = "AptaSmartStackComplication"
+
+    var body: some WidgetConfiguration {
+        StaticConfiguration(kind: kind, provider: WatchComplicationProvider()) { entry in
+            SmartStackComplicationView(entry: entry)
+        }
+        .configurationDisplayName("apta Pro Countdown")
+        .description("Current prayer countdown with progress")
+        .supportedFamilies([.accessoryRectangular])
+    }
+}
+
 struct AptaCornerComplication: Widget {
     let kind = "AptaCornerComplication"
 

@@ -200,6 +200,104 @@ struct RectangularComplicationView: View {
     }
 }
 
+// MARK: - Smart Stack countdown (Pro only)
+
+/// Athan Utility-style layout: current prayer with time remaining, the next
+/// prayer's time, and a progress bar across the current window.
+struct SmartStackComplicationView: View {
+    let entry: WatchEntry
+
+    private let accent = Color(red: 0.56, green: 0.75, blue: 1.0)
+
+    var body: some View {
+        Group {
+            if entry.isProUser {
+                proView
+            } else {
+                lockedView
+            }
+        }
+        .containerBackground(.clear, for: .widget)
+    }
+
+    @ViewBuilder
+    private var proView: some View {
+        if let nextName = entry.nextPrayerName, let nextTime = entry.nextPrayerTime {
+            // Between Sunrise and Dhuhr there is no prayer window to be "in",
+            // so the first line points forward ("Dhuhr in 2h") instead of
+            // counting down a window ("Sunrise • 2h left").
+            let inSunriseGap = entry.previousPrayerName == PrayerName.sunrise.rawValue
+            VStack(alignment: .leading, spacing: 2) {
+                HStack(spacing: 4) {
+                    if inSunriseGap {
+                        Text("\(nextName) in \(Text(nextTime, style: .relative))")
+                            .font(.system(size: 16, weight: .bold, design: .rounded))
+                            .monospacedDigit()
+                    } else {
+                        if let currentName = entry.previousPrayerName {
+                            Text(currentName)
+                                .font(.system(size: 16, weight: .bold, design: .rounded))
+                            Text("•")
+                                .font(.system(size: 16, weight: .bold, design: .rounded))
+                        }
+                        Text("\(Text(nextTime, style: .relative)) left")
+                            .font(.system(size: 15, weight: .semibold, design: .rounded))
+                            .monospacedDigit()
+                    }
+                }
+                .foregroundStyle(accent)
+                .widgetAccentable()
+                .lineLimit(1)
+                .minimumScaleFactor(0.6)
+
+                if inSunriseGap, let following = entry.upcomingPrayers.first {
+                    Text("\(following.name) \(shortTime(following.time))")
+                        .font(.system(size: 17, weight: .medium, design: .rounded))
+                        .foregroundStyle(.primary)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.6)
+                } else {
+                    Text("\(nextName) \(shortTime(nextTime))")
+                        .font(.system(size: 17, weight: .medium, design: .rounded))
+                        .foregroundStyle(.primary)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.6)
+                }
+
+                if let interval = entry.progressInterval {
+                    ProgressView(timerInterval: interval, countsDown: false) {
+                        EmptyView()
+                    } currentValueLabel: {
+                        EmptyView()
+                    }
+                    .progressViewStyle(.linear)
+                    .tint(accent)
+                }
+            }
+            .padding(.horizontal, 2)
+        } else {
+            HStack {
+                Image(systemName: "moon.stars")
+                Text("apta")
+                    .font(.system(size: 14, weight: .medium, design: .rounded))
+                Spacer()
+            }
+        }
+    }
+
+    private var lockedView: some View {
+        HStack {
+            Image(systemName: "lock.fill")
+                .font(.system(size: 10))
+                .foregroundStyle(.secondary)
+            Text("apta Pro")
+                .font(.system(size: 12, weight: .medium))
+            Spacer()
+        }
+        .padding(.horizontal, 4)
+    }
+}
+
 // MARK: - Corner (Pro only)
 
 struct CornerComplicationView: View {

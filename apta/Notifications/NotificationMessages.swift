@@ -131,6 +131,12 @@ enum NotificationMessages {
         }
     }
 
+    static func preMessage(for prayer: PrayerName, minutes: Int, time: Date, settings: PrayerSettings) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = settings.timeFormat == .twelve ? "h:mm a" : "HH:mm"
+        return "\(minutes) minutes until \(prayer.rawValue) — \(formatter.string(from: time))"
+    }
+
     static func simpleMessage(for prayer: PrayerName, time: Date, settings: PrayerSettings) -> String {
         let formatter = DateFormatter()
         formatter.dateFormat = settings.timeFormat == .twelve ? "h:mm a" : "HH:mm"

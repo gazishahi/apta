@@ -172,6 +172,13 @@ struct SettingsView: View {
                     }
                     .pickerStyle(.menu)
 
+                    Picker("Early Reminder", selection: $settings.preNotificationMinutes) {
+                        ForEach(PrayerSettings.preNotificationOptions, id: \.self) { minutes in
+                            Text(minutes == 0 ? "Off" : "\(minutes) min before").tag(minutes)
+                        }
+                    }
+                    .pickerStyle(.menu)
+
                     DisclosureGroup("Prayer Alerts", isExpanded: $prayersExpanded) {
                         Toggle("Fajr", isOn: $settings.fajrNotification)
                         Toggle("Dhuhr", isOn: $settings.dhuhrNotification)
