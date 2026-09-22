@@ -34,7 +34,7 @@ struct CircularComplicationView: View {
                         .font(.system(size: 13, weight: .semibold, design: .rounded))
                         .lineLimit(1)
                         .minimumScaleFactor(0.7)
-                    Text(time, style: .timer)
+                    PrayerCountdownText(start: entry.date, end: time, minutesOnly: false)
                         .font(.system(size: 12, weight: .medium, design: .rounded))
                         .lineLimit(1)
                         .minimumScaleFactor(0.5)
@@ -105,14 +105,14 @@ struct CornerProgressComplicationView: View {
                         .minimumScaleFactor(0.6)
                         .widgetCurvesContent()
                         .widgetLabel {
-                            Gauge(value: progress) {
-                                EmptyView()
-                            } currentValueLabel: {
-                                EmptyView()
-                            } minimumValueLabel: {
-                                Text(remainingText(until: time))
-                            } maximumValueLabel: {
-                                Text(shortTime(time))
+                            if let interval = entry.progressInterval {
+                                ProgressView(timerInterval: interval, countsDown: false) {
+                                    Text(shortTime(time))
+                                } currentValueLabel: {
+                                    PrayerCountdownText(start: entry.date, end: time)
+                                }
+                            } else {
+                                PrayerCountdownText(start: entry.date, end: time)
                             }
                         }
                 }
@@ -125,22 +125,6 @@ struct CornerProgressComplicationView: View {
         .containerBackground(.clear, for: .widget)
     }
 
-    // Progress at this entry's date; the timeline's dense entries keep it moving.
-    private var progress: Double {
-        guard let interval = entry.progressInterval else { return 0 }
-        let total = interval.upperBound.timeIntervalSince(interval.lowerBound)
-        guard total > 0 else { return 0 }
-        let elapsed = entry.date.timeIntervalSince(interval.lowerBound)
-        return min(max(elapsed / total, 0), 1)
-    }
-
-    private func remainingText(until time: Date) -> String {
-        let minutes = Int((time.timeIntervalSince(entry.date) / 60).rounded(.up))
-        if minutes >= 60 {
-            return "\(minutes / 60)h"
-        }
-        return "\(max(minutes, 0))m"
-    }
 }
 
 // MARK: - Rectangular (Pro only)
@@ -164,7 +148,7 @@ struct RectangularComplicationView: View {
                         .font(.system(size: 13, weight: .semibold))
                         .tracking(1)
                     Spacer()
-                    Text(time, style: .timer)
+                    PrayerCountdownText(start: entry.date, end: time, minutesOnly: false)
                         .font(.system(size: 13, weight: .thin, design: .monospaced))
                         .monospacedDigit()
                 }
@@ -223,46 +207,28 @@ struct SmartStackComplicationView: View {
     @ViewBuilder
     private var proView: some View {
         if let nextName = entry.nextPrayerName, let nextTime = entry.nextPrayerTime {
-            // Between Sunrise and Dhuhr there is no prayer window to be "in",
-            // so the first line points forward ("Dhuhr in 2h") instead of
-            // counting down a window ("Sunrise • 2h left").
-            let inSunriseGap = entry.previousPrayerName == PrayerName.sunrise.rawValue
             VStack(alignment: .leading, spacing: 2) {
                 HStack(spacing: 4) {
-                    if inSunriseGap {
-                        Text("\(nextName) in \(Text(nextTime, style: .relative))")
+                    if let currentName = entry.previousPrayerName {
+                        Text(currentName)
                             .font(.system(size: 16, weight: .bold, design: .rounded))
-                            .monospacedDigit()
-                    } else {
-                        if let currentName = entry.previousPrayerName {
-                            Text(currentName)
-                                .font(.system(size: 16, weight: .bold, design: .rounded))
-                            Text("•")
-                                .font(.system(size: 16, weight: .bold, design: .rounded))
-                        }
-                        Text("\(Text(nextTime, style: .relative)) left")
-                            .font(.system(size: 15, weight: .semibold, design: .rounded))
-                            .monospacedDigit()
+                        Text("•")
+                            .font(.system(size: 16, weight: .bold, design: .rounded))
                     }
+                    PrayerCountdownText(start: entry.date, end: nextTime, showsSuffix: true)
+                        .font(.system(size: 15, weight: .semibold, design: .rounded))
+                        .monospacedDigit()
                 }
                 .foregroundStyle(accent)
                 .widgetAccentable()
                 .lineLimit(1)
                 .minimumScaleFactor(0.6)
 
-                if inSunriseGap, let following = entry.upcomingPrayers.first {
-                    Text("\(following.name) \(shortTime(following.time))")
-                        .font(.system(size: 17, weight: .medium, design: .rounded))
-                        .foregroundStyle(.primary)
-                        .lineLimit(1)
-                        .minimumScaleFactor(0.6)
-                } else {
-                    Text("\(nextName) \(shortTime(nextTime))")
-                        .font(.system(size: 17, weight: .medium, design: .rounded))
-                        .foregroundStyle(.primary)
-                        .lineLimit(1)
-                        .minimumScaleFactor(0.6)
-                }
+                Text("\(nextName) \(shortTime(nextTime))")
+                    .font(.system(size: 17, weight: .medium, design: .rounded))
+                    .foregroundStyle(.primary)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.6)
 
                 if let interval = entry.progressInterval {
                     ProgressView(timerInterval: interval, countsDown: false) {
@@ -337,9 +303,6 @@ struct CornerCountdownComplicationView: View {
         Group {
             if entry.isProUser {
                 if let name = entry.nextPrayerName, let time = entry.nextPrayerTime {
-                    // Live timers don't survive widgetCurvesContent (their width
-                    // changes every second), so the timer lives in the curved
-                    // widget label and the prayer name takes the big inner slot.
                     Text(cornerLabel(for: name))
                         .font(.system(size: 22, weight: .semibold, design: .rounded))
                         .foregroundStyle(.primary)
@@ -347,7 +310,7 @@ struct CornerCountdownComplicationView: View {
                         .minimumScaleFactor(0.6)
                         .widgetCurvesContent()
                         .widgetLabel {
-                            Text(time, style: .timer)
+                            PrayerCountdownText(start: entry.date, end: time, showsSuffix: true)
                                 .font(.system(size: 17, weight: .semibold, design: .rounded))
                                 .monospacedDigit()
                                 .foregroundStyle(.primary)
@@ -367,6 +330,7 @@ struct CornerCountdownComplicationView: View {
 
 private func shortTime(_ date: Date) -> String {
     let f = DateFormatter()
+    f.timeZone = SharedDefaults.prayerTimeZone
     f.dateFormat = "h:mm"
     return f.string(from: date)
 }

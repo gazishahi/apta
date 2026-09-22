@@ -6,18 +6,23 @@ struct OnboardingContainerView: View {
 
     @State private var step = 0
     @State private var settings: PrayerSettings
-    @StateObject private var locationService = LocationService()
+    @State private var locationChoiceMade: Bool
+    @ObservedObject private var locationService: LocationService
 
     private let totalSteps = 4
     private let suggested: AppCalculationMethod
 
-    init(onComplete: @escaping () -> Void) {
+    init(locationService: LocationService, onComplete: @escaping () -> Void) {
+        self.locationService = locationService
         self.onComplete = onComplete
         let method = AppCalculationMethod.suggestedForLocale()
         self.suggested = method
         var initial = PrayerSettings()
         initial.calculationMethod = method
         _settings = State(initialValue: initial)
+        _locationChoiceMade = State(initialValue: SharedDefaults.suite.bool(
+            forKey: SharedDefaults.backgroundLocationChoiceMadeKey
+        ))
     }
 
     private var isLastStep: Bool { step == totalSteps - 1 }
@@ -25,9 +30,9 @@ struct OnboardingContainerView: View {
     private var buttonDisabled: Bool {
         if step == 2 {
             let status = locationService.authorizationStatus
-            return locationService.location == nil
+            return !locationChoiceMade || (locationService.location == nil
                 && status != .denied
-                && status != .restricted
+                && status != .restricted)
         }
         return false
     }
@@ -46,7 +51,10 @@ struct OnboardingContainerView: View {
                     case 1:
                         OnboardingPreferencesView(asrMethod: $settings.asrMethod, highLatitudeRule: $settings.highLatitudeRule)
                     case 2:
-                        OnboardingLocationView(locationService: locationService)
+                        OnboardingLocationView(
+                            locationService: locationService,
+                            choiceMade: $locationChoiceMade
+                        )
                     case 3:
                         OnboardingNotificationView(settings: $settings)
                     default:
@@ -91,8 +99,9 @@ struct OnboardingContainerView: View {
 
     private func finish() {
         PrayerSettings.current = settings
+        SharedDefaults.suite.set(true, forKey: SharedDefaults.backgroundLocationChoiceMadeKey)
         PrayerSettings.hasCompletedOnboarding = true
-        Task.detached { WatchSyncService.shared.sendSettingsUpdate() }
+        WatchSyncService.shared.sendSettingsUpdate()
         onComplete()
     }
 }

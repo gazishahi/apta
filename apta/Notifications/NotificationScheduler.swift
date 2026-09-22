@@ -21,7 +21,7 @@ enum NotificationScheduler {
         center.removeAllPendingNotificationRequests()
 
         let now = Date()
-        let calendar = Calendar(identifier: .gregorian)
+        let calendar = SharedDefaults.prayerCalendar
 
         for dayOffset in 0..<3 {
             guard let date = calendar.date(byAdding: .day, value: dayOffset, to: now) else { continue }
@@ -42,24 +42,16 @@ enum NotificationScheduler {
                     title = entry.name.rawValue
                 }
 
-                let body: String
-                if entry.name == .sunrise {
-                    body = NotificationMessages.simpleMessage(for: entry.name, time: entry.time, settings: settings)
-                } else {
-                    switch settings.notificationStyle {
-                    case .fun:
-                        body = NotificationMessages.funMessage(for: entry.name, date: date, isRamadan: isRamadan)
-                    case .simple:
-                        body = NotificationMessages.simpleMessage(for: entry.name, time: entry.time, settings: settings)
-                    }
-                }
+                let body = NotificationMessages.prayerMessage(for: entry.name, time: entry.time,
+                                                               date: date, isRamadan: isRamadan,
+                                                               settings: settings)
 
                 let content = UNMutableNotificationContent()
                 content.title = title
                 content.body = body
                 content.sound = .default
 
-                let comps = calendar.dateComponents([.year, .month, .day, .hour, .minute, .second], from: entry.time)
+                let comps = triggerComponents(for: entry.time, calendar: calendar)
                 let trigger = UNCalendarNotificationTrigger(dateMatching: comps, repeats: false)
 
                 guard let year = comps.year, let month = comps.month, let day = comps.day else { return }
@@ -79,11 +71,12 @@ enum NotificationScheduler {
                             for: entry.name,
                             minutes: settings.preNotificationMinutes,
                             time: entry.time,
-                            settings: settings
+                            settings: settings,
+                            isRamadan: isRamadan
                         )
                         preContent.sound = .default
 
-                        let preComps = calendar.dateComponents([.year, .month, .day, .hour, .minute, .second], from: preTime)
+                        let preComps = triggerComponents(for: preTime, calendar: calendar)
                         let preTrigger = UNCalendarNotificationTrigger(dateMatching: preComps, repeats: false)
                         let preId = "\(entry.name.rawValue)-pre-\(year)-\(month)-\(day)"
                         center.add(UNNotificationRequest(identifier: preId, content: preContent, trigger: preTrigger))
@@ -106,7 +99,7 @@ enum NotificationScheduler {
                     )
                     content.sound = .default
 
-                    let comps = calendar.dateComponents([.year, .month, .day, .hour, .minute, .second], from: supplemental.time)
+                    let comps = triggerComponents(for: supplemental.time, calendar: calendar)
                     let trigger = UNCalendarNotificationTrigger(dateMatching: comps, repeats: false)
 
                     guard let year = comps.year, let month = comps.month, let day = comps.day else { continue }
@@ -122,11 +115,15 @@ enum NotificationScheduler {
         UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
     }
 
+    static func triggerComponents(for date: Date, calendar: Calendar = SharedDefaults.prayerCalendar) -> DateComponents {
+        calendar.dateComponents([.timeZone, .year, .month, .day, .hour, .minute, .second], from: date)
+    }
+
     // MARK: - Ramadan Detection
 
     static func isRamadan(on date: Date, hijriAdjustment: Int) -> Bool {
-        let adjusted = Calendar.current.date(byAdding: .day, value: hijriAdjustment, to: date) ?? date
-        let islamicCalendar = Calendar(identifier: .islamicUmmAlQura)
+        let adjusted = SharedDefaults.prayerCalendar.date(byAdding: .day, value: hijriAdjustment, to: date) ?? date
+        let islamicCalendar = SharedDefaults.calendar(identifier: .islamicUmmAlQura)
         let month = islamicCalendar.component(.month, from: adjusted)
         return month == 9
     }

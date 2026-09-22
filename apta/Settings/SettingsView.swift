@@ -145,7 +145,7 @@ struct SettingsView: View {
             } footer : {
                 Text("Adjust the Hijri date if it differs from your local moonsighting.")
             }
-            
+
             // SECTION 4: NOTIFICATIONS
             Section {
                 Toggle("Prayer Notifications", isOn: $settings.notificationsEnabled)
@@ -166,11 +166,13 @@ struct SettingsView: View {
 
                 if settings.notificationsEnabled {
                     Picker("Style", selection: $settings.notificationStyle) {
-                        ForEach(PrayerSettings.NotificationStyle.allCases) { style in
+                        ForEach([PrayerSettings.NotificationStyle.simple, .fun]) { style in
                             Text(style.rawValue).tag(style)
                         }
                     }
-                    .pickerStyle(.menu)
+                    .pickerStyle(.segmented)
+
+                    NotificationPreviewView(settings: settings)
 
                     Picker("Early Reminder", selection: $settings.preNotificationMinutes) {
                         ForEach(PrayerSettings.preNotificationOptions, id: \.self) { minutes in
@@ -280,9 +282,21 @@ struct SettingsView: View {
             }
         }
         .sheet(isPresented: $showPaywall) { PaywallView() }
+        .alert("Restore Purchases", isPresented: restoreMessagePresented) {
+            Button("OK") { purchaseManager.clearRestoreMessage() }
+        } message: {
+            Text(purchaseManager.restoreMessage ?? "")
+        }
         .navigationTitle("Settings")
         .navigationBarTitleDisplayMode(.inline)
         .onChange(of: settings) { oldValue, newValue in save() }
+    }
+
+    private var restoreMessagePresented: Binding<Bool> {
+        Binding(
+            get: { purchaseManager.restoreMessage != nil },
+            set: { if !$0 { purchaseManager.clearRestoreMessage() } }
+        )
     }
 
     private var fajrAngleBinding: Binding<Bool> {

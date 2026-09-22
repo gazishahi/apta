@@ -8,6 +8,10 @@ struct AptaWatchApp: App {
     @StateObject private var viewModel = WatchPrayerViewModel()
     @Environment(\.scenePhase) private var scenePhase
 
+    init() {
+        _ = WatchSessionDelegate.shared
+    }
+
     var body: some Scene {
         WindowGroup {
             ContentView(viewModel: viewModel, locationService: locationService)
@@ -19,19 +23,29 @@ struct AptaWatchApp: App {
                     }
                     // Refresh on WatchConnectivity signal — data is already written to SharedDefaults by the delegate
                     WatchSessionDelegate.shared.onRefresh = { [self] in
-                        // If watch has no GPS fix, load the location the iPhone just sent
-                        if locationService.location == nil {
-                            locationService.reloadStoredLocation()
-                        }
+                        locationService.reloadStoredLocation()
+                        locationService.start()
                         if let loc = locationService.location {
                             viewModel.calculate(location: loc)
+                        } else {
+                            viewModel.clearPrayers()
                         }
                         WidgetCenter.shared.reloadAllTimelines()
                     }
                 }
                 .onChange(of: locationService.location) { location in
-                    guard let loc = location else { return }
+                    guard let loc = location else { viewModel.clearPrayers(); return }
                     viewModel.calculate(location: loc)
+                }
+                .task(id: viewModel.nextPrayer?.time) {
+                    guard let end = viewModel.nextPrayer?.time else { return }
+                    do {
+                        try await Task.sleep(for: .seconds(max(end.timeIntervalSinceNow, 0)))
+                    } catch {
+                        return
+                    }
+                    guard !Task.isCancelled, let location = locationService.location else { return }
+                    viewModel.calculate(location: location)
                 }
                 .onReceive(Timer.publish(every: 60, on: .main, in: .common).autoconnect()) { _ in
                     guard let loc = locationService.location else { return }

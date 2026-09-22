@@ -16,14 +16,15 @@ struct PrayerCalculationService {
         return params
     }
 
-    static func calculate(for date: Date = Date(), location: CLLocation, settings: PrayerSettings) -> [PrayerTimeEntry] {
+    static func calculate(for date: Date = Date(), location: CLLocation, settings: PrayerSettings,
+                          calendar: Calendar = SharedDefaults.prayerCalendar) -> [PrayerTimeEntry] {
         let coordinates = Coordinates(
             latitude: location.coordinate.latitude,
             longitude: location.coordinate.longitude
         )
 
         let params = buildParameters(from: settings)
-        let cal = Calendar(identifier: .gregorian)
+        let cal = calendar
         let components = cal.dateComponents([.year, .month, .day], from: date)
 
         guard let prayers = PrayerTimes(coordinates: coordinates, date: components, calculationParameters: params) else {
@@ -35,7 +36,7 @@ struct PrayerCalculationService {
             PrayerTimeEntry(name: .sunrise, time: prayers.sunrise),
         ]
         if settings.showIshraq {
-            let ishraqTime = Calendar.current.date(byAdding: .minute, value: 15, to: prayers.sunrise) ?? prayers.sunrise
+            let ishraqTime = SharedDefaults.prayerCalendar.date(byAdding: .minute, value: 15, to: prayers.sunrise) ?? prayers.sunrise
             entries.append(PrayerTimeEntry(name: .ishraq, time: ishraqTime))
         }
         let boundaries = settings.showHanbaliBoundaries
@@ -115,7 +116,7 @@ struct PrayerCalculationService {
         )
 
         let params = buildParameters(from: settings)
-        let cal = Calendar(identifier: .gregorian)
+        let cal = SharedDefaults.prayerCalendar
         let components = cal.dateComponents([.year, .month, .day], from: Date())
 
         guard let prayers = PrayerTimes(coordinates: coordinates, date: components, calculationParameters: params) else {
@@ -140,7 +141,7 @@ enum PrayerWindowResolver {
     static func resolve(
         at date: Date,
         prayers: [PrayerTimeEntry],
-        calendar: Calendar = Calendar(identifier: .gregorian)
+        calendar: Calendar = SharedDefaults.prayerCalendar
     ) -> PrayerWindowResolution {
         let sortedPrayers = prayers.sorted { $0.time < $1.time }
         let previousPrayer = sortedPrayers.last(where: { $0.time <= date })
@@ -167,5 +168,25 @@ enum PrayerWindowResolver {
             nextPrayer: nextPrayer,
             displayPrayers: displayPrayers
         )
+    }
+}
+
+enum PrayerCountdownFormatter {
+    /// A stable, minute-only countdown suitable for low-frequency widget updates.
+    static func remainingMinutes(until end: Date, from now: Date) -> String {
+        let secondsRemaining = end.timeIntervalSince(now)
+        guard secondsRemaining > 0 else { return "now" }
+
+        let minutesRemaining = max(Int(ceil(secondsRemaining / 60)), 1)
+        if minutesRemaining < 60 {
+            return "\(minutesRemaining) min left"
+        }
+
+        let hours = minutesRemaining / 60
+        let minutes = minutesRemaining % 60
+        if minutes == 0 {
+            return "\(hours)h left"
+        }
+        return "\(hours)h \(minutes)m left"
     }
 }

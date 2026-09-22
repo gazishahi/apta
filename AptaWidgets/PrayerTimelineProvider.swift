@@ -26,7 +26,7 @@ struct PrayerTimelineProvider: TimelineProvider {
         }
 
         let settings = PrayerSettings.current
-        let calendar = Calendar(identifier: .gregorian)
+        let calendar = SharedDefaults.prayerCalendar
         let today = calendar.startOfDay(for: now)
         let tomorrow = calendar.date(byAdding: .day, value: 1, to: today)!
         let boundaryPrayers = prayers(for: [today, tomorrow], location: location, settings: settings)
@@ -50,7 +50,7 @@ struct PrayerTimelineProvider: TimelineProvider {
     }
 
     private func buildEntry(for date: Date, location: CLLocation, settings: PrayerSettings) -> PrayerWidgetEntry {
-        let calendar = Calendar(identifier: .gregorian)
+        let calendar = SharedDefaults.prayerCalendar
         let surroundingDates = (-1...1).compactMap {
             calendar.date(byAdding: .day, value: $0, to: calendar.startOfDay(for: date))
         }
@@ -94,9 +94,10 @@ struct PrayerTimelineProvider: TimelineProvider {
     }
 
     private func formatHijriDate(settings: PrayerSettings, date: Date) -> String {
-        let calendar = Calendar(identifier: .islamicUmmAlQura)
-        let adjusted = Calendar.current.date(byAdding: .day, value: settings.hijriAdjustment, to: date) ?? date
+        let calendar = SharedDefaults.calendar(identifier: .islamicUmmAlQura)
+        let adjusted = SharedDefaults.prayerCalendar.date(byAdding: .day, value: settings.hijriAdjustment, to: date) ?? date
         let formatter = DateFormatter()
+        formatter.timeZone = SharedDefaults.prayerTimeZone
         formatter.calendar = calendar
         formatter.locale = Locale(identifier: "en")
         formatter.dateFormat = "d MMMM y"

@@ -5,99 +5,116 @@ enum NotificationMessages {
     // MARK: - Fun Messages
 
     static let fajrMessages = [
-        "Your bed is lying to you. Get up.",
+        "Fajr is here. The blankets make a strong case, though.",
         "Yes, it's early. Yes, it's worth it.",
-        "Fajr alarm > regular alarm.",
-        "The snooze button is not your friend right now.",
-        "Technically you could sleep in. But you won't.",
-        "4 AM you is stronger than 4 AM you thinks.",
-        "Cold water, wudu, go.",
-        "If you're reading this, you're already awake. Might as well.",
+        "A quiet world. A very persuasive pillow. Time for Fajr.",
+        "The group chats can sleep. It's Fajr.",
+        "Small yawn. Deep breath. Fajr.",
+        "Your morning has an opening act: Fajr.",
+        "Bed hair is welcome. It's Fajr.",
+        "Fajr first. The to-do list hasn't found you yet.",
     ]
 
     static let dhuhrMessages = [
         "Lunch break? Prayer break.",
         "Step away from the screen.",
-        "Your meeting can wait. This one can't.",
+        "Your tabs will still be there after Dhuhr. All of them.",
         "Dhuhr. Aka the midday reset button.",
-        "Quick break from pretending to be productive.",
-        "The sun is literally right above you. Take the hint.",
-        "Lock in to prayer real quick.",
-        "Sandwich after. Salah first.",
+        "Dhuhr is here. Give your to-do list a little intermission.",
+        "A little less scrolling. A little more stillness. Dhuhr.",
+        "Pause the busy. It's Dhuhr.",
+        "Dhuhr: a different kind of standing appointment.",
     ]
 
     static let asrMessages = [
-        "The 3 PM slump is real. Asr is realer.",
-        "You forgot about Asr, didn't you? It's okay, that's why I'm here.",
-        "This is your Asr reminder before you get busy and forget.",
-        "Between Dhuhr and Maghrib there's this one. Don't skip it.",
+        "The afternoon has a plot twist: a pause for Asr.",
+        "Asr is here. Your errands can take a breather too.",
+        "A full afternoon deserves a little stillness. Asr.",
+        "Asr: your afternoon intermission, no ticket needed.",
         "Your phone just reminded you to pray. What a time to be alive.",
-        "Yes, again. That's kind of the whole point.",
-        "Allah loves you and so do I. Now, go pray.",
+        "The to-do list is doing its thing. Time for Asr.",
+        "Asr is here. A good moment to put the phone down.",
     ]
 
     static let maghribMessages = [
         "Sun's gone. You know the drill.",
-        "Golden hour is over. Maghrib hour begins.",
-        "The sky is doing its thing. You do yours.",
-        "You know what's nicer than the sunset? Maghrib. Now go.",
-        "Day shift is over. Pray and clock out.",
-        "Maghrib waits for no one. Literally, it's a short window.",
-        "The sky turned orange for you. Least you can do.",
+        "The sun has signed off. It's Maghrib.",
+        "The sky is changing outfits. Time for Maghrib.",
+        "Sunset comes with a reminder: Maghrib.",
+        "A change of scenery. A moment for Maghrib.",
+        "Maghrib is here. Evening has entered the chat.",
+        "The day's turning a page. Time for Maghrib.",
         "Instagram sunset pic can wait."
     ]
 
     static let ishaMessages = [
         "Last one of the day. You got this.",
-        "One more and you're done. For today, at least.",
+        "Isha is here. A little stillness before the wind-down.",
         "The day's closing credits. Pray through them.",
-        "Don't fall asleep before this one. I'm watching.",
+        "The pillow has plans. First, a moment for Isha.",
         "The night is dark, but Isha brings light.",
-        "You must be so eepy. That's great. But go pray first.",
-        "Last one and then a night of Tahajjud and dhikr!",
-        "The pillow will wait three more minutes."
+        "Isha: a quieter kind of night mode.",
+        "One last prayer reminder. No cliffhanger tonight.",
+        "Isha is here. The next episode can stay queued."
     ]
 
     static let ishraqMessages = [
-        "Sunrise was 15 minutes ago. Ishraq time.",
-        "Recommended prayer, major rewards.",
-        "Two rakat sunnah after sunrise.",
-        "Beautiful time for prayer.",
-        "Blessed time to remember Allah.",
-        "The sun's up. Time to pray.",
-        "Quick prayer, big reward.",
+        "Ishraq time. An optional pause before the day picks up speed.",
+        "Room for a little stillness? It's Ishraq time.",
+        "Ishraq is here. An optional addition to your morning routine.",
+        "The morning has a little breathing room. A moment for Ishraq, if you like.",
+        "Ishraq time. A gentle invitation, no calendar invite needed.",
+        "An optional morning pause, with fewer notifications. Ishraq.",
+        "Ishraq is here, if you'd like a moment away from the bustle.",
+    ]
+
+    static let sunriseMessages = [
+        "Sunrise. The day is officially showing off.",
+        "Sunrise is here. Nature has switched on the lights.",
+        "The sun has clocked in. Good morning.",
+        "Sunrise. A fresh page, no loading screen.",
+        "Daylight has arrived. No subscription required.",
+        "Sunrise. The sky's morning update is in.",
     ]
 
     // MARK: - Ramadan Messages
 
-    static let suhoorMessages = [
-        "Alright, stop eating now.",
-        "Last bite. I mean it.",
-        "Chug that water like your life depends on it. Because your afternoon does.",
-        "Look at you taking that last bite. Stop.",
-        "Eat something. Anything. You'll thank yourself at 2 PM.",
-        "Fajr is coming and it's bringing a long day with it. Fuel up.",
+    // These arrive at Fajr, never as an invitation to keep eating.
+    static let ramadanFajrMessages = [
+        "Suhoor has ended. Time for Fajr. The kitchen can take a breather.",
+        "Suhoor has ended. Fajr is here, bed hair and all.",
+        "Suhoor has ended. Time for Fajr. A quiet start before the busy.",
+        "Suhoor has ended. Fajr is here. The group chats can wait.",
+        "Suhoor has ended. Time for Fajr. Small yawn, deep breath.",
+        "Suhoor has ended. Fajr is here. The dishes aren't going anywhere.",
     ]
 
     static let iftarMessages = [
-        "Go eat. You've earned it.",
-        "Oily food: coming soon to an iftar near you.",
-        "Om nom nom.",
-        "The longest day of your life is over. Again. Tomorrow, you do it again.",
-        "Date first. Then everything else. You know the order.",
-        "Your stomach has been filing complaints all day. Time to respond.",
-        "Iftar time. Try not to eat everything in the first 3 minutes.",
-        "You survived. Reward yourself. Responsibly.",
-        "The samosas have been waiting for you.",
-        "Breaking our fast at the Yemeni coffee shop, are we?",
+        "Iftar and Maghrib are here. A date worth looking forward to.",
+        "Time for iftar and Maghrib. The table's moment has arrived.",
+        "Iftar and Maghrib are here. Water, meet your biggest fan.",
+        "Time for iftar and Maghrib. The first sip gets a warm welcome.",
+        "Iftar and Maghrib are here. The food photos can wait.",
+        "Time for iftar and Maghrib. A little less waiting, a little more gratitude.",
+        "Iftar and Maghrib are here. Today's dinner has an opening ceremony.",
+        "Time for iftar and Maghrib. A lovely reason to gather round.",
     ]
 
     // MARK: - Message Selection
 
+    static func prayerMessage(for prayer: PrayerName, time: Date, date: Date,
+                              isRamadan: Bool, settings: PrayerSettings) -> String {
+        if settings.notificationStyle == .simple {
+            let message = simpleMessage(for: prayer, time: time, settings: settings)
+            return isRamadan && prayer == .fajr ? "Suhoor has ended. \(message)" : message
+        }
+        return funMessage(for: prayer, date: date, isRamadan: isRamadan)
+    }
+
     static func funMessage(for prayer: PrayerName, date: Date, isRamadan: Bool) -> String {
         if isRamadan {
             if prayer == .fajr {
-                return seededPick(from: suhoorMessages, prayer: prayer, date: date)
+                return seededPick(from: ramadanFajrMessages, prayer: prayer, date: date)
             }
             if prayer == .maghrib {
                 return seededPick(from: iftarMessages, prayer: prayer, date: date)
@@ -112,44 +129,67 @@ enum NotificationMessages {
         case .maghrib: pool = maghribMessages
         case .isha: pool = ishaMessages
         case .ishraq: pool = ishraqMessages
-        case .sunrise: return ""
+        case .sunrise: pool = sunriseMessages
         }
         return seededPick(from: pool, prayer: prayer, date: date)
     }
 
     static func boundaryMessage(label: String, prayer: PrayerName, time: Date, settings: PrayerSettings) -> String {
         let formatter = DateFormatter()
+        formatter.timeZone = SharedDefaults.prayerTimeZone
         formatter.dateFormat = settings.timeFormat == .twelve ? "h:mm a" : "HH:mm"
         let timeStr = formatter.string(from: time)
         switch label {
         case "ends":
-            return "\(prayer.rawValue) time is ending — \(timeStr)"
+            return "\(prayer.rawValue) time is ending at \(timeStr)"
         case "best before":
-            return "Best time for \(prayer.rawValue) is ending — \(timeStr)"
+            return "Best time for \(prayer.rawValue) is ending at \(timeStr)"
         default:
             return "It's \(timeStr)"
         }
     }
 
-    static func preMessage(for prayer: PrayerName, minutes: Int, time: Date, settings: PrayerSettings) -> String {
+    static func preMessage(for prayer: PrayerName, minutes: Int, time: Date, settings: PrayerSettings,
+                           isRamadan: Bool = false) -> String {
         let formatter = DateFormatter()
+        formatter.timeZone = SharedDefaults.prayerTimeZone
         formatter.dateFormat = settings.timeFormat == .twelve ? "h:mm a" : "HH:mm"
-        return "\(minutes) minutes until \(prayer.rawValue) — \(formatter.string(from: time))"
+        let timing = "\(minutes) minutes until \(prayer.rawValue) at \(formatter.string(from: time))"
+        if isRamadan && prayer == .fajr {
+            return settings.notificationStyle == .fun
+                ? "\(timing). Time to wrap up suhoor. The kitchen's closing act."
+                : "\(timing). Time to wrap up suhoor."
+        }
+        guard settings.notificationStyle == .fun else { return timing }
+        let nudge: String
+        switch prayer {
+        case .fajr: nudge = "Give the blankets a little notice."
+        case .dhuhr: nudge = "Find a good stopping point. Your tabs can hold the fort."
+        case .asr: nudge = "An intermission for your afternoon is on its way."
+        case .maghrib:
+            nudge = isRamadan ? "Iftar is coming. The table's almost on stage." : "Evening is waiting in the wings."
+        case .isha: nudge = "A heads-up for you and your pillow."
+        case .sunrise, .ishraq: return timing
+        }
+        return "\(timing). \(nudge)"
     }
 
     static func simpleMessage(for prayer: PrayerName, time: Date, settings: PrayerSettings) -> String {
         let formatter = DateFormatter()
+        formatter.timeZone = SharedDefaults.prayerTimeZone
         formatter.dateFormat = settings.timeFormat == .twelve ? "h:mm a" : "HH:mm"
-        return "It's time for \(prayer.rawValue) — \(formatter.string(from: time))"
+        return "It's time for \(prayer.rawValue) (\(formatter.string(from: time)))"
     }
 
     /// Date-seeded pick so same day = same message (no duplicates on reschedule)
     private static func seededPick(from pool: [String], prayer: PrayerName, date: Date) -> String {
         guard !pool.isEmpty else { return "" }
-        let cal = Calendar(identifier: .gregorian)
+        let cal = SharedDefaults.prayerCalendar
         let day = cal.ordinality(of: .day, in: .era, for: date) ?? 0
-        let hash = day &+ prayer.rawValue.hashValue
-        let index = abs(hash) % pool.count
+        // Unlike Swift's randomized hashValue, this stays stable across launches.
+        let offset = prayer.rawValue.utf8.reduce(0) { $0 + Int($1) }
+        let remainder = (day % pool.count + offset % pool.count) % pool.count
+        let index = (remainder + pool.count) % pool.count
         return pool[index]
     }
 }

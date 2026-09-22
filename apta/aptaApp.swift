@@ -5,15 +5,18 @@ import WidgetKit
 @main
 struct aptaApp: App {
     @Environment(\.scenePhase) private var scenePhase
+    @StateObject private var purchaseManager = PurchaseManager.shared
+    @StateObject private var locationService = LocationService()
 
     var body: some Scene {
         WindowGroup {
-            RootCoordinator()
+            RootCoordinator(locationService: locationService)
         }
         .onChange(of: scenePhase) {
             if scenePhase == .active {
                 rescheduleNotifications()
                 WidgetCenter.shared.reloadAllTimelines()
+                Task { _ = await purchaseManager.refreshEntitlements() }
             }
         }
     }

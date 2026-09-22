@@ -1,4 +1,5 @@
 import SwiftUI
+import CoreLocation
 
 struct RootCoordinator: View {
     enum AppPhase {
@@ -10,13 +11,13 @@ struct RootCoordinator: View {
     @Environment(\.scenePhase) private var scenePhase
     @State private var phase: AppPhase = .splash
     @State private var showSettings = false
-    @StateObject private var locationService = LocationService()
+    @State private var showLocationUpgradePrompt = false
+    @ObservedObject private var locationService: LocationService
     @StateObject private var viewModel: PrayerTimesViewModel
 
-    init() {
-        let locService = LocationService()
-        _locationService = StateObject(wrappedValue: locService)
-        _viewModel = StateObject(wrappedValue: PrayerTimesViewModel(locationService: locService))
+    init(locationService: LocationService) {
+        self.locationService = locationService
+        _viewModel = StateObject(wrappedValue: PrayerTimesViewModel(locationService: locationService))
     }
 
     private var resolvedColorScheme: ColorScheme? {
@@ -49,7 +50,7 @@ struct RootCoordinator: View {
                 }.statusBarHidden()
 
             case .onboarding:
-                OnboardingContainerView {
+                OnboardingContainerView(locationService: locationService) {
                     withAnimation(AnimationConstants.prayerTransition) {
                         phase = .main
                     }
@@ -70,8 +71,10 @@ struct RootCoordinator: View {
                         }
                     }
                     .onAppear {
+                        locationService.refreshAuthorizationState()
                         locationService.requestLocation()
                         viewModel.start()
+                        offerLocationUpgradeIfNeeded()
                     }
                     .onDisappear {
                         viewModel.stop()
@@ -80,17 +83,57 @@ struct RootCoordinator: View {
             }
         }
         .preferredColorScheme(resolvedColorScheme)
+        .alert("Keep Prayer Times Updated While Traveling?", isPresented: $showLocationUpgradePrompt) {
+            Button("Not Now", role: .cancel) {
+                recordLocationChoice()
+            }
+            Button("Enable") {
+                recordLocationChoice()
+                locationService.requestTravelPermission()
+            }
+        } message: {
+            Text("Allow apta to update prayer times, notifications, widgets, and Apple Watch after significant travel, even when you haven't opened the app.")
+        }
         .onChange(of: scenePhase) {
-            if scenePhase == .active, phase == .main {
-                locationService.requestLocation()
+            if scenePhase == .active {
+                locationService.refreshAuthorizationState()
+                if phase != .splash {
+                    locationService.requestLocation()
+                }
+                if phase == .main {
+                    offerLocationUpgradeIfNeeded()
+                }
             }
         }
         .onChange(of: locationService.location) {
             viewModel.recalculate()
-            if let loc = locationService.location {
-                NotificationScheduler.scheduleUpcoming(location: loc)
-                WatchSyncService.shared.sendSettingsUpdate()
-            }
         }
+    }
+
+    private func offerLocationUpgradeIfNeeded() {
+        guard locationService.manualLocation == nil else { return }
+        let defaults = SharedDefaults.suite
+        guard LocationUpgradePromptPolicy.shouldOffer(
+            hasCompletedOnboarding: PrayerSettings.hasCompletedOnboarding,
+            hasMadeChoice: defaults.bool(forKey: SharedDefaults.backgroundLocationChoiceMadeKey),
+            authorizationStatus: locationService.authorizationStatus
+        ) else { return }
+        showLocationUpgradePrompt = true
+    }
+
+    private func recordLocationChoice() {
+        SharedDefaults.suite.set(true, forKey: SharedDefaults.backgroundLocationChoiceMadeKey)
+    }
+}
+
+enum LocationUpgradePromptPolicy {
+    static func shouldOffer(
+        hasCompletedOnboarding: Bool,
+        hasMadeChoice: Bool,
+        authorizationStatus: CLAuthorizationStatus
+    ) -> Bool {
+        hasCompletedOnboarding &&
+            !hasMadeChoice &&
+            authorizationStatus == .authorizedWhenInUse
     }
 }

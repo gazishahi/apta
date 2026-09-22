@@ -17,22 +17,28 @@ class WatchLocationService: NSObject, ObservableObject, CLLocationManagerDelegat
 
     func reloadStoredLocation() {
         loadStoredLocation()
+        if SharedDefaults.manualLocation != nil { stopHeading() }
     }
 
     private func loadStoredLocation() {
+        if let manual = SharedDefaults.manualLocation {
+            location = CLLocation(latitude: manual.latitude, longitude: manual.longitude)
+            return
+        }
         let lat = SharedDefaults.suite.double(forKey: SharedDefaults.latitudeKey)
         let lon = SharedDefaults.suite.double(forKey: SharedDefaults.longitudeKey)
-        guard lat != 0 || lon != 0 else { return }
+        guard lat != 0 || lon != 0 else { location = nil; return }
         location = CLLocation(latitude: lat, longitude: lon)
     }
 
     func start() {
+        guard SharedDefaults.manualLocation == nil else { return }
         manager.requestWhenInUseAuthorization()
         manager.requestLocation()
     }
 
     func startHeading() {
-        guard CLLocationManager.headingAvailable() else { return }
+        guard SharedDefaults.manualLocation == nil, CLLocationManager.headingAvailable() else { return }
         manager.startUpdatingHeading()
     }
 
@@ -43,7 +49,7 @@ class WatchLocationService: NSObject, ObservableObject, CLLocationManagerDelegat
     // MARK: - CLLocationManagerDelegate
 
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        guard let loc = locations.last else { return }
+        guard SharedDefaults.manualLocation == nil, let loc = locations.last else { return }
         location = loc
         SharedDefaults.suite.set(loc.coordinate.latitude, forKey: SharedDefaults.latitudeKey)
         SharedDefaults.suite.set(loc.coordinate.longitude, forKey: SharedDefaults.longitudeKey)

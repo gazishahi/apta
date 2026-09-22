@@ -65,16 +65,9 @@ struct WatchComplicationProvider: TimelineProvider {
         let isPro    = storedIsProUser()
         let prayers  = prayers(spanningDaysFrom: now, location: location, settings: settings)
 
-        // Entries at every prayer boundary, plus 10-minute steps for the next
-        // 24h so non-live elements (the corner progress gauge and its
-        // time-remaining label) keep advancing between prayers.
-        var dates = Set(prayers.map(\.time).filter { $0 > now })
-        var step = now.addingTimeInterval(600)
-        let denseLimit = now.addingTimeInterval(24 * 3600)
-        while step < denseLimit {
-            dates.insert(step)
-            step = step.addingTimeInterval(600)
-        }
+        // The system advances timer text and progress independently of this
+        // timeline. Entries are only needed when the prayer data changes.
+        let dates = Set(prayers.map(\.time).filter { $0 > now })
 
         var entries: [WatchEntry] = []
         entries.append(buildEntry(date: now, prayers: prayers, isProUser: isPro))
@@ -82,9 +75,9 @@ struct WatchComplicationProvider: TimelineProvider {
             entries.append(buildEntry(date: date, prayers: prayers, isProUser: isPro))
         }
 
-        // Roll the window forward daily so the timeline never runs dry even if
-        // the watch app isn't opened for days.
-        let calendar = Calendar(identifier: .gregorian)
+        // Request a daily extension of the multi-day timeline. The OS may defer
+        // this request; it is not what drives the visible countdown.
+        let calendar = SharedDefaults.prayerCalendar
         let nextMidnight = calendar.startOfDay(for: calendar.date(byAdding: .day, value: 1, to: now)!)
         completion(Timeline(entries: entries, policy: .after(nextMidnight)))
     }
@@ -94,7 +87,7 @@ struct WatchComplicationProvider: TimelineProvider {
     // Includes yesterday so entries before today's Fajr still have a previous
     // prayer to anchor the progress interval.
     private func prayers(spanningDaysFrom date: Date, location: CLLocation, settings: PrayerSettings) -> [PrayerTimeEntry] {
-        let calendar = Calendar(identifier: .gregorian)
+        let calendar = SharedDefaults.prayerCalendar
         let startOfDay = calendar.startOfDay(for: date)
         return (-1...2)
             .compactMap { calendar.date(byAdding: .day, value: $0, to: startOfDay) }
@@ -104,9 +97,10 @@ struct WatchComplicationProvider: TimelineProvider {
     }
 
     private func buildEntry(date: Date, prayers: [PrayerTimeEntry], isProUser: Bool) -> WatchEntry {
+        let resolved = PrayerWindowResolver.resolve(at: date, prayers: prayers)
         let upcoming = prayers.filter { $0.time > date }
-        let next = upcoming.first
-        let previous = prayers.last { $0.time <= date }
+        let next = resolved.nextPrayer
+        let previous = resolved.previousPrayer
         let rest = upcoming.dropFirst().prefix(2).map { ($0.name.rawValue, $0.time) }
         return WatchEntry(
             date: date,
@@ -143,12 +137,11 @@ struct WatchComplicationProvider: TimelineProvider {
     private func storedLocation() -> CLLocation? {
         // Try application context first
         let ctx = applicationContext
-        if let lat = ctx[SharedDefaults.latitudeKey] as? Double,
-           let lon = ctx[SharedDefaults.longitudeKey] as? Double,
-           lat != 0 || lon != 0 {
-            return CLLocation(latitude: lat, longitude: lon)
+        SharedDefaults.storeLocationPayload(ctx)
+        if let manual = SharedDefaults.manualLocation {
+            return CLLocation(latitude: manual.latitude, longitude: manual.longitude)
         }
-        // Fallback to shared defaults
+        // Read the newest synchronized location, including an explicit clear.
         let defaults = SharedDefaults.suite
         let lat = defaults.double(forKey: SharedDefaults.latitudeKey)
         let lon = defaults.double(forKey: SharedDefaults.longitudeKey)
@@ -158,11 +151,15 @@ struct WatchComplicationProvider: TimelineProvider {
 
     private func storedIsProUser() -> Bool {
         let storedIsPro = SharedDefaults.isProUser
+        let defaults = SharedDefaults.suite
+        let storedUpdatedAt = defaults.double(forKey: SharedDefaults.proStatusUpdatedAtKey)
         let ctx = applicationContext
-        if let isPro = ctx[SharedDefaults.isProUserKey] as? Bool {
-            return isPro || storedIsPro
-        }
-        return storedIsPro
+        return ProStatusResolver.resolve(
+            storedValue: storedIsPro,
+            storedUpdatedAt: storedUpdatedAt,
+            contextValue: ctx[SharedDefaults.isProUserKey] as? Bool,
+            contextUpdatedAt: ctx[SharedDefaults.proStatusUpdatedAtKey] as? Double
+        )
     }
 
     private func storedPrayerSettings() -> PrayerSettings {

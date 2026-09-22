@@ -17,9 +17,13 @@ final class WatchSyncService: NSObject, WCSessionDelegate {
 
         let suite = SharedDefaults.suite
         var context: [String: Any] = ["action": "refresh"]
+        // An empty payload explicitly clears a previous manual selection.
+        context[SharedDefaults.manualLocationKey] = suite.data(forKey: SharedDefaults.manualLocationKey) ?? Data()
+        context[SharedDefaults.locationUpdatedAtKey] = suite.double(forKey: SharedDefaults.locationUpdatedAtKey)
         context[SharedDefaults.latitudeKey]  = suite.double(forKey: SharedDefaults.latitudeKey)
         context[SharedDefaults.longitudeKey] = suite.double(forKey: SharedDefaults.longitudeKey)
         context[SharedDefaults.isProUserKey] = suite.bool(forKey: SharedDefaults.isProUserKey)
+        context[SharedDefaults.proStatusUpdatedAtKey] = suite.double(forKey: SharedDefaults.proStatusUpdatedAtKey)
         if let data = suite.data(forKey: "prayerSettings") {
             context["prayerSettings"] = data
         }
@@ -28,11 +32,18 @@ final class WatchSyncService: NSObject, WCSessionDelegate {
         }
 
         try? WCSession.default.updateApplicationContext(context)
+        if WCSession.default.isReachable {
+            WCSession.default.sendMessage(context, replyHandler: nil, errorHandler: nil)
+        }
     }
 
     // MARK: - WCSessionDelegate
 
-    func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {}
+    func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
+        if activationState == .activated {
+            sendSettingsUpdate()
+        }
+    }
     func sessionDidBecomeInactive(_ session: WCSession) {}
     func sessionDidDeactivate(_ session: WCSession) {
         WCSession.default.activate()

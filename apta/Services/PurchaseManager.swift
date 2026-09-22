@@ -1,6 +1,7 @@
 import Foundation
 import StoreKit
 import Combine
+import WidgetKit
 
 @MainActor
 class PurchaseManager: ObservableObject {
@@ -13,21 +14,25 @@ class PurchaseManager: ObservableObject {
     @Published private(set) var isLoading: Bool = false
     @Published private(set) var product: Product?
     @Published var errorMessage: String?
+    @Published private(set) var restoreMessage: String?
 
     private var updateTask: Task<Void, Never>?
+    private var startupTask: Task<Void, Never>?
 
     private var defaults: UserDefaults { SharedDefaults.suite }
 
     init() {
         loadStoredPurchase()
-        updateTask = Task {
+        updateTask = Task { await listenForTransactions() }
+        startupTask = Task {
             await loadProduct()
-            await listenForTransactions()
+            _ = await refreshEntitlements()
         }
     }
 
     deinit {
         updateTask?.cancel()
+        startupTask?.cancel()
     }
 
     private func loadStoredPurchase() {
@@ -85,15 +90,49 @@ class PurchaseManager: ObservableObject {
         }
     }
 
-    func restorePurchases() async {
+    @discardableResult
+    func restorePurchases() async -> Bool {
         isLoading = true
         defer { isLoading = false }
+        errorMessage = nil
+        restoreMessage = nil
 
         do {
             try await AppStore.sync()
+            let restored = await refreshEntitlements()
+            if !restored {
+                errorMessage = "No active apta Pro purchase was found."
+            }
+            restoreMessage = restored ? "Your apta Pro purchase was restored." : errorMessage
+            return restored
         } catch {
-            errorMessage = "Failed to restore purchases"
+            errorMessage = "Failed to restore purchases: \(error.localizedDescription)"
+            restoreMessage = errorMessage
+            return false
         }
+    }
+
+    func clearRestoreMessage() {
+        restoreMessage = nil
+    }
+
+    /// Reconciles cached state with StoreKit's current, verified entitlements.
+    @discardableResult
+    func refreshEntitlements() async -> Bool {
+        var hasActiveProEntitlement = false
+
+        for await result in Transaction.currentEntitlements {
+            guard case .verified(let transaction) = result,
+                  transaction.productID == productID,
+                  transaction.revocationDate == nil else {
+                continue
+            }
+            hasActiveProEntitlement = true
+            break
+        }
+
+        publishProStatus(hasActiveProEntitlement)
+        return hasActiveProEntitlement
     }
 
     private func listenForTransactions() async {
@@ -109,10 +148,16 @@ class PurchaseManager: ObservableObject {
 
     private func handleVerifiedTransaction(_ transaction: Transaction) async {
         if transaction.productID == productID {
-            isProUser = transaction.revocationDate == nil
-            defaults.set(isProUser, forKey: isProKey)
-            WatchSyncService.shared.sendSettingsUpdate()
+            publishProStatus(transaction.revocationDate == nil)
         }
         await transaction.finish()
+    }
+
+    private func publishProStatus(_ isPro: Bool) {
+        isProUser = isPro
+        defaults.set(isPro, forKey: isProKey)
+        defaults.set(Date().timeIntervalSince1970, forKey: SharedDefaults.proStatusUpdatedAtKey)
+        WidgetCenter.shared.reloadAllTimelines()
+        WatchSyncService.shared.sendSettingsUpdate()
     }
 }

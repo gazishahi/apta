@@ -85,10 +85,11 @@ struct SmallPrayerWidgetView: View {
     private func formatTime(_ date: Date) -> String {
         let settings = PrayerSettings.current
         let formatter = DateFormatter()
+        formatter.timeZone = SharedDefaults.prayerTimeZone
         if settings.timeFormat == .twelve {
             formatter.dateFormat = "h:mm"
             let time = formatter.string(from: date)
-            let period = Calendar.current.component(.hour, from: date) < 12 ? "A" : "P"
+            let period = SharedDefaults.prayerCalendar.component(.hour, from: date) < 12 ? "A" : "P"
             return "\(time) \(period)"
         } else {
             formatter.dateFormat = "HH:mm"

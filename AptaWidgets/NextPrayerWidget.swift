@@ -11,7 +11,7 @@ struct NextPrayerWidgetView: View {
             Text("Open apta to set location")
                 .font(.caption)
                 .foregroundStyle(.secondary)
-        } else if let next = entry.nextDailyPrayer {
+        } else if let next = entry.nextPrayerEvent {
             VStack(spacing: 0) {
                 Text(next.name.rawValue.uppercased())
                     .font(.system(size: 26, weight: .medium))
@@ -26,7 +26,7 @@ struct NextPrayerWidgetView: View {
                     .foregroundStyle(secondaryTextColor)
                     .padding(.top, 2)
 
-                if let progressInterval = entry.dailyProgressInterval {
+                if let progressInterval = entry.nextEventProgressInterval {
                     ProgressView(timerInterval: progressInterval, countsDown: false) {
                         EmptyView()
                     } currentValueLabel: {
@@ -70,6 +70,7 @@ struct NextPrayerWidgetView: View {
 
     private func formatTime(_ date: Date) -> String {
         let formatter = DateFormatter()
+        formatter.timeZone = SharedDefaults.prayerTimeZone
         formatter.dateFormat = PrayerSettings.current.timeFormat == .twelve ? "h:mm a" : "HH:mm"
         return formatter.string(from: date)
     }

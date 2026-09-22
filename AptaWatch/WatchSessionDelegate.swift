@@ -1,6 +1,7 @@
 import Foundation
 import Combine
 import WatchConnectivity
+import WidgetKit
 
 final class WatchSessionDelegate: NSObject, ObservableObject, WCSessionDelegate {
     static let shared = WatchSessionDelegate()
@@ -15,7 +16,11 @@ final class WatchSessionDelegate: NSObject, ObservableObject, WCSessionDelegate 
 
     // MARK: - WCSessionDelegate
 
-    func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {}
+    func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
+        guard activationState == .activated else { return }
+        storePayload(session.receivedApplicationContext)
+        DispatchQueue.main.async { self.onRefresh?() }
+    }
 
     func session(_ session: WCSession, didReceiveMessage message: [String: Any]) {
         guard message["action"] as? String == "refresh" else { return }
@@ -31,10 +36,17 @@ final class WatchSessionDelegate: NSObject, ObservableObject, WCSessionDelegate 
 
     private func storePayload(_ payload: [String: Any]) {
         let suite = SharedDefaults.suite
-        if let lat = payload[SharedDefaults.latitudeKey] as? Double { suite.set(lat, forKey: SharedDefaults.latitudeKey) }
-        if let lon = payload[SharedDefaults.longitudeKey] as? Double { suite.set(lon, forKey: SharedDefaults.longitudeKey) }
-        if let isPro = payload[SharedDefaults.isProUserKey] as? Bool { suite.set(isPro, forKey: SharedDefaults.isProUserKey) }
+        SharedDefaults.storeLocationPayload(payload)
+        if let isPro = payload[SharedDefaults.isProUserKey] as? Bool {
+            let incomingUpdatedAt = payload[SharedDefaults.proStatusUpdatedAtKey] as? Double ?? 0
+            let storedUpdatedAt = suite.double(forKey: SharedDefaults.proStatusUpdatedAtKey)
+            if incomingUpdatedAt >= storedUpdatedAt {
+                suite.set(isPro, forKey: SharedDefaults.isProUserKey)
+                suite.set(incomingUpdatedAt, forKey: SharedDefaults.proStatusUpdatedAtKey)
+            }
+        }
         if let data = payload["prayerSettings"] as? Data { suite.set(data, forKey: "prayerSettings") }
         if let data = payload[SharedDefaults.backgroundThemeKey] as? Data { suite.set(data, forKey: SharedDefaults.backgroundThemeKey) }
+        WidgetCenter.shared.reloadAllTimelines()
     }
 }

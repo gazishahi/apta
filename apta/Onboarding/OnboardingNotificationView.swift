@@ -18,6 +18,15 @@ struct OnboardingNotificationView: View {
             .padding(.horizontal, 24)
 
             if notificationGranted {
+                VStack(spacing: 16) {
+                    Picker("Notification Style", selection: $settings.notificationStyle) {
+                        Text("Standard").tag(PrayerSettings.NotificationStyle.simple)
+                        Text("Whimsy").tag(PrayerSettings.NotificationStyle.fun)
+                    }
+                    .pickerStyle(.segmented)
+                    NotificationPreviewView(settings: settings)
+                }
+                .padding(.horizontal, 24)
                 HStack(spacing: 8) {
                     Image(systemName: "checkmark.circle.fill")
                         .foregroundStyle(AptaColors.primary)

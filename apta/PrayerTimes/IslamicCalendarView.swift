@@ -7,8 +7,9 @@ struct IslamicCalendarView: UIViewRepresentable {
 
     func makeUIView(context: Context) -> UICalendarView {
         let calendarView = UICalendarView()
-        let islamicCalendar = Calendar(identifier: .islamicUmmAlQura)
+        let islamicCalendar = SharedDefaults.calendar(identifier: .islamicUmmAlQura)
         calendarView.calendar = islamicCalendar
+        calendarView.timeZone = islamicCalendar.timeZone
         calendarView.locale = Locale(identifier: "en")
         calendarView.fontDesign = .default
         calendarView.delegate = context.coordinator
@@ -22,9 +23,12 @@ struct IslamicCalendarView: UIViewRepresentable {
     }
 
     func updateUIView(_ calendarView: UICalendarView, context: Context) {
-        let islamicCalendar = Calendar(identifier: .islamicUmmAlQura)
+        let islamicCalendar = SharedDefaults.calendar(identifier: .islamicUmmAlQura)
+        context.coordinator.parent = self
+        calendarView.calendar = islamicCalendar
+        calendarView.timeZone = islamicCalendar.timeZone
 
-        let adjustedSelectedDate = Calendar.current.date(byAdding: .day, value: hijriAdjustment, to: selectedDate) ?? selectedDate
+        let adjustedSelectedDate = SharedDefaults.prayerCalendar.date(byAdding: .day, value: hijriAdjustment, to: selectedDate) ?? selectedDate
         let components = islamicCalendar.dateComponents([.year, .month, .day], from: adjustedSelectedDate)
 
         if let selection = calendarView.selectionBehavior as? UICalendarSelectionSingleDate {
@@ -33,7 +37,7 @@ struct IslamicCalendarView: UIViewRepresentable {
             }
         }
 
-        let adjustedToday = Calendar.current.date(byAdding: .day, value: hijriAdjustment, to: Date()) ?? Date()
+        let adjustedToday = SharedDefaults.prayerCalendar.date(byAdding: .day, value: hijriAdjustment, to: Date()) ?? Date()
         let todayComponents = islamicCalendar.dateComponents([.year, .month, .day], from: adjustedToday)
 
         var componentsToReload = [todayComponents, components]
@@ -73,8 +77,8 @@ struct IslamicCalendarView: UIViewRepresentable {
                 return
             }
 
-            let adjustedDate = Calendar.current.date(byAdding: .day, value: -parent.hijriAdjustment, to: gregorianDate) ?? gregorianDate
-            parent.selectedDate = Calendar.current.startOfDay(for: adjustedDate)
+            let adjustedDate = SharedDefaults.prayerCalendar.date(byAdding: .day, value: -parent.hijriAdjustment, to: gregorianDate) ?? gregorianDate
+            parent.selectedDate = SharedDefaults.prayerCalendar.startOfDay(for: adjustedDate)
         }
 
         private func convertIslamicToGregorian(_ components: DateComponents, islamicCalendar: Calendar) -> Date? {
@@ -89,7 +93,7 @@ struct IslamicCalendarView: UIViewRepresentable {
 
             guard let islamicDate = islamicCalendar.date(from: islamicComps) else { return nil }
 
-            let gregorianCalendar = Calendar(identifier: .gregorian)
+            let gregorianCalendar = SharedDefaults.prayerCalendar
             return gregorianCalendar.date(bySettingHour: 12, minute: 0, second: 0, of: islamicDate)
         }
 
@@ -97,7 +101,7 @@ struct IslamicCalendarView: UIViewRepresentable {
             let calendar = calendarView.calendar
             guard let date = calendar.date(from: dateComponents) else { return nil }
 
-            let gregorian = Calendar(identifier: .gregorian)
+            let gregorian = SharedDefaults.prayerCalendar
             let todayInGregorian = gregorian.startOfDay(for: Date())
             let adjustedToday = gregorian.date(byAdding: .day, value: parent.hijriAdjustment, to: todayInGregorian) ?? todayInGregorian
             let todayInIslamic = calendar.startOfDay(for: adjustedToday)

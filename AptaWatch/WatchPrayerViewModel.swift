@@ -6,11 +6,17 @@ import SwiftUI
 
 class WatchPrayerViewModel: ObservableObject {
     @Published var nextPrayer: PrayerTimeEntry?
+    @Published private(set) var countdownStart = Date()
     @Published var upcomingPrayers: [PrayerTimeEntry] = []
     @Published var qiblaDirection: Double = 0
     @Published var hijriDate: String = ""
     @Published var isProUser: Bool = false
     @Published var backgroundPreset: BackgroundPreset? = nil
+
+    func clearPrayers() {
+        nextPrayer = nil
+        upcomingPrayers = []
+    }
 
     func calculate(location: CLLocation) {
         SharedDefaults.suite.synchronize()
@@ -18,6 +24,7 @@ class WatchPrayerViewModel: ObservableObject {
         backgroundPreset = BackgroundTheme.current.preset
         let settings = PrayerSettings.current
         let now = Date()
+        countdownStart = now
 
         let todayPrayers = PrayerCalculationService.calculate(for: now, location: location, settings: settings)
             .filter { $0.name != .ishraq }
@@ -27,7 +34,7 @@ class WatchPrayerViewModel: ObservableObject {
 
         if upcomingToday.isEmpty {
             // All of today's prayers have passed — roll fully into tomorrow
-            let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: now)!
+            let tomorrow = SharedDefaults.prayerCalendar.date(byAdding: .day, value: 1, to: now)!
             let tomorrowPrayers = tomorrowPrayers(for: tomorrow, location: location, settings: settings)
             nextPrayer = tomorrowPrayers.first
             upcomingPrayers = Array(tomorrowPrayers.dropFirst().prefix(maxRemaining))
@@ -36,7 +43,7 @@ class WatchPrayerViewModel: ObservableObject {
             var remaining = Array(upcomingToday.dropFirst())
             if remaining.count < maxRemaining {
                 // Pad with the start of tomorrow to always fill the list
-                let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: now)!
+                let tomorrow = SharedDefaults.prayerCalendar.date(byAdding: .day, value: 1, to: now)!
                 let needed = maxRemaining - remaining.count
                 remaining.append(contentsOf: tomorrowPrayers(for: tomorrow, location: location, settings: settings).prefix(needed))
             }
@@ -58,9 +65,10 @@ class WatchPrayerViewModel: ObservableObject {
     }
 
     private func formatHijriDate(settings: PrayerSettings) -> String {
-        let calendar = Calendar(identifier: .islamicUmmAlQura)
-        let date = Calendar.current.date(byAdding: .day, value: settings.hijriAdjustment, to: Date()) ?? Date()
+        let calendar = SharedDefaults.calendar(identifier: .islamicUmmAlQura)
+        let date = SharedDefaults.prayerCalendar.date(byAdding: .day, value: settings.hijriAdjustment, to: Date()) ?? Date()
         let formatter = DateFormatter()
+        formatter.timeZone = SharedDefaults.prayerTimeZone
         formatter.calendar = calendar
         formatter.locale = Locale(identifier: "en")
         formatter.dateFormat = "d MMM"

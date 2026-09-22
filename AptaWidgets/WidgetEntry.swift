@@ -24,19 +24,19 @@ struct PrayerWidgetEntry: TimelineEntry {
         return progressStartTime...progressEndTime
     }
 
-    var dailyPrayers: [PrayerTimeEntry] {
+    /// The five obligatory prayers used by schedule-style widget rows.
+    var salahPrayers: [PrayerTimeEntry] {
         allPrayers.filter { $0.name != .sunrise && $0.name != .ishraq }
     }
 
-    var nextDailyPrayer: PrayerTimeEntry? {
-        dailyPrayers.first { $0.time > date }
+    /// The next calculated event, including Sunrise but excluding optional Ishraq.
+    var nextPrayerEvent: PrayerTimeEntry? {
+        guard let nextPrayer, let nextPrayerTime else { return nil }
+        return PrayerTimeEntry(name: nextPrayer, time: nextPrayerTime)
     }
 
-    var dailyProgressInterval: ClosedRange<Date>? {
-        guard let nextPrayer = nextDailyPrayer else { return nil }
-        let previousPrayerTime = dailyPrayers.last { $0.time <= date }?.time ?? self.previousPrayerTime
-        guard let previousPrayerTime, previousPrayerTime < nextPrayer.time else { return nil }
-        return previousPrayerTime...nextPrayer.time
+    var nextEventProgressInterval: ClosedRange<Date>? {
+        progressInterval
     }
 
     static var placeholder: PrayerWidgetEntry {

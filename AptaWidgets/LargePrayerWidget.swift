@@ -19,7 +19,7 @@ struct LargePrayerWidgetView: View {
 
                 Spacer(minLength: 14)
 
-                if let next = entry.nextDailyPrayer {
+                if let next = entry.nextPrayerEvent {
                     Text(next.name.rawValue.uppercased())
                         .font(.system(size: 36, weight: .medium))
                         .kerning(3)
@@ -32,7 +32,7 @@ struct LargePrayerWidgetView: View {
                         .foregroundStyle(secondaryTextColor)
                         .padding(.top, 2)
 
-                    if let progressInterval = entry.dailyProgressInterval {
+                    if let progressInterval = entry.nextEventProgressInterval {
                         ProgressView(timerInterval: progressInterval, countsDown: false) {
                             EmptyView()
                         } currentValueLabel: {
@@ -98,9 +98,10 @@ struct LargePrayerWidgetView: View {
     private func formatTime(_ date: Date) -> String {
         let settings = PrayerSettings.current
         let formatter = DateFormatter()
+        formatter.timeZone = SharedDefaults.prayerTimeZone
         if settings.timeFormat == .twelve {
             formatter.dateFormat = "h:mm"
-            let period = Calendar.current.component(.hour, from: date) < 12 ? "A" : "P"
+            let period = SharedDefaults.prayerCalendar.component(.hour, from: date) < 12 ? "A" : "P"
             return "\(formatter.string(from: date)) \(period)"
         }
         formatter.dateFormat = "HH:mm"
@@ -110,6 +111,7 @@ struct LargePrayerWidgetView: View {
     private func formatHeroTime(_ date: Date) -> String {
         let settings = PrayerSettings.current
         let formatter = DateFormatter()
+        formatter.timeZone = SharedDefaults.prayerTimeZone
         formatter.dateFormat = settings.timeFormat == .twelve ? "h:mm a" : "HH:mm"
         return formatter.string(from: date)
     }

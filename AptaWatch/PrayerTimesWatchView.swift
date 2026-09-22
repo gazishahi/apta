@@ -27,18 +27,16 @@ struct PrayerTimesWatchView: View {
                             .tracking(2)
                             .foregroundColor(WatchThemeColors.textColor())
 
-                        // Always-On disallows per-second updates, making style .timer
-                        // fall back to verbose text that overflows — show a compact
-                        // minute-level countdown there instead.
+                        // The system owns both countdowns, including Always On.
                         if isLuminanceReduced {
-                            TimelineView(.everyMinute) { context in
-                                Text(compactRemaining(until: next.time, from: context.date))
-                                    .font(.system(size: 18, weight: .thin, design: .monospaced))
-                                    .foregroundColor(WatchThemeColors.textColor())
-                                    .monospacedDigit()
-                            }
+                            PrayerCountdownText(start: viewModel.countdownStart, end: next.time)
+                                .font(.system(size: 18, weight: .thin, design: .monospaced))
+                                .foregroundColor(WatchThemeColors.textColor())
+                                .monospacedDigit()
+                                .lineLimit(1)
+                                .minimumScaleFactor(0.6)
                         } else {
-                            Text(next.time, style: .timer)
+                            PrayerCountdownText(start: viewModel.countdownStart, end: next.time, minutesOnly: false)
                                 .font(.system(size: 18, weight: .thin, design: .monospaced))
                                 .foregroundColor(WatchThemeColors.textColor())
                                 .monospacedDigit()
@@ -77,11 +75,4 @@ struct PrayerTimesWatchView: View {
         }
     }
 
-    private func compactRemaining(until end: Date, from now: Date) -> String {
-        let minutes = max(Int(end.timeIntervalSince(now) / 60), 0)
-        if minutes >= 60 {
-            return "\(minutes / 60)h \(minutes % 60)m"
-        }
-        return "\(minutes)m"
-    }
 }

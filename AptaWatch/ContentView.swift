@@ -7,8 +7,16 @@ struct ContentView: View {
     var body: some View {
         TabView {
             PrayerTimesWatchView(viewModel: viewModel)
-            QiblaWatchView(viewModel: viewModel, locationService: locationService)
+            if SharedDefaults.manualLocation == nil {
+                QiblaWatchView(viewModel: viewModel, locationService: locationService)
+            } else {
+                Text("Switch to your current location on iPhone to use Qibla.")
+                    .font(.footnote)
+                    .multilineTextAlignment(.center)
+                    .padding()
+            }
         }
         .tabViewStyle(.page)
+        .environment(\.timeZone, SharedDefaults.prayerTimeZone)
     }
 }

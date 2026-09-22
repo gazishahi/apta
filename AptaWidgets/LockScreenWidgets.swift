@@ -14,6 +14,7 @@ struct InlinePrayerWidgetView: View {
 
     private func formatTime(_ date: Date) -> String {
         let formatter = DateFormatter()
+        formatter.timeZone = SharedDefaults.prayerTimeZone
         formatter.dateFormat = PrayerSettings.current.timeFormat == .twelve ? "h:mm a" : "HH:mm"
         return formatter.string(from: date)
     }
@@ -71,6 +72,7 @@ struct CircularPrayerWidgetView: View {
 
     private func formatTime(_ date: Date) -> String {
         let formatter = DateFormatter()
+        formatter.timeZone = SharedDefaults.prayerTimeZone
         formatter.dateFormat = PrayerSettings.current.timeFormat == .twelve ? "h:mm" : "HH:mm"
         return formatter.string(from: date)
     }
@@ -114,6 +116,7 @@ struct CircularCountdownWidgetView: View {
 
     private func formatTime(_ date: Date) -> String {
         let formatter = DateFormatter()
+        formatter.timeZone = SharedDefaults.prayerTimeZone
         formatter.dateFormat = PrayerSettings.current.timeFormat == .twelve ? "h:mm" : "HH:mm"
         return formatter.string(from: date)
     }
@@ -161,6 +164,7 @@ struct RectangularPrayerWidgetView: View {
 
     private func formatTime(_ date: Date) -> String {
         let formatter = DateFormatter()
+        formatter.timeZone = SharedDefaults.prayerTimeZone
         formatter.dateFormat = PrayerSettings.current.timeFormat == .twelve ? "h:mm a" : "HH:mm"
         return formatter.string(from: date)
     }

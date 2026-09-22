@@ -12,7 +12,7 @@ struct MediumPrayerWidgetView: View {
                 .foregroundStyle(.secondary)
         } else {
             VStack(spacing: 0) {
-                if let next = entry.nextDailyPrayer {
+                if let next = entry.nextPrayerEvent {
                     HStack(alignment: .firstTextBaseline, spacing: 8) {
                         Text(next.name.rawValue.uppercased())
                             .font(.system(size: 22, weight: .medium))
@@ -30,7 +30,7 @@ struct MediumPrayerWidgetView: View {
                     }
                     .frame(maxWidth: .infinity)
 
-                    if let progressInterval = entry.dailyProgressInterval {
+                    if let progressInterval = entry.nextEventProgressInterval {
                         ProgressView(timerInterval: progressInterval, countsDown: false) {
                             EmptyView()
                         } currentValueLabel: {
@@ -54,7 +54,7 @@ struct MediumPrayerWidgetView: View {
                 Spacer(minLength: 10)
 
                 HStack(spacing: 0) {
-                    let others = entry.dailyPrayers.filter { $0.name != entry.nextDailyPrayer?.name }
+                    let others = entry.salahPrayers.filter { $0.name != entry.nextPrayerEvent?.name }
                     ForEach(Array(others.enumerated()), id: \.element.id) { index, prayer in
                         VStack(spacing: 2) {
                             Text(prayer.name.shortLabel)
@@ -101,12 +101,14 @@ struct MediumPrayerWidgetView: View {
     private func formatTime(_ date: Date) -> String {
         let settings = PrayerSettings.current
         let formatter = DateFormatter()
+        formatter.timeZone = SharedDefaults.prayerTimeZone
         formatter.dateFormat = settings.timeFormat == .twelve ? "h:mm a" : "HH:mm"
         return formatter.string(from: date)
     }
 
     private func formatTimeShort(_ date: Date) -> String {
         let formatter = DateFormatter()
+        formatter.timeZone = SharedDefaults.prayerTimeZone
         formatter.dateFormat = PrayerSettings.current.timeFormat == .twelve ? "h:mm" : "HH:mm"
         return formatter.string(from: date)
     }

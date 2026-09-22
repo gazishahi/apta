@@ -11,10 +11,11 @@ struct PrayerTimesView: View {
     @State private var qiblaState: QiblaState = .idle
     @State private var lastTickDegree: Int = -999
     @State private var smoothedHeading: Double = 0
-    @State private var selectedDate: Date = Calendar.current.startOfDay(for: Date())
-    @State private var lastSelectedDate: Date = Calendar.current.startOfDay(for: Date())
+    @State private var selectedDate: Date = SharedDefaults.prayerCalendar.startOfDay(for: Date())
+    @State private var lastSelectedDate: Date = SharedDefaults.prayerCalendar.startOfDay(for: Date())
     @State private var dateChangeDirection: Int = 0
     @State private var showDatePicker = false
+    @State private var showLocationPicker = false
     @State private var wasAlignedWithQibla = false
     @State private var headingHistory: [Double] = []
     @State private var headingUnstable: Bool = false
@@ -26,34 +27,53 @@ struct PrayerTimesView: View {
         case found
     }
 
+    private enum DayRelation {
+        case past
+        case today
+        case future
+    }
+
     private var settings: PrayerSettings { PrayerSettings.current }
 
     private var timeFormatter: DateFormatter {
         let f = DateFormatter()
+        f.timeZone = SharedDefaults.prayerTimeZone
         f.dateFormat = settings.timeFormat == .twelve ? "h:mm" : "HH:mm"
         return f
     }
 
     private var amPmFormatter: DateFormatter {
         let f = DateFormatter()
+        f.timeZone = SharedDefaults.prayerTimeZone
         f.dateFormat = "a"
         return f
     }
 
     private var supplementalTimeFormatter: DateFormatter {
         let f = DateFormatter()
+        f.timeZone = SharedDefaults.prayerTimeZone
         f.dateFormat = settings.timeFormat == .twelve ? "h:mm a" : "HH:mm"
         return f
     }
 
     private var dateFormatter: DateFormatter {
         let f = DateFormatter()
+        f.timeZone = SharedDefaults.prayerTimeZone
         f.dateFormat = "EEE, MMM d"
         return f
     }
 
     private var isToday: Bool {
-        Calendar.current.isDateInToday(selectedDate)
+        SharedDefaults.prayerCalendar.isDateInToday(selectedDate)
+    }
+
+    private var dayRelation: DayRelation {
+        let calendar = SharedDefaults.prayerCalendar
+        let selectedDay = calendar.startOfDay(for: selectedDate)
+        let today = calendar.startOfDay(for: Date())
+        if selectedDay < today { return .past }
+        if selectedDay > today { return .future }
+        return .today
     }
 
     private let qiblaThreshold: Double = 10.0
@@ -92,8 +112,14 @@ struct PrayerTimesView: View {
 
                 Spacer()
 
-                qiblaView
-                    .padding(.bottom, 24)
+                if locationService.manualLocation == nil {
+                    qiblaView.padding(.bottom, 24)
+                } else {
+                    Text("Switch to your current location to use Qibla.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .padding(.bottom, 24)
+                }
             }
         }
         .overlay {
@@ -107,18 +133,38 @@ struct PrayerTimesView: View {
         .onChange(of: viewModel.currentPrayer?.name) { _, _ in Haptics.soft() }
         .onChange(of: PrayerSettings.current) { _, _ in invalidateCache() }
         .onChange(of: selectedDate) { _, newDate in cachePrayers(for: newDate) }
+        .onChange(of: locationService.location) { _, _ in
+            viewModel.recalculate()
+            invalidateCache()
+            selectedDate = SharedDefaults.prayerCalendar.startOfDay(for: Date())
+            lastSelectedDate = selectedDate
+            cachePrayers(for: selectedDate)
+        }
         .onAppear { cachePrayers(for: selectedDate) }
+        .environment(\.timeZone, SharedDefaults.prayerTimeZone)
+        .environment(\.calendar, SharedDefaults.prayerCalendar)
+        .sheet(isPresented: $showLocationPicker) {
+            LocationPickerView(locationService: locationService)
+        }
     }
 
     private var topBar: some View {
         HStack {
-            if !settings.simpleMode && !locationService.locationName.isEmpty {
-                Text(locationService.locationName.uppercased())
+            Button {
+                showLocationPicker = true
+            } label: {
+                Text((locationService.locationName.isEmpty ? "Current Location" : locationService.locationName).uppercased())
                     .font(.system(size: 11, weight: .medium))
                     .kerning(1.5)
                     .foregroundStyle(ThemeColors.tertiaryTextColor(for: colorScheme))
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.82)
+                    .allowsTightening(true)
+                    .layoutPriority(1)
             }
-            Spacer()
+            .accessibilityLabel("Location: \(locationService.locationName.isEmpty ? "Current Location" : locationService.locationName)")
+            .accessibilityHint("Choose a city or use your current location")
+            Spacer(minLength: 12)
             Button {
                 Haptics.light()
                 onOpenSettings()
@@ -127,6 +173,7 @@ struct PrayerTimesView: View {
                     .font(.system(size: 20, weight: .regular))
                     .foregroundStyle(ThemeColors.secondaryTextColor(for: colorScheme))
             }
+            .fixedSize()
         }
         .padding(.horizontal, 24)
         .padding(.top, 16)
@@ -142,38 +189,34 @@ struct PrayerTimesView: View {
 
             Button {
                 Haptics.light()
-                selectedDate = Calendar.current.startOfDay(for: Date())
+                selectedDate = SharedDefaults.prayerCalendar.startOfDay(for: Date())
             } label: {
-                let calendar = Calendar.current
-                let selectedStart = calendar.startOfDay(for: selectedDate)
-                let todayStart = calendar.startOfDay(for: Date())
-                let daysToToday = calendar.dateComponents([.day], from: selectedStart, to: todayStart).day ?? 0
-                HStack(spacing: 4) {
-                    if daysToToday < 0 {
-                        Image(systemName: "chevron.left")
-                            .font(.system(size: 10, weight: .semibold))
-                            .foregroundStyle(ThemeColors.tertiaryTextColor(for: colorScheme))
+                HStack(spacing: 6) {
+                    switch dayRelation {
+                    case .past:
                         Text("TODAY")
-                            .font(.system(size: 11, weight: .medium))
-                            .kerning(1.2)
-                            .foregroundStyle(ThemeColors.tertiaryTextColor(for: colorScheme))
-                    } else if daysToToday > 0 {
-                        Text("TODAY")
-                            .font(.system(size: 11, weight: .medium))
-                            .kerning(1.2)
-                            .foregroundStyle(ThemeColors.tertiaryTextColor(for: colorScheme))
                         Image(systemName: "chevron.right")
-                            .font(.system(size: 10, weight: .semibold))
-                            .foregroundStyle(ThemeColors.tertiaryTextColor(for: colorScheme))
-                    } else {
-                        Text("")
-                            .font(.system(size: 11, weight: .medium))
-                            .kerning(1.2)
-                            .foregroundStyle(ThemeColors.tertiaryTextColor(for: colorScheme))
+                    case .future:
+                        Image(systemName: "chevron.left")
+                        Text("TODAY")
+                    case .today:
+                        Text("TODAY")
                     }
                 }
+                .font(.system(size: 11, weight: .medium))
+                .kerning(1.2)
+                .foregroundStyle(ThemeColors.tertiaryTextColor(for: colorScheme))
             }
-            .frame(height: 24)
+            .accessibilityLabel(dayRelationAccessibilityLabel)
+            .frame(height: 26)
+        }
+    }
+
+    private var dayRelationAccessibilityLabel: String {
+        switch dayRelation {
+        case .past: return "Viewing a past day. Return to today."
+        case .today: return "Viewing today."
+        case .future: return "Viewing an upcoming day. Return to today."
         }
     }
 
@@ -186,7 +229,7 @@ struct PrayerTimesView: View {
             ForEach(generateDateRange(), id: \.self) { date in
                 PrayerDayView(
                     date: date,
-                    isToday: Calendar.current.isDateInToday(date),
+                    isToday: SharedDefaults.prayerCalendar.isDateInToday(date),
                     viewModel: viewModel,
                     settings: settings,
                     cachedPrayers: cachedPrayers[date] ?? viewModel.prayers(for: date)
@@ -465,15 +508,15 @@ struct PrayerTimesView: View {
     }
 
     private func shiftSelectedDate(by days: Int) {
-        if let shifted = Calendar.current.date(byAdding: .day, value: days, to: selectedDate) {
+        if let shifted = SharedDefaults.prayerCalendar.date(byAdding: .day, value: days, to: selectedDate) {
             dateChangeDirection = days >= 0 ? 1 : -1
             lastSelectedDate = selectedDate
-            selectedDate = Calendar.current.startOfDay(for: shifted)
+            selectedDate = SharedDefaults.prayerCalendar.startOfDay(for: shifted)
         }
     }
 
     private func generateDateRange() -> [Date] {
-        let calendar = Calendar.current
+        let calendar = SharedDefaults.prayerCalendar
         let today = calendar.startOfDay(for: Date())
         return (-30...30).compactMap { offset in
             calendar.date(byAdding: .day, value: offset, to: today)

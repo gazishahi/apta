@@ -6,14 +6,15 @@ enum DateFormatterFactory {
 
     static func make(format: String, locale: Locale? = nil, calendar: Calendar? = nil) -> DateFormatter {
         let isIslamic = calendar?.identifier == .islamicUmmAlQura
-        let cacheKey = "\(format)-\(locale?.identifier ?? "default")-\(isIslamic)"
+        let cacheKey = "\(format)-\(locale?.identifier ?? "default")-\(isIslamic)-\(SharedDefaults.prayerTimeZone.identifier)"
 
-        return cacheQueue.sync {
+        return cacheQueue.sync(flags: .barrier) {
             if let cached = formattersCache[cacheKey] {
                 return cached
             }
 
             let formatter = DateFormatter()
+            formatter.timeZone = SharedDefaults.prayerTimeZone
             formatter.dateFormat = format
             if let locale = locale {
                 formatter.locale = locale
@@ -28,7 +29,7 @@ enum DateFormatterFactory {
     }
 
     static func makeIslamic(format: String, locale: Locale = Locale(identifier: "en")) -> DateFormatter {
-        let calendar = Calendar(identifier: .islamicUmmAlQura)
+        let calendar = SharedDefaults.calendar(identifier: .islamicUmmAlQura)
         return make(format: format, locale: locale, calendar: calendar)
     }
 

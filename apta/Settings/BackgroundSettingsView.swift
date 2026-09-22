@@ -291,5 +291,17 @@ struct PaywallView: View {
         .task {
             await purchaseManager.loadProduct()
         }
+        .alert("Restore Purchases", isPresented: restoreMessagePresented) {
+            Button("OK") { purchaseManager.clearRestoreMessage() }
+        } message: {
+            Text(purchaseManager.restoreMessage ?? "")
+        }
+    }
+
+    private var restoreMessagePresented: Binding<Bool> {
+        Binding(
+            get: { purchaseManager.restoreMessage != nil },
+            set: { if !$0 { purchaseManager.clearRestoreMessage() } }
+        )
     }
 }
