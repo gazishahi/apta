@@ -8,12 +8,14 @@ class LocationService: NSObject, ObservableObject {
     @Published var location: CLLocation?
     @Published var authorizationStatus: CLAuthorizationStatus = .notDetermined
     @Published var error: Error?
+    @Published private(set) var isLocating = false
     @Published var locationName: String = ""
     @Published var heading: CLLocationDirection?
     @Published private(set) var manualLocation = SharedDefaults.manualLocation
 
     private let manager = CLLocationManager()
     private let geocoder = CLGeocoder()
+    private let currentLocationRecovery = CurrentLocationRecovery()
     private var travelAuthorizationRequest: TravelAuthorizationRequest = .none
 
     private enum TravelAuthorizationRequest {
@@ -50,7 +52,7 @@ class LocationService: NSObject, ObservableObject {
         case .notDetermined:
             manager.requestWhenInUseAuthorization()
         case .authorizedWhenInUse, .authorizedAlways:
-            manager.requestLocation()
+            requestLocation()
         case .denied, .restricted:
             return
         @unknown default:
@@ -59,17 +61,32 @@ class LocationService: NSObject, ObservableObject {
     }
 
     func requestLocation() {
-        guard manualLocation == nil else { return }
+        #if DEBUG
+        // Captures use the saved location, so iOS doesn't show the blue location indicator.
+        if CaptureMode.isActive { return }
+        #endif
+        guard manualLocation == nil, !isLocating,
+              manager.authorizationStatus == .authorizedWhenInUse ||
+              manager.authorizationStatus == .authorizedAlways else { return }
+        error = nil
+        isLocating = true
         manager.requestLocation()
     }
 
+    /// Record intent before leaving for Settings; iOS may terminate the app there.
+    func resumeCurrentLocationAfterPermissionChange() {
+        currentLocationRecovery.request()
+    }
+
     func selectManualLocation(_ selection: ManualPrayerLocation) {
+        currentLocationRecovery.cancel()
         geocoder.cancelGeocode()
         travelAuthorizationRequest = .none
         SharedDefaults.manualLocation = selection
         manualLocation = selection
         locationName = selection.city
         error = nil
+        isLocating = false
         stopHeadingUpdates()
         updateBackgroundMonitoring()
         let selected = CLLocation(latitude: selection.latitude, longitude: selection.longitude)
@@ -81,6 +98,7 @@ class LocationService: NSObject, ObservableObject {
     }
 
     func useCurrentLocation() {
+        currentLocationRecovery.cancel()
         guard manualLocation != nil else {
             requestPermission()
             return
@@ -110,6 +128,12 @@ class LocationService: NSObject, ObservableObject {
 
     func refreshAuthorizationState() {
         authorizationStatus = manager.authorizationStatus
+        if currentLocationRecovery.consumeIfAuthorized(authorizationStatus) {
+            useCurrentLocation()
+        }
+        if authorizationStatus != .authorizedAlways && authorizationStatus != .authorizedWhenInUse {
+            isLocating = false
+        }
         updateBackgroundMonitoring()
     }
 
@@ -120,10 +144,10 @@ class LocationService: NSObject, ObservableObject {
             return
         case .authorizedAlways:
             updateBackgroundMonitoring()
-            manager.requestLocation()
+            requestLocation()
         case .authorizedWhenInUse:
             travelAuthorizationRequest = .always
-            manager.requestLocation()
+            requestLocation()
             manager.requestAlwaysAuthorization()
         case .notDetermined:
             travelAuthorizationRequest = .whenInUse
@@ -187,13 +211,21 @@ extension LocationService: CLLocationManagerDelegate {
     nonisolated func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         Task { @MainActor [weak self] in
             guard let self, self.manualLocation == nil, let loc = locations.last else { return }
+            let wasLocating = self.isLocating
+            self.isLocating = false
             let defaults = SharedDefaults.suite
             let lastAcceptedTimestamp = defaults.double(forKey: SharedDefaults.locationTimestampKey)
             guard LocationUpdatePolicy.shouldAccept(
                 loc,
                 lastAcceptedTimestamp: lastAcceptedTimestamp,
                 now: Date()
-            ) else { return }
+            ) else {
+                if wasLocating && loc.timestamp.timeIntervalSince1970 != lastAcceptedTimestamp {
+                    self.error = CLError(.locationUnknown)
+                }
+                return
+            }
+            self.error = nil
 
             let movedToDifferentArea = self.location.map { $0.distance(from: loc) >= 20_000 } ?? false
             if movedToDifferentArea {
@@ -222,7 +254,8 @@ extension LocationService: CLLocationManagerDelegate {
 
     nonisolated func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         Task { @MainActor [weak self] in
-            guard let self else { return }
+            guard let self, self.manualLocation == nil else { return }
+            self.isLocating = false
             self.error = error
         }
     }
@@ -230,7 +263,7 @@ extension LocationService: CLLocationManagerDelegate {
     nonisolated func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
         Task { @MainActor [weak self] in
             guard let self else { return }
-            self.authorizationStatus = manager.authorizationStatus
+            self.refreshAuthorizationState()
             guard self.manualLocation == nil else {
                 self.updateBackgroundMonitoring()
                 return
@@ -238,18 +271,18 @@ extension LocationService: CLLocationManagerDelegate {
             if manager.authorizationStatus == .authorizedAlways {
                 self.travelAuthorizationRequest = .none
                 self.updateBackgroundMonitoring()
-                manager.requestLocation()
+                self.requestLocation()
             } else if manager.authorizationStatus == .authorizedWhenInUse {
                 self.updateBackgroundMonitoring()
                 if self.travelAuthorizationRequest == .whenInUse {
                     self.travelAuthorizationRequest = .always
-                    manager.requestLocation()
+                    self.requestLocation()
                     manager.requestAlwaysAuthorization()
                     return
                 }
 
                 self.travelAuthorizationRequest = .none
-                manager.requestLocation()
+                self.requestLocation()
             } else if manager.authorizationStatus == .denied ||
                         manager.authorizationStatus == .restricted {
                 self.travelAuthorizationRequest = .none
@@ -259,6 +292,32 @@ extension LocationService: CLLocationManagerDelegate {
                 self.updateBackgroundMonitoring()
             }
         }
+    }
+}
+
+/// A permission change alone must not override a manually selected city.
+/// Only an explicit request to use the current location can do so.
+struct CurrentLocationRecovery {
+    private static let key = "pending_current_location_request_v1"
+    private let defaults: UserDefaults
+
+    init(defaults: UserDefaults = SharedDefaults.suite) {
+        self.defaults = defaults
+    }
+
+    func request() {
+        defaults.set(true, forKey: Self.key)
+    }
+
+    func cancel() {
+        defaults.removeObject(forKey: Self.key)
+    }
+
+    func consumeIfAuthorized(_ status: CLAuthorizationStatus) -> Bool {
+        guard status == .authorizedWhenInUse || status == .authorizedAlways,
+              defaults.bool(forKey: Self.key) else { return false }
+        cancel()
+        return true
     }
 }
 

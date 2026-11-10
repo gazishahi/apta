@@ -1,8 +1,10 @@
 import Foundation
 import UserNotifications
 import CoreLocation
+import UIKit
 
 enum NotificationScheduler {
+    private static let queue = NotificationQueueCoordinator(store: SystemNotificationStore())
 
     static func requestPermission() async -> Bool {
         do {
@@ -13,21 +15,76 @@ enum NotificationScheduler {
         }
     }
 
-    static func scheduleUpcoming(location: CLLocation?) {
-        let settings = PrayerSettings.current
-        guard settings.notificationsEnabled, let location else { return }
+    @discardableResult
+    static func scheduleUpcoming(location: CLLocation?) -> Task<Bool, Never> {
+        NotificationBackgroundRefresh.scheduleNext()
+        let update = queue.enqueue(location: location, settings: PrayerSettings.current,
+                                   calendar: SharedDefaults.prayerCalendar)
+        if UIApplication.shared.applicationState != .background {
+            let lease = UIApplication.shared.beginBackgroundTask(withName: "Schedule prayer notifications") {
+                update.cancel()
+            }
+            Task { @MainActor in
+                _ = await update.value
+                if lease != .invalid { UIApplication.shared.endBackgroundTask(lease) }
+            }
+        }
+        return update
+    }
 
-        let center = UNUserNotificationCenter.current()
-        center.removeAllPendingNotificationRequests()
+    static func savedLocation(in defaults: UserDefaults = SharedDefaults.suite) -> CLLocation? {
+        if let data = defaults.data(forKey: SharedDefaults.manualLocationKey),
+           let manual = try? JSONDecoder().decode(ManualPrayerLocation.self, from: data) {
+            return CLLocation(latitude: manual.latitude, longitude: manual.longitude)
+        }
+        guard defaults.object(forKey: SharedDefaults.latitudeKey) != nil,
+              defaults.object(forKey: SharedDefaults.longitudeKey) != nil else { return nil }
+        return CLLocation(latitude: defaults.double(forKey: SharedDefaults.latitudeKey),
+                          longitude: defaults.double(forKey: SharedDefaults.longitudeKey))
+    }
 
-        let now = Date()
-        let calendar = SharedDefaults.prayerCalendar
+    static func cancelAll() {
+        queue.cancelPending()
+        NotificationBackgroundRefresh.scheduleNext()
+    }
 
-        for dayOffset in 0..<3 {
+    static func triggerComponents(for date: Date, calendar: Calendar = SharedDefaults.prayerCalendar) -> DateComponents {
+        calendar.dateComponents([.timeZone, .year, .month, .day, .hour, .minute, .second], from: date)
+    }
+
+    static func isRamadan(on date: Date, hijriAdjustment: Int) -> Bool {
+        let adjusted = SharedDefaults.prayerCalendar.date(byAdding: .day, value: hijriAdjustment, to: date) ?? date
+        let islamicCalendar = SharedDefaults.calendar(identifier: .islamicUmmAlQura)
+        return islamicCalendar.component(.month, from: adjusted) == 9
+    }
+}
+
+/// Pure planning, independent of GPS authorization and the system queue.
+enum PrayerNotificationPlan {
+    // Leave headroom beneath the platform's historical 64-request ceiling.
+    static let capacity = 60
+    static let horizonDays = 30
+
+    static func owns(_ identifier: String) -> Bool {
+        identifier.range(of: #"^(Fajr|Sunrise|Dhuhr|Asr|Maghrib|Isha|Ishraq)(-pre|-boundary)?-\d{4}-\d{1,2}-\d{1,2}$"#,
+                         options: .regularExpression) != nil
+    }
+
+    static func hasEnabledAlerts(_ settings: PrayerSettings) -> Bool {
+        PrayerName.allCases.contains { name in
+            settings.isNotificationEnabled(for: name) && (name != .ishraq || settings.showIshraq)
+        } || (settings.showHanbaliBoundaries && settings.boundaryNotificationsEnabled)
+    }
+
+    static func requests(location: CLLocation, settings: PrayerSettings, now: Date,
+                         calendar: Calendar, limit: Int = capacity) -> [UNNotificationRequest] {
+        guard settings.notificationsEnabled, limit > 0 else { return [] }
+        var candidates: [(time: Date, request: UNNotificationRequest)] = []
+        for dayOffset in 0..<horizonDays {
             guard let date = calendar.date(byAdding: .day, value: dayOffset, to: now) else { continue }
 
-            let prayers = PrayerCalculationService.calculate(for: date, location: location, settings: settings)
-            let isRamadan = settings.ramadanNotificationsEnabled && Self.isRamadan(on: date, hijriAdjustment: settings.hijriAdjustment)
+            let prayers = PrayerCalculationService.calculate(for: date, location: location, settings: settings, calendar: calendar)
+            let isRamadan = settings.ramadanNotificationsEnabled && NotificationScheduler.isRamadan(on: date, hijriAdjustment: settings.hijriAdjustment)
 
             for entry in prayers {
                 guard entry.time > now else { continue }
@@ -51,13 +108,13 @@ enum NotificationScheduler {
                 content.body = body
                 content.sound = .default
 
-                let comps = triggerComponents(for: entry.time, calendar: calendar)
+                let comps = NotificationScheduler.triggerComponents(for: entry.time, calendar: calendar)
                 let trigger = UNCalendarNotificationTrigger(dateMatching: comps, repeats: false)
 
-                guard let year = comps.year, let month = comps.month, let day = comps.day else { return }
+                guard let year = comps.year, let month = comps.month, let day = comps.day else { continue }
                 let id = "\(entry.name.rawValue)-\(year)-\(month)-\(day)"
                 let request = UNNotificationRequest(identifier: id, content: content, trigger: trigger)
-                center.add(request)
+                candidates.append((entry.time, request))
 
                 // Early reminder ("15 minutes until Fajr"), skipped for
                 // informational times that aren't prayers to head to.
@@ -76,10 +133,10 @@ enum NotificationScheduler {
                         )
                         preContent.sound = .default
 
-                        let preComps = triggerComponents(for: preTime, calendar: calendar)
+                        let preComps = NotificationScheduler.triggerComponents(for: preTime, calendar: calendar)
                         let preTrigger = UNCalendarNotificationTrigger(dateMatching: preComps, repeats: false)
                         let preId = "\(entry.name.rawValue)-pre-\(year)-\(month)-\(day)"
-                        center.add(UNNotificationRequest(identifier: preId, content: preContent, trigger: preTrigger))
+                        candidates.append((preTime, UNNotificationRequest(identifier: preId, content: preContent, trigger: preTrigger)))
                     }
                 }
             }
@@ -99,32 +156,27 @@ enum NotificationScheduler {
                     )
                     content.sound = .default
 
-                    let comps = triggerComponents(for: supplemental.time, calendar: calendar)
+                    let comps = NotificationScheduler.triggerComponents(for: supplemental.time, calendar: calendar)
                     let trigger = UNCalendarNotificationTrigger(dateMatching: comps, repeats: false)
 
                     guard let year = comps.year, let month = comps.month, let day = comps.day else { continue }
                     let id = "\(entry.name.rawValue)-boundary-\(year)-\(month)-\(day)"
                     let request = UNNotificationRequest(identifier: id, content: content, trigger: trigger)
-                    center.add(request)
+                    candidates.append((supplemental.time, request))
                 }
             }
         }
-    }
-
-    static func cancelAll() {
-        UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
-    }
-
-    static func triggerComponents(for date: Date, calendar: Calendar = SharedDefaults.prayerCalendar) -> DateComponents {
-        calendar.dateComponents([.timeZone, .year, .month, .day, .hour, .minute, .second], from: date)
-    }
-
-    // MARK: - Ramadan Detection
-
-    static func isRamadan(on date: Date, hijriAdjustment: Int) -> Bool {
-        let adjusted = SharedDefaults.prayerCalendar.date(byAdding: .day, value: hijriAdjustment, to: date) ?? date
-        let islamicCalendar = SharedDefaults.calendar(identifier: .islamicUmmAlQura)
-        let month = islamicCalendar.component(.month, from: adjusted)
-        return month == 9
+        // Sort all event types together before capping, so late reminders do
+        // not crowd out an earlier prayer on the last scheduled day.
+        let selected = candidates.sorted {
+            $0.time == $1.time ? $0.request.identifier < $1.request.identifier : $0.time < $1.time
+        }.prefix(min(limit, capacity)).map(\.request)
+        let selectedIDs = Set(selected.map(\.identifier))
+        return selected.filter { request in
+            // Do not end the queue with an early reminder whose actual prayer
+            // alert was cut off by the capacity limit.
+            !request.identifier.contains("-pre-") ||
+                selectedIDs.contains(request.identifier.replacingOccurrences(of: "-pre-", with: "-"))
+        }
     }
 }

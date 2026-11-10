@@ -65,6 +65,18 @@ struct PrayerCalculationService {
         return entries
     }
 
+    /// Keep the five prayers associated with the requested calculation day,
+    /// including Isha when its calculated time falls after local midnight.
+    static func dailySalah(
+        for date: Date,
+        location: CLLocation,
+        settings: PrayerSettings,
+        calendar: Calendar = SharedDefaults.prayerCalendar
+    ) -> [PrayerTimeEntry] {
+        calculate(for: date, location: location, settings: settings, calendar: calendar)
+            .filter { $0.name != .sunrise && $0.name != .ishraq }
+    }
+
     static func oneThirdOfNight(maghrib: Date, nextFajr: Date) -> Date {
         maghrib.addingTimeInterval(nextFajr.timeIntervalSince(maghrib) / 3)
     }

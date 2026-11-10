@@ -75,6 +75,9 @@ struct RootCoordinator: View {
                         locationService.requestLocation()
                         viewModel.start()
                         offerLocationUpgradeIfNeeded()
+                        #if DEBUG
+                        if CaptureMode.screen == .settings { showSettings = true }
+                        #endif
                     }
                     .onDisappear {
                         viewModel.stop()

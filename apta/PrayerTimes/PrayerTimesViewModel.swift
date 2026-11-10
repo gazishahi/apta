@@ -93,7 +93,7 @@ class PrayerTimesViewModel: ObservableObject {
     }
 
     private func updateCurrentAndUpcoming() {
-        let now = Date()
+        let now = currentDate()
         let today = SharedDefaults.prayerCalendar.startOfDay(for: now)
 
         let upcoming = allPrayers.filter { $0.time > now }
@@ -137,6 +137,13 @@ class PrayerTimesViewModel: ObservableObject {
         return prayers
     }
 
+    private func currentDate() -> Date {
+        #if DEBUG
+        if let captureNow = CaptureMode.now { return captureNow }
+        #endif
+        return Date()
+    }
+
     private func tick() {
         if locationService.location != nil,
            calculatedDay != SharedDefaults.prayerCalendar.startOfDay(for: Date()) {
@@ -152,7 +159,7 @@ class PrayerTimesViewModel: ObservableObject {
             return
         }
 
-        let now = Date()
+        let now = currentDate()
         let diff = current.time.timeIntervalSince(now)
 
         if diff <= 0 {

@@ -92,6 +92,23 @@ struct RectangularPrayerWidget: Widget {
     }
 }
 
+struct FivePrayersWidget: Widget {
+    let kind = "FivePrayersWidget"
+
+    var body: some WidgetConfiguration {
+        StaticConfiguration(
+            kind: kind,
+            provider: PrayerTimelineProvider(displaysCalendarDay: true)
+        ) { entry in
+            FivePrayersWidgetView(entry: entry)
+                .containerBackground(.fill.tertiary, for: .widget)
+        }
+        .configurationDisplayName("Five Prayers")
+        .description("All five prayer times for today, showing tomorrow's after Isha.")
+        .supportedFamilies([.accessoryRectangular])
+    }
+}
+
 struct WidgetContainerBackground: View {
     @Environment(\.colorScheme) private var colorScheme
 
@@ -124,5 +141,6 @@ struct AptaWidgetsBundle: WidgetBundle {
         CircularPrayerWidget()
         CircularCountdownWidget()
         RectangularPrayerWidget()
+        FivePrayersWidget()
     }
 }

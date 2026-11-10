@@ -4,6 +4,7 @@ import Foundation
 
 struct PrayerTimelineProvider: TimelineProvider {
     typealias Entry = PrayerWidgetEntry
+    var displaysCalendarDay = false
 
     func placeholder(in context: Context) -> PrayerWidgetEntry {
         .placeholder
@@ -30,8 +31,15 @@ struct PrayerTimelineProvider: TimelineProvider {
         let today = calendar.startOfDay(for: now)
         let tomorrow = calendar.date(byAdding: .day, value: 1, to: today)!
         let boundaryPrayers = prayers(for: [today, tomorrow], location: location, settings: settings)
-        let upcomingBoundaries = boundaryPrayers
-            .map(\.time)
+        var boundaryDates = boundaryPrayers.map(\.time)
+        if displaysCalendarDay {
+            // Calendar-day schedules roll at local midnight, including across DST.
+            boundaryDates.append(tomorrow)
+            if let followingDay = calendar.date(byAdding: .day, value: 1, to: tomorrow) {
+                boundaryDates.append(followingDay)
+            }
+        }
+        let upcomingBoundaries = Set(boundaryDates)
             .filter { $0 > now }
             .sorted()
 
@@ -59,6 +67,9 @@ struct PrayerTimelineProvider: TimelineProvider {
             prayers: prayers(for: surroundingDates, location: location, settings: settings),
             calendar: calendar
         )
+        let displayPrayers = displaysCalendarDay
+            ? calendarDaySalah(at: date, location: location, settings: settings, calendar: calendar)
+            : resolved.displayPrayers
 
         return PrayerWidgetEntry(
             date: date,
@@ -68,12 +79,20 @@ struct PrayerTimelineProvider: TimelineProvider {
             previousPrayerTime: resolved.previousPrayer?.time,
             progressStartTime: resolved.progressStartTime,
             progressEndTime: resolved.progressEndTime,
-            allPrayers: resolved.displayPrayers,
+            allPrayers: displayPrayers,
             hijriDateString: formatHijriDate(settings: settings, date: date),
             locationName: "",
             hasLocation: true,
             circularDisplayMode: .time
         )
+    }
+
+    /// Today's five prayers, or tomorrow's once today's Isha has started.
+    private func calendarDaySalah(at date: Date, location: CLLocation, settings: PrayerSettings, calendar: Calendar) -> [PrayerTimeEntry] {
+        let today = PrayerCalculationService.dailySalah(for: date, location: location, settings: settings, calendar: calendar)
+        guard let isha = today.last, date >= isha.time,
+              let tomorrow = calendar.date(byAdding: .day, value: 1, to: date) else { return today }
+        return PrayerCalculationService.dailySalah(for: tomorrow, location: location, settings: settings, calendar: calendar)
     }
 
     private func prayers(for dates: [Date], location: CLLocation, settings: PrayerSettings) -> [PrayerTimeEntry] {

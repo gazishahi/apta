@@ -1,0 +1,78 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:wght@400;500;600;700&display=block" rel="stylesheet">
+<style>
+  /* App Store creative assets (iOS 27+): product page header and search results.
+     Copy stays inside Apple's art safe area (measured from Apple's templates);
+     phones are backdrop and may be cropped. Rendered by render.cjs. */
+  :root { --gray: #8E8E93; --brand-dim: #48484A; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #1c1c1e; }
+  .slide { position: relative; overflow: hidden; background: #000; color: #fff; font-family: "Google Sans Flex", sans-serif; -webkit-font-smoothing: antialiased; }
+  .universal { width: 5244px; height: 2950px; }
+  .header { width: 3840px; height: 1646px; }
+  .search { width: 3840px; height: 2560px; }
+
+  /* The safe area box; everything that must be read lives inside it. */
+  .safe { position: absolute; display: flex; flex-direction: column; justify-content: center; }
+
+  .brand { font-weight: 400; letter-spacing: -0.02em; line-height: 1; white-space: nowrap; }
+  .brand b { font-weight: 400; color: #fff; }
+  .brand span { color: var(--brand-dim); }
+  .title { font-weight: 600; letter-spacing: -0.02em; line-height: 1.04; }
+  .sub { font-weight: 400; letter-spacing: -0.01em; line-height: 1.15; color: var(--gray); }
+
+  .phone { position: absolute; }
+  .phone .bezel { position: absolute; inset: 0; width: 100%; height: 100%; }
+  /* Screen clipped to the bezel's traced cutout (masks.py); values are fractions of the phone box. */
+  .phone .screen {
+    position: absolute; left: 4.966%; top: 2.133%; width: 90.068%; height: 95.733%; object-fit: cover;
+    -webkit-mask-image: url(iphone-mask.png); -webkit-mask-repeat: no-repeat;
+  }
+</style>
+</head>
+<body>
+
+<!-- Universal 5244 x 2950: one master for both placements. Safe area x 1921–3323, y 660–1622. -->
+<div class="slide universal" id="universal">
+  <div class="phone" style="left: 330px; top: 520px; width: 1080px; height: 2204px">
+    <img class="screen" src="captures/iphone/main_light.png" style="-webkit-mask-size: 1080px 2204px; -webkit-mask-position: -53.6px -47px"><img class="bezel" src="iphone-bezel.png">
+  </div>
+  <div class="phone" style="left: 3834px; top: 520px; width: 1080px; height: 2204px">
+    <img class="screen" src="captures/iphone/travel_light.png" style="-webkit-mask-size: 1080px 2204px; -webkit-mask-position: -53.6px -47px"><img class="bezel" src="iphone-bezel.png">
+  </div>
+  <div class="safe" style="left: 1921px; top: 660px; width: 1402px; height: 962px; align-items: center; text-align: center">
+    <div class="brand" style="font-size: 128px"><b>a</b><span>nother</span> <b>p</b><span>rayer</span> <b>t</b><span>ime</span> <b>a</b><span>pp</span></div>
+    <div class="sub" style="font-size: 64px; margin-top: 44px">Nothing extra. Just clarity.</div>
+  </div>
+</div>
+
+<!-- Product page header 3840 x 1646. Safe area x 1097–2743, y 493–1154. -->
+<div class="slide header" id="header">
+  <div class="phone" style="left: 140px; top: 230px; width: 760px; height: 1551px">
+    <img class="screen" src="captures/iphone/main_light.png" style="-webkit-mask-size: 760px 1551px; -webkit-mask-position: -37.7px -33.1px"><img class="bezel" src="iphone-bezel.png">
+  </div>
+  <div class="phone" style="left: 2940px; top: 230px; width: 760px; height: 1551px">
+    <img class="screen" src="captures/iphone/travel_light.png" style="-webkit-mask-size: 760px 1551px; -webkit-mask-position: -37.7px -33.1px"><img class="bezel" src="iphone-bezel.png">
+  </div>
+  <div class="safe" style="left: 1097px; top: 493px; width: 1646px; height: 661px; align-items: center; text-align: center">
+    <div class="brand" style="font-size: 150px"><b>a</b><span>nother</span> <b>p</b><span>rayer</span> <b>t</b><span>ime</span> <b>a</b><span>pp</span></div>
+    <div class="sub" style="font-size: 72px; margin-top: 48px">Nothing extra. Just clarity.</div>
+  </div>
+</div>
+
+<!-- Search results 3840 x 2560 (also exported at 1920 x 1280). Safe area x 836–3004, y 765–1795. -->
+<div class="slide search" id="search">
+  <div class="phone" style="left: 2080px; top: 420px; width: 1000px; height: 2041px">
+    <img class="screen" src="captures/iphone/main_light.png" style="-webkit-mask-size: 1000px 2041px; -webkit-mask-position: -49.7px -43.5px"><img class="bezel" src="iphone-bezel.png">
+  </div>
+  <div class="safe" style="left: 836px; top: 765px; width: 1180px; height: 1030px">
+    <div class="title" style="font-size: 158px; white-space: nowrap">The next prayer,<br>at a glance.</div>
+    <div class="sub" style="font-size: 74px; margin-top: 52px">Nothing extra. Just clarity.</div>
+  </div>
+</div>
+
+</body>
+</html>
