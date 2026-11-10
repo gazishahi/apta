@@ -58,6 +58,12 @@ struct OnboardingLocationView: View {
                             ? "Travel updates enabled"
                             : "Location received"
                     )
+                } else if locationService.error != nil && !locationService.isLocating {
+                    Button("Couldn't get your location · Try Again") {
+                        locationService.requestPermission()
+                    }
+                    .font(Typography.onboardingBody)
+                    .padding(.horizontal, 24)
                 } else {
                     ProgressView()
                         .padding(.horizontal, 24)

@@ -4,6 +4,7 @@ import WidgetKit
 
 @main
 struct aptaApp: App {
+    @UIApplicationDelegateAdaptor(NotificationAppDelegate.self) private var appDelegate
     @Environment(\.scenePhase) private var scenePhase
     @StateObject private var purchaseManager = PurchaseManager.shared
     @StateObject private var locationService = LocationService()
@@ -17,16 +18,13 @@ struct aptaApp: App {
                 rescheduleNotifications()
                 WidgetCenter.shared.reloadAllTimelines()
                 Task { _ = await purchaseManager.refreshEntitlements() }
+            } else if scenePhase == .background {
+                NotificationBackgroundRefresh.scheduleNext()
             }
         }
     }
 
     private func rescheduleNotifications() {
-        let defaults = SharedDefaults.suite
-        let lat = defaults.double(forKey: SharedDefaults.latitudeKey)
-        let lon = defaults.double(forKey: SharedDefaults.longitudeKey)
-        guard lat != 0 || lon != 0 else { return }
-        let location = CLLocation(latitude: lat, longitude: lon)
-        NotificationScheduler.scheduleUpcoming(location: location)
+        NotificationScheduler.scheduleUpcoming(location: NotificationScheduler.savedLocation())
     }
 }

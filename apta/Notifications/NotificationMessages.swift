@@ -5,9 +5,9 @@ enum NotificationMessages {
     // MARK: - Fun Messages
 
     static let fajrMessages = [
-        "Fajr is here. The blankets make a strong case, though.",
+        "Prayer is better than sleep. Even this sleep.",
         "Yes, it's early. Yes, it's worth it.",
-        "A quiet world. A very persuasive pillow. Time for Fajr.",
+        "The blankets will keep. Fajr won't.",
         "The group chats can sleep. It's Fajr.",
         "Small yawn. Deep breath. Fajr.",
         "Your morning has an opening act: Fajr.",

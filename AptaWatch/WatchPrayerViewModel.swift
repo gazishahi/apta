@@ -8,6 +8,8 @@ class WatchPrayerViewModel: ObservableObject {
     @Published var nextPrayer: PrayerTimeEntry?
     @Published private(set) var countdownStart = Date()
     @Published var upcomingPrayers: [PrayerTimeEntry] = []
+    /// Index in `upcomingPrayers` where tomorrow's prayers begin, if any are listed.
+    @Published private(set) var tomorrowStartIndex: Int?
     @Published var qiblaDirection: Double = 0
     @Published var hijriDate: String = ""
     @Published var isProUser: Bool = false
@@ -16,6 +18,7 @@ class WatchPrayerViewModel: ObservableObject {
     func clearPrayers() {
         nextPrayer = nil
         upcomingPrayers = []
+        tomorrowStartIndex = nil
     }
 
     func calculate(location: CLLocation) {
@@ -23,8 +26,8 @@ class WatchPrayerViewModel: ObservableObject {
         isProUser = SharedDefaults.isProUser
         backgroundPreset = BackgroundTheme.current.preset
         let settings = PrayerSettings.current
-        let now = Date()
-        countdownStart = now
+        let now = currentDate()
+        countdownStart = Date() // The countdown runs on the system clock.
 
         let todayPrayers = PrayerCalculationService.calculate(for: now, location: location, settings: settings)
             .filter { $0.name != .ishraq }
@@ -38,9 +41,11 @@ class WatchPrayerViewModel: ObservableObject {
             let tomorrowPrayers = tomorrowPrayers(for: tomorrow, location: location, settings: settings)
             nextPrayer = tomorrowPrayers.first
             upcomingPrayers = Array(tomorrowPrayers.dropFirst().prefix(maxRemaining))
+            tomorrowStartIndex = upcomingPrayers.isEmpty ? nil : 0
         } else {
             nextPrayer = upcomingToday.first
             var remaining = Array(upcomingToday.dropFirst())
+            let todayCount = remaining.count
             if remaining.count < maxRemaining {
                 // Pad with the start of tomorrow to always fill the list
                 let tomorrow = SharedDefaults.prayerCalendar.date(byAdding: .day, value: 1, to: now)!
@@ -48,6 +53,7 @@ class WatchPrayerViewModel: ObservableObject {
                 remaining.append(contentsOf: tomorrowPrayers(for: tomorrow, location: location, settings: settings).prefix(needed))
             }
             upcomingPrayers = Array(remaining.prefix(maxRemaining))
+            tomorrowStartIndex = todayCount < upcomingPrayers.count ? todayCount : nil
         }
 
         let coords = Coordinates(
@@ -57,6 +63,23 @@ class WatchPrayerViewModel: ObservableObject {
         qiblaDirection = Qibla(coordinates: coords).direction
 
         hijriDate = formatHijriDate(settings: settings)
+    }
+
+    /// The countdown runs on the system clock, so shift its end when the clock is pinned for captures.
+    func countdownEnd(for prayer: PrayerTimeEntry) -> Date {
+        #if DEBUG
+        if let captureNow = CaptureMode.now {
+            return prayer.time.addingTimeInterval(Date().timeIntervalSince(captureNow))
+        }
+        #endif
+        return prayer.time
+    }
+
+    private func currentDate() -> Date {
+        #if DEBUG
+        if let captureNow = CaptureMode.now { return captureNow }
+        #endif
+        return Date()
     }
 
     private func tomorrowPrayers(for date: Date, location: CLLocation, settings: PrayerSettings) -> [PrayerTimeEntry] {

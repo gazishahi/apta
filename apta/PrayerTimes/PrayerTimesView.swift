@@ -113,13 +113,16 @@ struct PrayerTimesView: View {
                 Spacer()
 
                 if locationService.manualLocation == nil {
-                    qiblaView.padding(.bottom, 24)
+                    qiblaView.padding(.bottom, 8)
                 } else {
                     Text("Switch to your current location to use Qibla.")
                         .font(.caption)
                         .foregroundStyle(.secondary)
-                        .padding(.bottom, 24)
+                        .padding(.bottom, 8)
                 }
+                locationFooter
+                    .padding(.horizontal, 24)
+                    .padding(.bottom, 16)
             }
         }
         .overlay {
@@ -140,7 +143,21 @@ struct PrayerTimesView: View {
             lastSelectedDate = selectedDate
             cachePrayers(for: selectedDate)
         }
-        .onAppear { cachePrayers(for: selectedDate) }
+        .onAppear {
+            cachePrayers(for: selectedDate)
+            #if DEBUG
+            switch CaptureMode.screen {
+            case .location:
+                showLocationPicker = true
+            case .qibla:
+                // The simulator has no compass, so point the heading straight at the Qibla.
+                qiblaState = .searching
+                locationService.heading = viewModel.qiblaDirection
+            default:
+                break
+            }
+            #endif
+        }
         .environment(\.timeZone, SharedDefaults.prayerTimeZone)
         .environment(\.calendar, SharedDefaults.prayerCalendar)
         .sheet(isPresented: $showLocationPicker) {
@@ -150,21 +167,7 @@ struct PrayerTimesView: View {
 
     private var topBar: some View {
         HStack {
-            Button {
-                showLocationPicker = true
-            } label: {
-                Text((locationService.locationName.isEmpty ? "Current Location" : locationService.locationName).uppercased())
-                    .font(.system(size: 11, weight: .medium))
-                    .kerning(1.5)
-                    .foregroundStyle(ThemeColors.tertiaryTextColor(for: colorScheme))
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.82)
-                    .allowsTightening(true)
-                    .layoutPriority(1)
-            }
-            .accessibilityLabel("Location: \(locationService.locationName.isEmpty ? "Current Location" : locationService.locationName)")
-            .accessibilityHint("Choose a city or use your current location")
-            Spacer(minLength: 12)
+            Spacer()
             Button {
                 Haptics.light()
                 onOpenSettings()
@@ -177,6 +180,49 @@ struct PrayerTimesView: View {
         }
         .padding(.horizontal, 24)
         .padding(.top, 16)
+    }
+
+    private var locationFooter: some View {
+        VStack(spacing: 0) {
+            Button {
+                showLocationPicker = true
+            } label: {
+                HStack(spacing: 6) {
+                    Image(systemName: locationService.manualLocation == nil ? "location" : "mappin")
+                    Text(locationLabel.uppercased())
+                        .kerning(1.2)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.82)
+                    Image(systemName: "chevron.down")
+                        .font(.system(size: 8, weight: .medium))
+                }
+                .font(.system(size: 11, weight: .medium))
+                .foregroundStyle(ThemeColors.secondaryTextColor(for: colorScheme))
+                .frame(minHeight: 44)
+                .contentShape(Rectangle())
+            }
+            .accessibilityLabel("Location: \(locationLabel)")
+            .accessibilityHint("Choose a city or use your current location")
+
+            if locationService.manualLocation == nil {
+                if locationService.authorizationStatus == .denied || locationService.authorizationStatus == .restricted {
+                    Button("Location access is off · Choose location") { showLocationPicker = true }
+                        .font(.caption)
+                } else if locationService.isLocating {
+                    Text("Updating location…")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                } else if locationService.error != nil {
+                    Button("Couldn't update location · Retry") { locationService.requestPermission() }
+                        .font(.caption)
+                }
+            }
+        }
+    }
+
+    private var locationLabel: String {
+        let city = locationService.locationName.isEmpty ? "Current Location" : locationService.locationName
+        return locationService.manualLocation == nil ? city : "\(city) · Manual"
     }
 
     private var dateNavigationSection: some View {
@@ -209,6 +255,9 @@ struct PrayerTimesView: View {
             }
             .accessibilityLabel(dayRelationAccessibilityLabel)
             .frame(height: 26)
+            .opacity(isToday ? 0 : 1)
+            .disabled(isToday)
+            .accessibilityHidden(isToday)
         }
     }
 

@@ -29,14 +29,14 @@ struct PrayerTimesWatchView: View {
 
                         // The system owns both countdowns, including Always On.
                         if isLuminanceReduced {
-                            PrayerCountdownText(start: viewModel.countdownStart, end: next.time)
+                            PrayerCountdownText(start: viewModel.countdownStart, end: viewModel.countdownEnd(for: next))
                                 .font(.system(size: 18, weight: .thin, design: .monospaced))
                                 .foregroundColor(WatchThemeColors.textColor())
                                 .monospacedDigit()
                                 .lineLimit(1)
                                 .minimumScaleFactor(0.6)
                         } else {
-                            PrayerCountdownText(start: viewModel.countdownStart, end: next.time, minutesOnly: false)
+                            PrayerCountdownText(start: viewModel.countdownStart, end: viewModel.countdownEnd(for: next), minutesOnly: false)
                                 .font(.system(size: 18, weight: .thin, design: .monospaced))
                                 .foregroundColor(WatchThemeColors.textColor())
                                 .monospacedDigit()
@@ -52,7 +52,15 @@ struct PrayerTimesWatchView: View {
 
                     // Remaining upcoming prayers (forward-looking only)
                     VStack(spacing: 4) {
-                        ForEach(viewModel.upcomingPrayers) { prayer in
+                        ForEach(Array(viewModel.upcomingPrayers.enumerated()), id: \.element.id) { index, prayer in
+                            if index == viewModel.tomorrowStartIndex {
+                                Text("TOMORROW")
+                                    .font(.system(size: 8, weight: .medium))
+                                    .tracking(1.5)
+                                    .foregroundColor(WatchThemeColors.tertiaryTextColor())
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    .padding(.top, index == 0 ? 0 : 2)
+                            }
                             HStack {
                                 Text(prayer.name.rawValue)
                                     .font(.system(size: 11, weight: .regular))

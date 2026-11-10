@@ -31,6 +31,10 @@ struct QiblaWatchView: View {
         .onAppear {
             SharedDefaults.suite.synchronize()
             locationService.startHeading()
+            #if DEBUG
+            // The simulator has no compass; face just off the Qibla.
+            if CaptureMode.screen == .qibla { locationService.heading = viewModel.qiblaDirection - 2 }
+            #endif
         }
         .onDisappear { locationService.stopHeading() }
         .onChange(of: locationService.heading) { _ in

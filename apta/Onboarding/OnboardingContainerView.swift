@@ -49,7 +49,7 @@ struct OnboardingContainerView: View {
                     case 0:
                         OnboardingMethodView(selection: $settings.calculationMethod, suggested: suggested)
                     case 1:
-                        OnboardingPreferencesView(asrMethod: $settings.asrMethod, highLatitudeRule: $settings.highLatitudeRule)
+                        OnboardingPreferencesView(asrMethod: $settings.asrMethod)
                     case 2:
                         OnboardingLocationView(
                             locationService: locationService,
@@ -101,6 +101,7 @@ struct OnboardingContainerView: View {
         PrayerSettings.current = settings
         SharedDefaults.suite.set(true, forKey: SharedDefaults.backgroundLocationChoiceMadeKey)
         PrayerSettings.hasCompletedOnboarding = true
+        NotificationScheduler.scheduleUpcoming(location: locationService.location)
         WatchSyncService.shared.sendSettingsUpdate()
         onComplete()
     }

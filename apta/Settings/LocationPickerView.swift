@@ -62,10 +62,16 @@ struct LocationPickerView: View {
             .searchable(text: $query, prompt: "Search city or town")
             .toolbar { ToolbarItem(placement: .confirmationAction) { Button("Done") { dismiss() } } }
             .task(id: query) { await search() }
+            #if DEBUG
+            .onAppear { if let captureQuery = CaptureMode.query { query = captureQuery } }
+            #endif
             .onDisappear { activeSearch?.cancel() }
             .alert("Location Access Needed", isPresented: $showPermissionAlert) {
                 Button("Open Settings") {
-                    if let url = URL(string: UIApplication.openSettingsURLString) { openURL(url) }
+                    if let url = URL(string: UIApplication.openSettingsURLString) {
+                        locationService.resumeCurrentLocationAfterPermissionChange()
+                        openURL(url)
+                    }
                 }
                 Button("Cancel", role: .cancel) { }
             } message: {
