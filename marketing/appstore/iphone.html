@@ -1,0 +1,136 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:wght@400;500;600;700&display=block" rel="stylesheet">
+<style>
+  /* App Store iPhone set, 1320 x 2868 (6.9"). Rendered by render.cjs. */
+  :root {
+    --gray-on-dark: #8E8E93;
+    --gray-on-light: #6E6E73;
+    --brand-dim: #48484A;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #1c1c1e; }
+  .slide {
+    width: 1320px; height: 2868px; position: relative; overflow: hidden;
+    font-family: "Google Sans Flex", sans-serif; -webkit-font-smoothing: antialiased;
+  }
+  .dark { background: #000; color: #fff; }
+  .light { background: #fff; color: #000; }
+
+  .caption { position: absolute; top: 250px; left: 0; right: 0; text-align: center; }
+  .title { font-size: 172px; font-weight: 600; letter-spacing: -0.02em; line-height: 1; }
+  .sub { margin-top: 44px; font-size: 76px; font-weight: 400; letter-spacing: -0.01em; line-height: 1.15; }
+  .dark .sub { color: var(--gray-on-dark); }
+  .light .sub { color: var(--gray-on-light); }
+
+  .phone { position: absolute; left: 50%; top: 830px; width: 1110px; height: 2265px; transform: translateX(-50%); }
+  /* The screen fills the bezel's cutout exactly, clipped by a mask traced from the bezel (masks.py). */
+  .phone .screen {
+    position: absolute; left: 55.1px; top: 48.3px; width: 999.8px; height: 2168.4px; object-fit: cover;
+    -webkit-mask-image: url(iphone-mask.png); -webkit-mask-size: 1110px 2265px; -webkit-mask-position: -55.1px -48.3px;
+    -webkit-mask-repeat: no-repeat;
+  }
+  .phone .bezel { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+  /* Slide 4: real widgets cut from device screenshots (widgets.py), drawn 1.1x; each tile
+     image has 4px of transparent padding, hence the offsets. */
+  .lock { position: absolute; left: 90px; top: 770px; width: 1140px; height: 619px; border-radius: 64px; overflow: hidden; background: #000; }
+  .lock img { display: block; width: 100%; }
+  .tile { position: absolute; }
+
+  /* Slide 1: the acronym spells itself out. */
+  .brand { position: absolute; left: 92px; top: 190px; font-size: 250px; font-weight: 400; letter-spacing: -0.02em; line-height: 1.14; }
+  .brand b { font-weight: 400; color: #fff; }
+  .brand span { color: var(--brand-dim); }
+
+  /* iOS notification banners, set in the system font like the real thing. */
+  .notif {
+    position: absolute; left: 50%; transform: translateX(-50%); width: 1150px;
+    display: flex; gap: 34px; align-items: flex-start; padding: 38px 44px;
+    border-radius: 64px; background: rgba(242, 242, 247, 0.94); color: #000;
+    box-shadow: 0 40px 90px rgba(0, 0, 0, 0.45);
+    font-family: -apple-system, "SF Pro Text", sans-serif;
+  }
+  .notif img { width: 112px; height: 112px; border-radius: 26px; flex: none; }
+  .notif > div { flex: 1; min-width: 0; } /* full width, so the time sits flush right */
+  .notif .head { display: flex; justify-content: space-between; font-size: 44px; font-weight: 600; }
+  .notif .head span { font-weight: 400; color: #8E8E93; }
+  .notif .body { margin-top: 6px; font-size: 44px; line-height: 1.22; }
+
+  .watch { position: absolute; left: 50%; top: 860px; width: 1200px; height: 1920px; transform: translateX(-50%); }
+  .watch .screen { position: absolute; left: 178px; top: 446px; width: 844px; height: 1028px; object-fit: cover; border-radius: 120px; }
+  .watch .bezel { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+  .swatches { display: flex; justify-content: center; gap: 30px; margin-top: 56px; }
+  .swatches i { width: 64px; height: 64px; border-radius: 50%; display: block; }
+
+  .statement { position: absolute; left: 92px; right: 92px; top: 860px; font-size: 168px; font-weight: 500; letter-spacing: -0.025em; line-height: 1.12; }
+  .statement span { color: #C7C7CC; }
+  .footnote { position: absolute; left: 92px; right: 92px; bottom: 300px; font-size: 64px; line-height: 1.2; color: var(--gray-on-light); }
+
+</style>
+</head>
+<body>
+
+<div class="slide dark" id="01">
+  <div class="brand"><b>a</b><span>nother</span><br><b>p</b><span>rayer</span><br><b>t</b><span>ime</span><br><b>a</b><span>pp</span></div>
+  <div class="phone" style="top: 1520px"><img class="screen" src="captures/iphone/main_light.png"><img class="bezel" src="iphone-bezel.png"></div>
+</div>
+
+<div class="slide light" id="02">
+  <div class="caption"><div class="title">Simple</div><div class="sub">Nothing extra.<br>Just clarity.</div></div>
+  <div class="phone"><img class="screen" src="captures/iphone/main_dark.png"><img class="bezel" src="iphone-bezel.png"></div>
+</div>
+
+<div class="slide dark" id="03">
+  <div class="caption"><div class="title">Thoughtful</div><div class="sub">Reminders with<br>a little personality.</div></div>
+  <div class="phone"><img class="screen" src="captures/iphone/main_light.png"><img class="bezel" src="iphone-bezel.png"></div>
+  <div class="notif" style="top: 990px"><img src="app-icon.png"><div><div class="head">Fajr<span>5:19 AM</span></div><div class="body">Yes, it's early. Yes, it's worth it.</div></div></div>
+  <div class="notif" style="top: 1270px"><img src="app-icon.png"><div><div class="head">Dhuhr<span>11:41 AM</span></div><div class="body">Your tabs will still be there after Dhuhr. All of them.</div></div></div>
+</div>
+
+<div class="slide light" id="04">
+  <div class="caption"><div class="title">At a glance</div><div class="sub">The next prayer on your<br>Lock Screen and Home Screen.</div></div>
+  <div class="lock"><img src="captures/widgets/lock.png"></div>
+  <img class="tile" src="captures/widgets/tile_list.png" style="left: 86px; top: 1446px; width: 545.6px">
+  <img class="tile" src="captures/widgets/tile_next.png" style="left: 686.4px; top: 1446px; width: 545.6px">
+  <img class="tile" src="captures/widgets/tile_medium.png" style="left: 86px; top: 2047.2px; width: 1146.2px">
+</div>
+
+<div class="slide dark" id="05">
+  <div class="caption"><div class="title">On your wrist</div><div class="sub">Complications, Smart Stack<br>and a live countdown.</div></div>
+  <div class="watch"><img class="screen" src="out/watch/01.png"><img class="bezel" src="watch-bezel.png"></div>
+</div>
+
+<div class="slide light" id="06">
+  <div class="phone" style="top: -330px"><img class="screen" src="captures/iphone/qibla_dark.png"><img class="bezel" src="iphone-bezel.png"></div>
+  <div class="caption" style="top: 2150px"><div class="title">Qibla</div><div class="sub">Found in seconds.<br>No clutter.</div></div>
+</div>
+
+<div class="slide dark" id="07">
+  <div class="caption"><div class="title">Anywhere</div><div class="sub">Plan ahead in any city.<br>Everything follows along.</div></div>
+  <div class="phone"><img class="screen" src="captures/iphone/travel_light.png"><img class="bezel" src="iphone-bezel.png"></div>
+</div>
+
+<div class="slide light" id="08">
+  <div class="caption"><div class="title">Precise</div><div class="sub">Your method.<br>Your madhab.</div></div>
+  <div class="phone"><img class="screen" src="captures/iphone/settings_dark.png"><img class="bezel" src="iphone-bezel.png"></div>
+</div>
+
+<div class="slide dark" id="09">
+  <div class="caption">
+    <div class="title">Yours</div><div class="sub">Colors for the app<br>and your widgets.</div>
+    <div class="swatches"><i style="background:#D1FAE5"></i><i style="background:#E0E7FF"></i><i style="background:#FFE4E6"></i><i style="background:#FEF3C7"></i><i style="background:#DBEAFE"></i></div>
+  </div>
+  <div class="phone" style="top: 990px"><img class="screen" src="captures/iphone/theme_emerald.png"><img class="bezel" src="iphone-bezel.png"></div>
+</div>
+
+<div class="slide light" id="10">
+  <div class="statement"><span>No</span> ads.<br><span>No</span> accounts.<br><span>No</span> data collected.</div>
+  <div class="footnote">Prayer times are calculated right on your iPhone.</div>
+</div>
+
+</body>
+</html>

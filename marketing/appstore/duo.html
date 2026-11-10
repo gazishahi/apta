@@ -1,0 +1,102 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:wght@400;500;600;700&display=block" rel="stylesheet">
+<style>
+  /* App Store iPhone Duo sets: outer display 1398 x 2034, inner display 2853 x 2007.
+     Same system as iphone.html. Rendered by render.cjs. */
+  :root {
+    --gray-on-dark: #8E8E93;
+    --gray-on-light: #6E6E73;
+    --brand-dim: #48484A;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #1c1c1e; }
+  .slide { position: relative; overflow: hidden; font-family: "Google Sans Flex", sans-serif; -webkit-font-smoothing: antialiased; }
+  .outer { width: 1398px; height: 2034px; }
+  .inner { width: 2853px; height: 2007px; }
+  .dark { background: #000; color: #fff; }
+  .light { background: #fff; color: #000; }
+
+  .caption { position: absolute; left: 0; right: 0; text-align: center; }
+  .title { font-weight: 600; letter-spacing: -0.02em; line-height: 1; }
+  .sub { font-weight: 400; letter-spacing: -0.01em; line-height: 1.15; }
+  .dark .sub { color: var(--gray-on-dark); }
+  .light .sub { color: var(--gray-on-light); }
+  .outer .caption { top: 170px; }
+  .outer .title { font-size: 156px; }
+  .outer .sub { margin-top: 40px; font-size: 68px; }
+  .inner .caption { top: 150px; }
+  .inner .title { font-size: 150px; }
+  .inner .sub { margin-top: 32px; font-size: 70px; }
+
+  .brand b { font-weight: 400; color: #fff; }
+  .brand span { color: var(--brand-dim); }
+  .outer .brand { position: absolute; left: 96px; top: 140px; font-size: 196px; letter-spacing: -0.02em; line-height: 1.12; }
+  .inner .brand { position: absolute; left: 0; right: 0; top: 190px; text-align: center; font-size: 210px; letter-spacing: -0.02em; }
+
+  /* Devices: Apple's bezels, with the screen clipped by a mask traced from each bezel (masks.py). */
+  .device { position: absolute; left: 50%; transform: translateX(-50%); }
+  .device .bezel { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .device .screen { position: absolute; object-fit: cover; -webkit-mask-repeat: no-repeat; }
+  .duo-outer { width: 1100px; height: 1533.3px; }
+  .duo-outer .screen {
+    left: 60.1px; top: 54.5px; width: 979.8px; height: 1424.3px;
+    -webkit-mask-image: url(duo-outer-mask.png); -webkit-mask-size: 1100px 1533.3px; -webkit-mask-position: -60.1px -54.5px;
+  }
+  .duo-inner { width: 2300px; height: 1670.9px; }
+  .duo-inner .screen {
+    left: 87.7px; top: 87.7px; width: 2124.5px; height: 1495.4px;
+    -webkit-mask-image: url(duo-inner-mask.png); -webkit-mask-size: 2300px 1670.9px; -webkit-mask-position: -87.7px -87.7px;
+  }
+</style>
+</head>
+<body>
+
+<!-- Inner display (open), landscape -->
+
+<div class="slide inner dark" id="inner/01">
+  <div class="brand"><b>a</b><span>nother</span> <b>p</b><span>rayer</span> <b>t</b><span>ime</span> <b>a</b><span>pp</span></div>
+  <div class="device duo-inner" style="top: 560px"><img class="screen" src="captures/duo/inner/main_light.png"><img class="bezel" src="duo-inner-bezel.png"></div>
+</div>
+
+<div class="slide inner light" id="inner/02">
+  <div class="caption"><div class="title">Side by side</div><div class="sub">Unfold it. The whole day, at a glance.</div></div>
+  <div class="device duo-inner" style="top: 560px"><img class="screen" src="captures/duo/inner/main_dark.png"><img class="bezel" src="duo-inner-bezel.png"></div>
+</div>
+
+<div class="slide inner dark" id="inner/03">
+  <div class="caption"><div class="title">Anywhere</div><div class="sub">Plan ahead in any city. Everything follows along.</div></div>
+  <div class="device duo-inner" style="top: 560px"><img class="screen" src="captures/duo/inner/travel_light.png"><img class="bezel" src="duo-inner-bezel.png"></div>
+</div>
+
+<div class="slide inner light" id="inner/04">
+  <div class="caption" style="top: 100px"><div class="title">Qibla</div><div class="sub">Found in seconds. No clutter.</div></div>
+  <div class="device duo-inner" style="top: 450px"><img class="screen" src="captures/duo/inner/qibla_dark.png"><img class="bezel" src="duo-inner-bezel.png"></div>
+</div>
+
+<div class="slide inner dark" id="inner/05">
+  <div class="caption"><div class="title">Yours</div><div class="sub">Colors for the app and your widgets.</div></div>
+  <div class="device duo-inner" style="top: 560px"><img class="screen" src="captures/duo/inner/theme_emerald.png"><img class="bezel" src="duo-inner-bezel.png"></div>
+</div>
+
+<!-- Outer display (closed), portrait -->
+
+<div class="slide outer dark" id="outer/01">
+  <div class="brand"><b>a</b><span>nother</span><br><b>p</b><span>rayer</span><br><b>t</b><span>ime</span><br><b>a</b><span>pp</span></div>
+  <div class="device duo-outer" style="top: 1180px"><img class="screen" src="captures/duo/outer/main_light.png"><img class="bezel" src="duo-outer-bezel.png"></div>
+</div>
+
+<div class="slide outer light" id="outer/02">
+  <div class="caption"><div class="title">Simple</div><div class="sub">Nothing extra.<br>Just clarity.</div></div>
+  <div class="device duo-outer" style="top: 640px"><img class="screen" src="captures/duo/outer/main_dark.png"><img class="bezel" src="duo-outer-bezel.png"></div>
+</div>
+
+<div class="slide outer dark" id="outer/03">
+  <div class="caption"><div class="title">Qibla</div><div class="sub">Found in seconds.<br>No clutter.</div></div>
+  <div class="device duo-outer" style="top: 640px"><img class="screen" src="captures/duo/outer/qibla_light.png"><img class="bezel" src="duo-outer-bezel.png"></div>
+</div>
+
+</body>
+</html>

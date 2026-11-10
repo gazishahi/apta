@@ -1,0 +1,10 @@
+{
+  "name": "apta-appstore",
+  "private": true,
+  "scripts": {
+    "render": "node render.cjs iphone.html out/iphone && node render.cjs duo.html out/duo && node render.cjs creative.html out/creative && sips -z 1280 1920 out/creative/search.png --out out/creative/search-1920x1280.png >/dev/null && python3 watch.py && python3 flatten.py && python3 sizes.py"
+  },
+  "devDependencies": {
+    "playwright": "1.63.0"
+  }
+}
